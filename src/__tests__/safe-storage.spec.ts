@@ -41,7 +41,7 @@ describe('SafeStorage', () => {
   it('should localStorage.getItem returns correct decrypted value', () => {
     const safeStorage = makeSut();
     const key = 'any_key';
-    const value = { value: 'any_value' };
+    const value = { value: 'any_fake_value' };
 
     safeStorage.setItem(key, value);
     const storagedDecrypetdValue = safeStorage.getItem(key);
