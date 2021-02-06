@@ -1,9 +1,14 @@
 {
   "name": "encrypt-storage",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "homepage": "https://github.com/michelonsouza/encrypt-storage",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/michelonsouza/encrypt-storage.git"
+  },
   "scripts": {
     "build": "tsc --declaration",
     "test": "jest --passWithNoTests --no-cache --runInBand",
