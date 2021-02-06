@@ -1,5 +1,5 @@
 {
-  "name": "safe-storage",
+  "name": "encrypt-storage",
   "version": "0.0.1",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
@@ -23,7 +23,7 @@
   "author": {
     "email": "michelon.souza@gmail.com",
     "name": "Michelon Souza",
-    "url": "https://github.com/michelonsouza/safe-storage"
+    "url": "https://github.com/michelonsouza/encrypt-storage"
   },
   "license": "MIT",
   "devDependencies": {
