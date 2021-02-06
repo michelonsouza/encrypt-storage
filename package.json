@@ -22,7 +22,8 @@
   ],
   "author": {
     "email": "michelon.souza@gmail.com",
-    "name": "Michelon Souza"
+    "name": "Michelon Souza",
+    "url": "https://github.com/michelonsouza/safe-storage"
   },
   "license": "MIT",
   "devDependencies": {
