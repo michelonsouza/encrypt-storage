@@ -1,7 +1,7 @@
 /**
  * SafeStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
  */
-export declare class SafeStorage {
+export default class SafeStorage {
     private readonly secretKey;
     private readonly prefix;
     private storage;

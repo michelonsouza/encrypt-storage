@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SafeStorage = void 0;
 var crypto_js_1 = require("crypto-js");
 /**
  * SafeStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
@@ -82,4 +81,4 @@ var SafeStorage = /** @class */ (function () {
     };
     return SafeStorage;
 }());
-exports.SafeStorage = SafeStorage;
+exports.default = SafeStorage;
