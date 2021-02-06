@@ -3,7 +3,7 @@ import { AES, enc } from 'crypto-js';
 /**
  * SafeStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
  */
-export class SafeStorage {
+export default class SafeStorage {
   private storage: Storage;
 
   /**

@@ -1,6 +1,6 @@
 import 'jest-localstorage-mock';
 
-import { SafeStorage } from '..';
+import SafeStorage from '..';
 
 const makeSut = (
   prefix = '',
