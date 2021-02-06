@@ -3,12 +3,16 @@
     "target": "es5",
     "module": "commonjs",
     "outDir": "./dist",
+    "lib": ["ES2015", "DOM"],
+    "sourceMap": true,
+    "declaration": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
+    "moduleResolution": "node"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
