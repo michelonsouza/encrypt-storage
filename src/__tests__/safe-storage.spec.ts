@@ -48,4 +48,37 @@ describe('SafeStorage', () => {
 
     expect(storagedDecrypetdValue).toEqual(value);
   });
+
+  it('should calls localStorage.removeItem with correct key', () => {
+    const safeStorage = makeSut();
+    const key = 'any_key';
+
+    safeStorage.removeItem(key);
+
+    expect(localStorage.removeItem).toHaveBeenCalledWith(key);
+  });
+
+  it('should calls localStorage.clear', () => {
+    const safeStorage = makeSut();
+
+    safeStorage.setItem('any_key_1', 'any_value');
+    safeStorage.setItem('any_key_2', 'any_value');
+
+    expect(localStorage.length).toBe(2);
+
+    safeStorage.clear();
+
+    expect(localStorage.length).toBe(0);
+  });
+
+  it('should get correct key insted of index', () => {
+    const safeStorage = makeSut();
+
+    safeStorage.setItem('any_key_1', 'any_value');
+    safeStorage.setItem('any_key_2', 'any_value');
+
+    expect(safeStorage.key(0)).toBe('any_key_1');
+    expect(safeStorage.key(1)).toBe('any_key_2');
+    expect(safeStorage.key(2)).toBeFalsy();
+  });
 });

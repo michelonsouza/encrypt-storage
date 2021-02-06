@@ -9,6 +9,6 @@ module.exports = {
   testEnvironment: 'jsdom',
   preset: 'ts-jest',
   transform: {
-    '.+\\.ts$': 'ts-jest',
+    '.+\\.(ts)$': 'ts-jest',
   },
 };

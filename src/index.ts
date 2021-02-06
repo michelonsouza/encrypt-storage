@@ -51,7 +51,7 @@ export class SafeStorage {
    * 		getItem('any_key') -> `'any value'`
    */
   getItem(key: string): string | any | undefined {
-    const item = localStorage.getItem(key);
+    const item = this.storage.getItem(key);
 
     if (item) {
       const decryptedValue = AES.decrypt(item, this.secretKey).toString(
@@ -66,5 +66,32 @@ export class SafeStorage {
     }
 
     return undefined;
+  }
+
+  /**
+   * `removeItem` - Is the faction to be remove `safeItem` in `localStorage`
+   * @param {string} key - Is the key of `data` in `localStorage`.
+   * @return {void}
+   * Returns `void`.
+   * @usage
+   * 		removeItem('any_key')
+   */
+  removeItem(key: string): void {
+    this.storage.removeItem(key);
+  }
+
+  /**
+   * `clear` - Clear all selectedStorage
+   */
+  clear(): void {
+    this.storage.clear();
+  }
+
+  /**
+   * `key` - Return a `key` in selectedStorage index or `null`
+   * @param {number} index - Index of `key` in `selectedStorage`
+   */
+  key(index: number): string | null {
+    return this.storage.key(index);
   }
 }
