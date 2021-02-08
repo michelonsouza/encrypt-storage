@@ -107,3 +107,5 @@ export function EncryptStorage(
     length: storage.length,
   };
 }
+
+export default EncryptStorage;
