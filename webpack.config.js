@@ -29,7 +29,6 @@ module.exports = {
       patterns: [
         { from: "./README.MD", to: "README.MD" },
         { from: "./LICENSE", to: "LICENSE.txt" },
-        { from: "./.github", to: ".github" },
       ],
     }),
   ],
