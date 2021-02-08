@@ -54,7 +54,8 @@ export default class SafeStorage {
    * 		getItem('any_key') -> `'any value'`
    */
   getItem(key: string): string | any | undefined {
-    const item = this.storage.getItem(key);
+    const storageKey = this.prefix ? `${this.prefix}:${key}` : key;
+    const item = this.storage.getItem(storageKey);
 
     if (item) {
       const decryptedValue = AES.decrypt(
