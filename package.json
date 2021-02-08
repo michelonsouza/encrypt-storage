@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "0.1.2",
+  "version": "0.1.21",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,8 +24,12 @@
     "localStorage",
     "sessionStorage",
     "safeStorage",
-    "encrypetd storage",
-    "encrypted data"
+    "encryptStorage",
+    "encrypted storage",
+    "encrypted data",
+    "security",
+    "browser storage",
+    "lgpd"
   ],
   "author": {
     "email": "michelon.souza@gmail.com",
