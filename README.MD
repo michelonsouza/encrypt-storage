@@ -11,7 +11,7 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
   - [Example](#example)
     - [CommonJS](#commonjs)
     - [JS Import (es6)](#js-import-es6)
-    - [CDN](#cdn)
+    - [CDN (unpkg.com)](#cdn-unpkgcom)
   - [Parameters](#parameters)
     - [secretKey](#secretkey)
     - [options](#options)
