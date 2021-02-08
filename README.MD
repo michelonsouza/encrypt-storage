@@ -11,6 +11,7 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
   - [Example](#example)
     - [CommonJS](#commonjs)
     - [JS Import (es6)](#js-import-es6)
+    - [CDN](#cdn)
   - [Parameters](#parameters)
     - [secretKey](#secretkey)
     - [options](#options)
@@ -54,6 +55,15 @@ module.exports = encryptStorage
 import { EncryptStorage } from 'encrypt-storage';
 
 export const encryptStorage = EncryptStorage('secret_key', options);
+```
+
+### CDN (unpkg.com)
+```html
+<script>
+  import { EncryptStorage } from 'https://unpkg.com/encrypt-storage@0.1.23/dist/index.js'
+
+  const encryptStorage = EncryptStorage('secret_key', options);
+</script>
 ```
 
 Create a file in your utils folder or a folder of your choice. But I advise you to use it as a singleton, so to speak, for better use.
