@@ -1,7 +1,7 @@
 module.exports = {
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>'],
   collectCoverageFrom: [
-    '<rootDir>/src/**/*.{ts}',
+    '<rootDir>/src/**/*.ts',
     '!**/*.d.ts',
   ],
   setupFiles: ['jest-localstorage-mock'],
@@ -9,6 +9,6 @@ module.exports = {
   testEnvironment: 'jsdom',
   preset: 'ts-jest',
   transform: {
-    '.+\\.(ts)$': 'ts-jest',
+    '.+\\.ts$': 'ts-jest',
   },
 };

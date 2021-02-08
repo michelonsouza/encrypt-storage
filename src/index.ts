@@ -59,13 +59,11 @@ export interface EncryptStorageTypes extends Storage {
  */
 export function EncryptStorage(
   secretKey: string,
-  {
-    prefix = '',
-    storageType = 'localStorage',
-    stateManagementUse = false,
-  }: EncryptStorageOptions,
+  options: EncryptStorageOptions,
 ): EncryptStorageTypes {
-  const storage: Storage = window[storageType];
+  const storage: Storage = window[options.storageType || 'localStorage'];
+  const prefix = options.prefix || '';
+  const stateManagementUse = options.stateManagementUse || false;
 
   return {
     setItem(key: string, value: any): void {
@@ -101,10 +99,10 @@ export function EncryptStorage(
       storage.removeItem(key);
     },
     clear(): void {
-      this.storage.clear();
+      storage.clear();
     },
     key(index: number): string | null {
-      return this.storage.key(index);
+      return storage.key(index);
     },
     length: storage.length,
   };
