@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,8 +11,8 @@
   },
   "scripts": {
     "clean": "shx rm -rf _bundles lib lib-esm",
-    "build-test": "npm run clean && tsc && tsc -m es6 --outDir lib-esm && webpack",
     "build": "tsc --declaration",
+    "build:minified": "webpack",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "yarn test -- --watch",
     "test:staged": "yarn test -- --find-relatedTests",

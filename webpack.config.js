@@ -10,6 +10,9 @@ module.exports = {
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
+  externals: {
+    'crypto': 'crypto',
+  },
   resolve: {
     extensions: ['.ts', '.js'],
   },

@@ -6,6 +6,8 @@ import { AES, enc } from 'crypto-js';
 export default class SafeStorage {
   private storage: Storage;
 
+  private privateProps = new WeakMap();
+
   /**
    * Constructor
    * @param {string} secretKey - Encryptation key. Required
@@ -13,11 +15,12 @@ export default class SafeStorage {
    * @param {string} storageType - Storage type you prefer save your data. Only in `localStorage` and `sessionStorage`. Defaults `localStorage`
    */
   constructor(
-    private readonly secretKey: string,
+    secretKey: string,
     private readonly prefix: string = '',
     storageType: 'localStorage' | 'sessionStorage' = 'localStorage',
   ) {
     this.storage = window[storageType];
+    this.privateProps.set(this, { secretKey });
   }
 
   /**
@@ -35,7 +38,7 @@ export default class SafeStorage {
       typeof value === 'object' ? JSON.stringify(value) : String(value);
     const encryptedValue = AES.encrypt(
       valueToString,
-      this.secretKey,
+      this.privateProps.get(this).secretKey,
     ).toString();
 
     this.storage.setItem(storageKey, encryptedValue);
@@ -54,9 +57,10 @@ export default class SafeStorage {
     const item = this.storage.getItem(key);
 
     if (item) {
-      const decryptedValue = AES.decrypt(item, this.secretKey).toString(
-        enc.Utf8,
-      );
+      const decryptedValue = AES.decrypt(
+        item,
+        this.privateProps.get(this).secretKey,
+      ).toString(enc.Utf8);
 
       try {
         return JSON.parse(decryptedValue);
