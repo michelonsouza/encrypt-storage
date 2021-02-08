@@ -2,4 +2,13 @@ node_modules
 .*
 **/tsconfig.json
 **/webpack.config.js
+**/.editorconfig
+**/.eslintignore
+**/.eslint.json
+**/.prettierignore
+**/.prettierrc
+**/.huskyrc.json
+**/.lintstaged.json
+**/.travis.yml
+**/.jest.config.js
 src
