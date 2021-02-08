@@ -60,7 +60,8 @@ export const encryptStorage = EncryptStorage('secret_key', options);
 ### CDN (unpkg.com)
 ```html
 <script>
-  import { EncryptStorage } from 'https://unpkg.com/encrypt-storage@0.1.23/dist/index.js'
+  // get latest version of package at npm
+  import { EncryptStorage } from 'https://unpkg.com/encrypt-storage/dist/index.js'
 
   const encryptStorage = EncryptStorage('secret_key', options);
 </script>
