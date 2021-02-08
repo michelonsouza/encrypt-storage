@@ -1,4 +1,5 @@
 const {resolve} = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: 'production',
@@ -22,5 +23,14 @@ module.exports = {
       use: 'ts-loader',
       exclude: '/node_modules/'
     }]
-  }
+  },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: "./README.MD", to: "README.MD" },
+        { from: "./LICENSE", to: "LICENSE.txt" },
+        { from: "./.github", to: ".github" },
+      ],
+    }),
+  ],
 }

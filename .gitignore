@@ -3,4 +3,4 @@ coverage
 dist
 lib-esm
 _bundles
-__tests__
+/__tests__
