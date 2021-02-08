@@ -11,4 +11,6 @@ node_modules
 **/.lintstaged.json
 **/.travis.yml
 **/.jest.config.js
+coverage
+__tests__
 src
