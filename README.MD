@@ -71,7 +71,13 @@ export const encryptStorage = EncryptStorage('secret_key', options)
 
 ## Parameters
 ### secretKey
-The `secretKey` parameter is a `string` you encrypt your data. If you use a `framework` like `ReactJS` or `VueJS` prefer to store this data in your application's `.env` file.
+The `secretKey` parameter is a `string` you encrypt your data. If you use a `framework` like `ReactJS` or `VueJS` prefer to store this data in your application's `.env` file:
+
+```typescript
+// const { EncryptStorage } = require('encrypt-storage');
+
+export const encryptStorage = EncryptStorage(process.env.SECRET_KEY, options)
+```
 
 ### options
 The options object is made up of the following properties:
