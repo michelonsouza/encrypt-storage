@@ -1,28 +1,12 @@
 import { AES, enc } from 'crypto-js';
 
-/**
- * SafeStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
- */
-export default class SafeStorage {
-  private storage: Storage;
+export interface EncryptStorageOptions {
+  prefix?: string;
+  stateManagementUse?: boolean;
+  storageType?: 'localStorage' | 'sessionStorage';
+}
 
-  private privateProps = new WeakMap();
-
-  /**
-   * Constructor
-   * @param {string} secretKey - Encryptation key. Required
-   * @param {string} prefix - Prefix used in storageKey. Defaults `undefined` EX: `@prefix:key`
-   * @param {string} storageType - Storage type you prefer save your data. Only in `localStorage` and `sessionStorage`. Defaults `localStorage`
-   */
-  constructor(
-    secretKey: string,
-    private readonly prefix: string = '',
-    storageType: 'localStorage' | 'sessionStorage' = 'localStorage',
-  ) {
-    this.storage = window[storageType];
-    this.privateProps.set(this, { secretKey });
-  }
-
+export interface EncryptStorageTypes extends Storage {
   /**
    * `setItem` - Is the function to be set `safeItem` in `selected storage`
    * @param {string} key - Is the key of `data` in `selected storage`.
@@ -32,17 +16,7 @@ export default class SafeStorage {
    * 		setItem('any_key', {key: 'value', another_key: 2})
    * 		setItem('any_key', 'any value')
    */
-  setItem(key: string, value: any): void {
-    const storageKey = this.prefix ? `${this.prefix}:${key}` : key;
-    const valueToString =
-      typeof value === 'object' ? JSON.stringify(value) : String(value);
-    const encryptedValue = AES.encrypt(
-      valueToString,
-      this.privateProps.get(this).secretKey,
-    ).toString();
-
-    this.storage.setItem(storageKey, encryptedValue);
-  }
+  setItem(key: string, value: any): void;
 
   /**
    * `getItem` - Is the faction to be get `safeItem` in `localStorage`
@@ -53,25 +27,7 @@ export default class SafeStorage {
    * 		getItem('any_key') -> `{key: 'value', another_key: 2}`
    * 		getItem('any_key') -> `'any value'`
    */
-  getItem(key: string): string | any | undefined {
-    const storageKey = this.prefix ? `${this.prefix}:${key}` : key;
-    const item = this.storage.getItem(storageKey);
-
-    if (item) {
-      const decryptedValue = AES.decrypt(
-        item,
-        this.privateProps.get(this).secretKey,
-      ).toString(enc.Utf8);
-
-      try {
-        return JSON.parse(decryptedValue);
-      } catch (error) {
-        return decryptedValue;
-      }
-    }
-
-    return undefined;
-  }
+  getItem(key: string): string | any | undefined;
 
   /**
    * `removeItem` - Is the faction to be remove `safeItem` in `localStorage`
@@ -81,22 +37,75 @@ export default class SafeStorage {
    * @usage
    * 		removeItem('any_key')
    */
-  removeItem(key: string): void {
-    this.storage.removeItem(key);
-  }
+  removeItem(key: string): void;
 
   /**
    * `clear` - Clear all selectedStorage
    */
-  clear(): void {
-    this.storage.clear();
-  }
+  clear(): void;
 
   /**
    * `key` - Return a `key` in selectedStorage index or `null`
    * @param {number} index - Index of `key` in `selectedStorage`
    */
-  key(index: number): string | null {
-    return this.storage.key(index);
-  }
+  key(index: number): string | null;
+}
+
+/**
+ * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
+ *
+ * @param {string} secretKey - A secret to encrypt data
+ * @param {EncrytStorageOptions} options - A optional settings to set encryptData or select `sessionStorage` to browser storage
+ */
+export function EncryptStorage(
+  secretKey: string,
+  {
+    prefix = '',
+    storageType = 'localStorage',
+    stateManagementUse = false,
+  }: EncryptStorageOptions,
+): EncryptStorageTypes {
+  const storage: Storage = window[storageType];
+
+  return {
+    setItem(key: string, value: any): void {
+      const storageKey = prefix ? `${prefix}:${key}` : key;
+      const valueToString =
+        typeof value === 'object' ? JSON.stringify(value) : String(value);
+      const encryptedValue = AES.encrypt(valueToString, secretKey).toString();
+
+      storage.setItem(storageKey, encryptedValue);
+    },
+
+    getItem(key: string): string | any | undefined {
+      const storageKey = prefix ? `${prefix}:${key}` : key;
+      const item = storage.getItem(storageKey);
+
+      if (item) {
+        const decryptedValue = AES.decrypt(item, secretKey).toString(enc.Utf8);
+
+        if (stateManagementUse) {
+          return decryptedValue;
+        }
+
+        try {
+          return JSON.parse(decryptedValue);
+        } catch (error) {
+          return decryptedValue;
+        }
+      }
+
+      return undefined;
+    },
+    removeItem(key: string): void {
+      storage.removeItem(key);
+    },
+    clear(): void {
+      this.storage.clear();
+    },
+    key(index: number): string | null {
+      return this.storage.key(index);
+    },
+    length: storage.length,
+  };
 }
