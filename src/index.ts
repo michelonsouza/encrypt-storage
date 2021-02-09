@@ -61,6 +61,12 @@ export function EncryptStorage(
   secretKey: string,
   options: EncryptStorageOptions,
 ): EncryptStorageTypes {
+  if (!secretKey) {
+    throw new Error(
+      'The secretKey parameter is mandatory. Please provide a valid secretKey',
+    );
+  }
+
   const storage: Storage = window[options.storageType || 'localStorage'];
   const prefix = options.prefix || '';
   const stateManagementUse = options.stateManagementUse || false;
