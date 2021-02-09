@@ -10,8 +10,9 @@ node_modules
 **/.huskyrc.json
 **/.lintstaged.json
 **/.travis.yml
-**/.jest.config.js
+**/jest.config.js
 .github
+docs
 coverage
 __tests__
 src

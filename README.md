@@ -5,25 +5,29 @@ The `Encrypt Storage` is a `wrapper` for native `Storage` of browser.
 
 Using the `crypto-js` library as an encryption engine, it saves the encrypted data on the `selected storage` in the same way as the native `Storage`.
 
+> NOTE: Nothing on the front end is entirely secure. The library's proposal is to make it difficult for the user to see the data through the console, but as the secret key is on the front end, if the user searches hard enough, he will end up finding it. Just to make it clear that nothing is completely secure on the front end. Thank you for your attention.
+
 ## Table of Contents
 
-- [Features](#features)
-- [Installing](#installing)
-- [Examples](#examples)
-  - [CommonJS](#commonjs)
-  - [JS Import (es6)](#js-import-es6)
-  - [Conventions](#conventions)
-- [Parameters](#parameters)
-  - [secretKey](#secretkey)
-  - [options](#options)
-- [Usage](#usage)
-  - [setItem](#setitem)
-  - [getItem](#getitem)
-  - [removeItem](#removeitem)
-  - [clear](#clear)
-  - [key](#key)
-  - [length](#length)
-- [License](#License)
+- [Encrypt Storage](#encrypt-storage)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Installing](#installing)
+  - [Examples](#examples)
+    - [CommonJS](#commonjs)
+    - [JS Import (es6)](#js-import-es6)
+    - [Conventions](#conventions)
+  - [Parameters](#parameters)
+    - [secretKey](#secretkey)
+    - [options](#options)
+  - [Usage](#usage)
+    - [setItem](#setitem)
+    - [getItem](#getitem)
+    - [removeItem](#removeitem)
+    - [clear](#clear)
+    - [key](#key)
+    - [length](#length)
+- [License](#license)
 
 ## Features
   - Save encrypted data in `localStorage` and `sessionStorage`
