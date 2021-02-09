@@ -4,7 +4,9 @@ import {
   EncryptStorage,
   EncryptStorageTypes,
   EncryptStorageOptions,
-} from '../src/index';
+} from '../src';
+
+import { InvalidSecretKeyError } from '../src/errors';
 
 interface MakeSutParams extends EncryptStorageOptions {
   secretKey?: string;
@@ -118,5 +120,13 @@ describe('SafeStorage', () => {
     safeStorage.getItem(key);
 
     expect(localStorage.getItem).toHaveBeenCalledWith(`${prefix}:${key}`);
+  });
+
+  it('should throws InvalidSecretKeyError if secret key is invalid', () => {
+    try {
+      EncryptStorage('12345678');
+    } catch (error) {
+      expect(error).toBeInstanceOf(InvalidSecretKeyError);
+    }
   });
 });

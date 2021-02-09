@@ -1,5 +1,7 @@
 import { AES, enc } from 'crypto-js';
 
+import { InvalidSecretKeyError } from './errors';
+
 export interface EncryptStorageOptions {
   prefix?: string;
   stateManagementUse?: boolean;
@@ -54,17 +56,15 @@ export interface EncryptStorageTypes extends Storage {
 /**
  * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
  *
- * @param {string} secretKey - A secret to encrypt data
+ * @param {string} secretKey - A secret to encrypt data must be contain min of 10 characters
  * @param {EncrytStorageOptions} options - A optional settings to set encryptData or select `sessionStorage` to browser storage
  */
 export function EncryptStorage(
   secretKey: string,
-  options: EncryptStorageOptions,
+  options: EncryptStorageOptions = {},
 ): EncryptStorageTypes {
-  if (!secretKey) {
-    throw new Error(
-      'The secretKey parameter is mandatory. Please provide a valid secretKey',
-    );
+  if (secretKey.length < 10) {
+    throw new InvalidSecretKeyError();
   }
 
   const storage: Storage = window[options.storageType || 'localStorage'];
