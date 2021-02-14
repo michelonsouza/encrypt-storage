@@ -207,7 +207,7 @@ Returns a `quantity` of `keys` existents in `selectedStorage`
 
 ```typescript
 ...
-encryptStorage.key(0);
+encryptStorage.length;
 ```
 
 # License
