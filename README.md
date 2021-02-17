@@ -27,6 +27,8 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
     - [clear](#clear)
     - [key](#key)
     - [length](#length)
+    - [encryptString](#encryptstring)
+    - [decryptString](#decryptstring)
 - [License](#license)
 
 ## Features
@@ -208,6 +210,26 @@ Returns a `quantity` of `keys` existents in `selectedStorage`
 ```typescript
 ...
 encryptStorage.length;
+```
+
+### encryptString
+Encrypt any string and rerturn `encrypted value`
+```typescript
+...
+import { encryptStorage } from './utils';
+
+const encryptedValue = encryptStorage.encryptString('any_string');
+// 'U2FsdGVkX1/jvF6fLkGI3aALI9ssWNAPAeZ5nxeskh8='
+```
+
+### decryptString
+Decrypt any string (encrypted with `encryptString`) and return `decrypted value`
+```typescript
+...
+import { encryptStorage } from './utils';
+
+const encryptedValue = encryptStorage.decryptString('U2FsdGVkX1/jvF6fLkGI3aALI9ssWNAPAeZ5nxeskh8=');
+// 'any_string'
 ```
 
 # License

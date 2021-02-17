@@ -129,4 +129,21 @@ describe('SafeStorage', () => {
       expect(error).toBeInstanceOf(InvalidSecretKeyError);
     }
   });
+
+  it('should encrypt string and return encrypted value', () => {
+    const safeStorage = makeSut();
+    const value = 'any_string';
+    const result = safeStorage.encryptString(value);
+
+    expect(result).not.toEqual(value);
+  });
+
+  it('should dencrypt string and return decrypted value', () => {
+    const safeStorage = makeSut();
+    const value = 'any_string';
+    const encryptedValue = safeStorage.encryptString(value);
+    const decryptedValue = safeStorage.decryptString(encryptedValue);
+
+    expect(decryptedValue).toEqual(value);
+  });
 });

@@ -51,6 +51,26 @@ export interface EncryptStorageTypes extends Storage {
    * @param {number} index - Index of `key` in `selectedStorage`
    */
   key(index: number): string | null;
+
+  /**
+   * `encryptString` - Is the faction to be `encrypt` any string and return encrypted value
+   * @param {string} str - A `string` to be encrypted.
+   * @return {string} result
+   * Returns `string`.
+   * @usage
+   * 		encryptString('any_string') -> 'encrypted value'
+   */
+  encryptString(key: string): string;
+
+  /**
+   * `decryptString` - Is the faction to be `decrypt` any string encrypted by `encryptString` and return decrypted value
+   * @param {string} str - A `string` to be decrypted.
+   * @return {string} result
+   * Returns `string`.
+   * @usage
+   * 		decryptString('any_string') -> 'decrypted value'
+   */
+  decryptString(key: string): string;
 }
 
 /**
@@ -72,6 +92,7 @@ export function EncryptStorage(
   const stateManagementUse = options.stateManagementUse || false;
 
   return {
+    length: storage.length,
     setItem(key: string, value: any): void {
       const storageKey = prefix ? `${prefix}:${key}` : key;
       const valueToString =
@@ -80,7 +101,6 @@ export function EncryptStorage(
 
       storage.setItem(storageKey, encryptedValue);
     },
-
     getItem(key: string): string | any | undefined {
       const storageKey = prefix ? `${prefix}:${key}` : key;
       const item = storage.getItem(storageKey);
@@ -110,7 +130,16 @@ export function EncryptStorage(
     key(index: number): string | null {
       return storage.key(index);
     },
-    length: storage.length,
+    encryptString(str: string): string {
+      const encryptedValue = AES.encrypt(str, secretKey).toString();
+
+      return encryptedValue;
+    },
+    decryptString(str: string): string {
+      const decryptedValue = AES.decrypt(str, secretKey).toString(enc.Utf8);
+
+      return decryptedValue;
+    },
   };
 }
 
