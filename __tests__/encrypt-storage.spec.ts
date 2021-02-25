@@ -72,6 +72,21 @@ describe('SafeStorage', () => {
     expect(localStorage.removeItem).toHaveBeenCalledWith(key);
   });
 
+  it('should calls localStorage.removeItemFromPattern remove all items with this pattern', () => {
+    const safeStorage = makeSut();
+    const pattern = '12345678';
+    const userKey = `${pattern}:user`;
+    const itemKey = `${pattern}:item`;
+
+    safeStorage.setItem(userKey, { id: 123 });
+    safeStorage.setItem(itemKey, { id: 456 });
+
+    safeStorage.removeItemFromPattern(pattern);
+
+    expect(localStorage.removeItem).toHaveBeenCalledWith(userKey);
+    expect(localStorage.removeItem).toHaveBeenCalledWith(itemKey);
+  });
+
   it('should calls localStorage.clear', () => {
     const safeStorage = makeSut();
 

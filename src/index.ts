@@ -42,6 +42,18 @@ export interface EncryptStorageTypes extends Storage {
   removeItem(key: string): void;
 
   /**
+   * `removeItemFromPattern` - Is the faction to be remove `safeItem` in `localStorage` from `pattern` based
+   * @param {string} pattern - Is the key of `data` in `localStorage`.
+   * @return {void}
+   * Returns `void`.
+   * @usage
+   *    // itemKey = '12345678:user'
+   *    // another itemKey = '12345678:item'
+   * 		removeItem('12345678') -> item removed from `selectedStorage`
+   */
+  removeItemFromPattern(pattern: string): void;
+
+  /**
    * `clear` - Clear all selectedStorage
    */
   clear(): void;
@@ -123,6 +135,15 @@ export function EncryptStorage(
     },
     removeItem(key: string): void {
       storage.removeItem(key);
+    },
+
+    removeItemFromPattern(pattern: string): void {
+      const keys = Object.keys(storage);
+      const filteredKeys = keys.filter(key => key.includes(pattern));
+
+      filteredKeys.forEach(key => {
+        this.removeItem(key);
+      });
     },
     clear(): void {
       storage.clear();
