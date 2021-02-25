@@ -21,8 +21,8 @@ export interface EncryptStorageTypes extends Storage {
   setItem(key: string, value: any): void;
 
   /**
-   * `getItem` - Is the faction to be get `safeItem` in `localStorage`
-   * @param {string} key - Is the key of `data` in `localStorage`.
+   * `getItem` - Is the faction to be get `safeItem` in `selected storage`
+   * @param {string} key - Is the key of `data` in `selected storage`.
    * @return {string | any | undefined} - Returns a formatted value when the same is an object or string when not.
    * Returns `undefined` when value not exists.
    * @usage
@@ -32,8 +32,8 @@ export interface EncryptStorageTypes extends Storage {
   getItem(key: string): string | any | undefined;
 
   /**
-   * `removeItem` - Is the faction to be remove `safeItem` in `localStorage`
-   * @param {string} key - Is the key of `data` in `localStorage`.
+   * `removeItem` - Is the faction to be remove `safeItem` in `selected storage`
+   * @param {string} key - Is the key of `data` in `selected storage`.
    * @return {void}
    * Returns `void`.
    * @usage
@@ -42,25 +42,25 @@ export interface EncryptStorageTypes extends Storage {
   removeItem(key: string): void;
 
   /**
-   * `removeItemFromPattern` - Is the faction to be remove `safeItem` in `localStorage` from `pattern` based
-   * @param {string} pattern - Is the key of `data` in `localStorage`.
+   * `removeItemFromPattern` - Is the faction to be remove `safeItem` in `selected storage` from `pattern` based
+   * @param {string} pattern - Is the pattern existent in keys of `selected storage`.
    * @return {void}
    * Returns `void`.
    * @usage
    *    // itemKey = '12345678:user'
    *    // another itemKey = '12345678:item'
-   * 		removeItem('12345678') -> item removed from `selectedStorage`
+   * 		removeItem('12345678') -> item removed from `selected storage`
    */
   removeItemFromPattern(pattern: string): void;
 
   /**
-   * `clear` - Clear all selectedStorage
+   * `clear` - Clear all selected storage
    */
   clear(): void;
 
   /**
-   * `key` - Return a `key` in selectedStorage index or `null`
-   * @param {number} index - Index of `key` in `selectedStorage`
+   * `key` - Return a `key` in selected storage index or `null`
+   * @param {number} index - Index of `key` in `selected storage`
    */
   key(index: number): string | null;
 
