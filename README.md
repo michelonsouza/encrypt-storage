@@ -24,6 +24,7 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
     - [setItem](#setitem)
     - [getItem](#getitem)
     - [removeItem](#removeitem)
+    - [removeItemFromPattern](#removeitemfrompattern)
     - [clear](#clear)
     - [key](#key)
     - [length](#length)
@@ -185,6 +186,20 @@ Remove an item from `selectedStorage`
 encryptStorage.removeItem('user');
 ```
 
+### removeItemFromPattern
+
+Remove an item from `selectedStorage`
+
+```typescript
+...
+encryptStorage.setItem('12345678:user', { id: 1234 });
+encryptStorage.setItem('12345678:item', { id: 5678 });
+
+encryptStorage.removeItemFromPatter('12345678');
+
+// items `12345678:user` and `12345678:item` are removed from `selectedStorage`
+```
+
 ### clear
 
 Clear all data from `selectedStorage`
@@ -228,7 +243,7 @@ Decrypt any string (encrypted with `encryptString`) and return `decrypted value`
 ...
 import { encryptStorage } from './utils';
 
-const encryptedValue = encryptStorage.decryptString('U2FsdGVkX1/jvF6fLkGI3aALI9ssWNAPAeZ5nxeskh8=');
+const decryptedValue = encryptStorage.decryptString('U2FsdGVkX1/jvF6fLkGI3aALI9ssWNAPAeZ5nxeskh8=');
 // 'any_string'
 ```
 
