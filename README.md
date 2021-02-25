@@ -108,6 +108,13 @@ export const encryptStorage = EncryptStorage(process.env.SECRET_KEY, options)
 
 The options object consists of the following properties:
 
+|key                |type                               |default        |
+|-------------------|-----------------------------------|---------------|
+|prefix             |`string`                           |`null`         |
+|storageType        |`localStorage` or `sessionStorage` |`localStorage` |
+|stateManagementUse |`boolean`                          |`false`        |
+
+
 *prefix*: default `null` - is optional and is the prefix of all keys used in the selected storage as shown below:
 
 ```typescript
