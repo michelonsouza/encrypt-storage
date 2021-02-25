@@ -195,9 +195,9 @@ Remove an item from `selectedStorage`
 encryptStorage.setItem('12345678:user', { id: 1234 });
 encryptStorage.setItem('12345678:item', { id: 5678 });
 
-encryptStorage.removeItemFromPatter('12345678');
+encryptStorage.removeItemFromPattern('12345678');
 
-// items `12345678:user` and `12345678:item` are removed from `selectedStorage`
+// items '12345678:user' and '12345678:item' are removed from 'selectedStorage'
 ```
 
 ### clear
