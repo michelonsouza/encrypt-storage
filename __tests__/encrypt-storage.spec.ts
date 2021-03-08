@@ -1,4 +1,5 @@
 import 'jest-localstorage-mock';
+import faker from 'faker';
 
 import {
   EncryptStorage,
@@ -19,33 +20,37 @@ const makeSut = (
     prefix,
     storageType,
     stateManagementUse,
-    secretKey = 'secret_storage_key',
+    secretKey = faker.random.uuid(),
   } = params;
   return EncryptStorage(secretKey, { prefix, storageType, stateManagementUse });
 };
 
 describe('SafeStorage', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   it('should enshure localStorage been called', () => {
     const safeStorage = makeSut();
-    const key = 'any_key';
+    const key = faker.random.word();
 
-    safeStorage.setItem(key, 'any_value');
+    safeStorage.setItem(key, faker.random.word());
 
     expect(localStorage.setItem).toHaveBeenCalled();
   });
 
   it('should enshure sessionStorage been called', () => {
     const safeStorage = makeSut({ storageType: 'sessionStorage' });
-    const key = 'any_key';
+    const key = faker.random.word();
 
-    safeStorage.setItem(key, 'any_value');
+    safeStorage.setItem(key, faker.random.word());
 
     expect(sessionStorage.setItem).toHaveBeenCalled();
   });
 
   it('should calls localStorage.getItem with correct key', () => {
     const safeStorage = makeSut();
-    const key = 'any_key';
+    const key = faker.random.word();
 
     safeStorage.getItem(key);
 
@@ -54,8 +59,19 @@ describe('SafeStorage', () => {
 
   it('should localStorage.getItem returns correct decrypted value', () => {
     const safeStorage = makeSut();
-    const key = 'any_key';
-    const value = { value: 'any_fake_value' };
+    const key = faker.random.word();
+    const value = { value: faker.random.word() };
+
+    safeStorage.setItem(key, value);
+    const storagedDecrypetdValue = safeStorage.getItem(key);
+
+    expect(storagedDecrypetdValue).toEqual(value);
+  });
+
+  it('should localStorage.getItem returns correct decrypted value when is a string', () => {
+    const safeStorage = makeSut();
+    const key = faker.random.word();
+    const value = faker.random.word();
 
     safeStorage.setItem(key, value);
     const storagedDecrypetdValue = safeStorage.getItem(key);
@@ -65,7 +81,7 @@ describe('SafeStorage', () => {
 
   it('should calls localStorage.removeItem with correct key', () => {
     const safeStorage = makeSut();
-    const key = 'any_key';
+    const key = faker.random.word();
 
     safeStorage.removeItem(key);
 
@@ -74,7 +90,7 @@ describe('SafeStorage', () => {
 
   it('should calls localStorage.removeItemFromPattern remove all items with this pattern', () => {
     const safeStorage = makeSut();
-    const pattern = '12345678';
+    const pattern = faker.random.alphaNumeric(8);
     const userKey = `${pattern}:user`;
     const itemKey = `${pattern}:item`;
 
@@ -89,9 +105,12 @@ describe('SafeStorage', () => {
 
   it('should calls localStorage.clear', () => {
     const safeStorage = makeSut();
+    const key1 = faker.random.word();
+    const key2 = faker.random.word();
+    const anyValue = faker.random.word();
 
-    safeStorage.setItem('any_key_1', 'any_value');
-    safeStorage.setItem('any_key_2', 'any_value');
+    safeStorage.setItem(key1, anyValue);
+    safeStorage.setItem(key2, anyValue);
 
     expect(localStorage.length).toBe(2);
 
@@ -102,20 +121,23 @@ describe('SafeStorage', () => {
 
   it('should get correct key insted of index', () => {
     const safeStorage = makeSut();
+    const key1 = faker.random.word();
+    const key2 = faker.random.word();
 
-    safeStorage.setItem('any_key_1', 'any_value');
-    safeStorage.setItem('any_key_2', 'any_value');
+    safeStorage.setItem(key1, 'any_value');
+    safeStorage.setItem(key2, 'any_value');
 
-    expect(safeStorage.key(0)).toBe('any_key_1');
-    expect(safeStorage.key(1)).toBe('any_key_2');
+    expect(safeStorage.key(0)).toBe(key1);
+    expect(safeStorage.key(1)).toBe(key2);
     expect(safeStorage.key(2)).toBeFalsy();
   });
 
   it('should return string if stateManagementUse is true', () => {
     const safeStorage = makeSut({ stateManagementUse: true });
+    const key = faker.random.word();
 
-    safeStorage.setItem('any_key', { value: 'any_value', number: 100 });
-    const value = safeStorage.getItem('any_key');
+    safeStorage.setItem(key, { value: faker.random.word(), number: 100 });
+    const value = safeStorage.getItem(key);
 
     expect(typeof value).toBe('string');
   });
@@ -128,10 +150,10 @@ describe('SafeStorage', () => {
 
   it('should use prefix with key', () => {
     const prefix = '@test';
-    const key = 'any_key';
+    const key = faker.random.word();
     const safeStorage = makeSut({ prefix });
 
-    safeStorage.setItem(key, { value: 'any_value', number: 100 });
+    safeStorage.setItem(key, { value: faker.random.word(), number: 100 });
     safeStorage.getItem(key);
 
     expect(localStorage.getItem).toHaveBeenCalledWith(`${prefix}:${key}`);
@@ -139,7 +161,7 @@ describe('SafeStorage', () => {
 
   it('should throws InvalidSecretKeyError if secret key is invalid', () => {
     try {
-      EncryptStorage('12345678');
+      EncryptStorage(faker.random.alphaNumeric(8));
     } catch (error) {
       expect(error).toBeInstanceOf(InvalidSecretKeyError);
     }
@@ -147,7 +169,7 @@ describe('SafeStorage', () => {
 
   it('should encrypt string and return encrypted value', () => {
     const safeStorage = makeSut();
-    const value = 'any_string';
+    const value = faker.random.word();
     const result = safeStorage.encryptString(value);
 
     expect(result).not.toEqual(value);
@@ -155,7 +177,7 @@ describe('SafeStorage', () => {
 
   it('should dencrypt string and return decrypted value', () => {
     const safeStorage = makeSut();
-    const value = 'any_string';
+    const value = faker.random.word();
     const encryptedValue = safeStorage.encryptString(value);
     const decryptedValue = safeStorage.decryptString(encryptedValue);
 

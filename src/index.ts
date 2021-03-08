@@ -85,8 +85,6 @@ export interface EncryptStorageTypes extends Storage {
   decryptString(key: string): string;
 }
 
-type StorageKeys<T> = { [Key in keyof T]: boolean };
-
 /**
  * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
  *
@@ -104,16 +102,6 @@ export function EncryptStorage(
   const storage: Storage = window[options.storageType || 'localStorage'];
   const prefix = options.prefix || '';
   const stateManagementUse = options.stateManagementUse || false;
-  const keys: { [key: string]: boolean } = Object.keys(storage)
-    .map(key => key.replace(prefix, ''))
-    .filter(key => key !== 'length')
-    .reduce((accumulator: any, key) => {
-      accumulator[key] = true;
-
-      return accumulator;
-    }, {});
-
-  type MappedStorageKeys = keyof StorageKeys<typeof keys>;
 
   return {
     length: storage.length,
@@ -124,9 +112,8 @@ export function EncryptStorage(
       const encryptedValue = AES.encrypt(valueToString, secretKey).toString();
 
       storage.setItem(storageKey, encryptedValue);
-      keys[key] = true;
     },
-    getItem(key: MappedStorageKeys): string | any | undefined {
+    getItem(key: string): string | any | undefined {
       const storageKey = prefix ? `${prefix}:${key}` : key;
       const item = storage.getItem(storageKey as string);
 
@@ -146,9 +133,8 @@ export function EncryptStorage(
 
       return undefined;
     },
-    removeItem(key: MappedStorageKeys): void {
+    removeItem(key: string): void {
       storage.removeItem(key as string);
-      delete keys[key];
     },
 
     removeItemFromPattern(pattern: string): void {
