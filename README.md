@@ -20,6 +20,10 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
   - [Parameters](#parameters)
     - [secretKey](#secretkey)
     - [options](#options)
+  - [Global state management persist solutions](#global-state-management-persist-solutions)
+    - [redux-persist](#redux-persist)
+    - [vuex-persist](#vuex-persist)
+  - [AWS Amplify](#aws-amplify)
   - [Usage](#usage)
     - [setItem](#setitem)
     - [getItem](#getitem)
@@ -129,9 +133,11 @@ in your storage:
 
 ![storageKeyValue](./docs/resources/storageKeyValue.png)
 
+## Global state management persist solutions
+
 *stateManagementUse*: default `false` - is a `boolean` value that, when true allows the use of it with `vuex-persist` and `redux-persist`:
 
-**redux-persist**
+### redux-persist
 
 ```typescript
 ...
@@ -143,7 +149,7 @@ const persistConfig = {
 };
 ```
 
-**vuex-persist**
+### vuex-persist
 
 ```typescript
 ...
@@ -162,6 +168,28 @@ export const encryptStorage = EncryptStorage('secret_key', {
 });
 ```
 
+## AWS Amplify
+
+In the case of `aws-amplify`, if you want to use the facility of not needing to use `JSON.parse` in the rest of the application, prefer to create an instance within the `amplify` configuration file, as follows:
+
+```typescript
+import Amplify from 'aws-amplify';
+import { EncryptStorage } from 'encrypt-storage';
+
+const encryptStorage = EncryptStorage('secret_key',{
+  ...,
+  stateManagementUse: true,
+});
+
+...
+
+Amplify.configure({
+  Auth: {
+    ...,
+    storage: encryptStorage,
+  },
+});
+```
 ## Usage
 
 The usage follows the premise that encryptStorage has been "instantiated" in another file. In the example, the utils folder is used and JS imports.
