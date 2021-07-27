@@ -2395,9 +2395,9 @@ getpass@^0.1.1:
     assert-plus "^1.0.0"
 
 git-commit-msg-linter@^3.0.0:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/git-commit-msg-linter/-/git-commit-msg-linter-3.0.4.tgz#30e2ce5030a96ee17b4a02f30c03e076e1c05fb7"
-  integrity sha512-esIuO3+/oWm1Gv6IbU7A5rhQ2hQzyIcKXgjg6QAwXpotkqNHqmrAU1AO9XMh3QnCuBFA2E+RCJnNBRp327uPdQ==
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/git-commit-msg-linter/-/git-commit-msg-linter-3.2.6.tgz#e2894fc21d3b69635433e1c5b161e25e6b6068d1"
+  integrity sha512-u9LolsJjHFLm12FWCnZhrhMJmHzDBP4Uz31F+OLpTSGvZW9ms6/+0hscJA9nisFU0HK0tJJ991ISomc5ajoO6A==
   dependencies:
     chalk "^2.4.2"
     did-you-mean "^0.0.1"
