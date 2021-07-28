@@ -115,7 +115,7 @@ export function EncryptStorage(
     },
     getItem(key: string): string | any | undefined {
       const storageKey = prefix ? `${prefix}:${key}` : key;
-      const item = storage.getItem(storageKey as string);
+      const item = storage.getItem(storageKey);
 
       if (item) {
         const decryptedValue = AES.decrypt(item, secretKey).toString(enc.Utf8);
@@ -134,7 +134,8 @@ export function EncryptStorage(
       return undefined;
     },
     removeItem(key: string): void {
-      storage.removeItem(key as string);
+      const storageKey = prefix ? `${prefix}:${key}` : key;
+      storage.removeItem(storageKey);
     },
 
     removeItemFromPattern(pattern: string): void {
