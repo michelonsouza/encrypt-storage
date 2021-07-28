@@ -143,7 +143,7 @@ export function EncryptStorage(
       const filteredKeys = storageKeys.filter(key => key.includes(pattern));
 
       filteredKeys.forEach(key => {
-        this.removeItem(key);
+        storage.removeItem(key);
       });
     },
     clear(): void {
