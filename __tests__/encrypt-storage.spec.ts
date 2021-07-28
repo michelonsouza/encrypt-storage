@@ -20,7 +20,7 @@ const makeSut = (
     prefix,
     storageType,
     stateManagementUse,
-    secretKey = faker.random.uuid(),
+    secretKey = faker.datatype.uuid(),
   } = params;
   return EncryptStorage(secretKey, { prefix, storageType, stateManagementUse });
 };
