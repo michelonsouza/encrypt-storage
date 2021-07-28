@@ -88,6 +88,17 @@ describe('SafeStorage', () => {
     expect(localStorage.removeItem).toHaveBeenCalledWith(key);
   });
 
+  it('should calls localStorage.removeItem with correct prefix and key', () => {
+    const prefix = faker.random.word();
+    const safeStorage = makeSut({ prefix });
+    const key = faker.random.word();
+    const composedKey = `${prefix}:${key}`;
+
+    safeStorage.removeItem(key);
+
+    expect(localStorage.removeItem).toHaveBeenCalledWith(composedKey);
+  });
+
   it('should calls localStorage.removeItemFromPattern remove all items with this pattern', () => {
     const safeStorage = makeSut();
     const pattern = faker.random.alphaNumeric(8);
