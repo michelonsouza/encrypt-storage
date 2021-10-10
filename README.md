@@ -93,6 +93,7 @@ Create a `file` containing the `EncryptStorage` instance in a `utils` folder or 
 ### Parameters
 
 *secretKey*: **required** = A string containing at least 10 characters;
+
 **NOTE**: If you are using a `SPA` model (vue, react or angular) prefer to store this information in your application's `.env` file.
 
 *options*: **optional** = An object as described above and which will be shown below;
@@ -131,6 +132,8 @@ export const encryptStorage = new EncryptStorage('secret-key', {
 ```
 
 #### *storageType*
+
+**NOTE**: This property is also required for completely identical use to the browser's native. Thus, it will not have the native library behavior when parsing data to javascript objects or type casting such as 'true' being a boolean, '2' being a number, etc.
 
 default `localStorage` - is the type of storage that will be used, at the moment only `localStorage` and `sessionStorage` are allowed:
 
