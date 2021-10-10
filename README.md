@@ -23,7 +23,7 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
       - [*storageType*](#storagetype)
       - [*stateManagementUse*](#statemanagementuse)
       - [*encAlgorithm*](#encalgorithm)
-    - [Functions](#functions)
+    - [Methods](#methods)
       - [*setItem*](#setitem)
       - [*getItem*](#getitem)
       - [*removeItem*](#removeitem)
@@ -169,7 +169,7 @@ export const encryptStorage = new EncryptStorage('secret-key', {
 });
 ```
 
-### Functions
+### Methods
 
 From here, we will have the following code as the EncryptStorage instance model:
 
