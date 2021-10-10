@@ -151,7 +151,7 @@ export class EncryptStorage implements EncryptStorageTypes {
     this.storage.setItem(storageKey, encryptedValue);
   }
 
-  public getItem<T = string>(key: string): T | undefined {
+  public getItem<T = any>(key: string): T | undefined {
     const storageKey = this.getKey(key);
     const item = this.storage.getItem(storageKey);
 
