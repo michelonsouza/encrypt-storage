@@ -5,7 +5,6 @@ export interface EncryptStorageOptions {
   prefix?: string;
   stateManagementUse?: boolean;
   storageType?: 'localStorage' | 'sessionStorage';
-  isAsync?: boolean;
   encAlgorithm?: EncAlgorithm;
 }
 
@@ -196,7 +195,11 @@ export class EncryptStorage implements EncryptStorageTypes {
     }
 
     const value = keys.reduce((accumulator: Record<string, any>, key) => {
-      accumulator[key] = this.getItem(key);
+      const formattedKey = this.prefix
+        ? key.replace(`${this.prefix}:`, '')
+        : key;
+
+      accumulator[formattedKey] = this.getItem(formattedKey);
 
       return accumulator;
     }, {});

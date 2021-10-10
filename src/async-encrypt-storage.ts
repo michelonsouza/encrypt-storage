@@ -19,7 +19,8 @@ export class AsyncEncryptStorage {
 
   public async getItem<T = any>(key: string): Promise<T | string | undefined> {
     return new Promise(resolve => {
-      resolve(this.encryptStorage.getItem(key));
+      const storageValue = this.encryptStorage.getItem(key);
+      resolve(storageValue);
     });
   }
 
@@ -33,7 +34,8 @@ export class AsyncEncryptStorage {
     pattern: string,
   ): Promise<Record<string, any> | undefined> {
     return new Promise(resolve => {
-      resolve(this.encryptStorage.getItemFromPattern(pattern));
+      const storageValues = this.encryptStorage.getItemFromPattern(pattern);
+      resolve(storageValues);
     });
   }
 
@@ -57,13 +59,15 @@ export class AsyncEncryptStorage {
 
   public async encryptString(str: string): Promise<string> {
     return new Promise(resolve => {
-      resolve(this.encryptStorage.encryptString(str));
+      const encryptedValue = this.encryptStorage.encryptString(str);
+      resolve(encryptedValue);
     });
   }
 
   public async decryptString(str: string): Promise<string> {
     return new Promise(resolve => {
-      resolve(this.encryptStorage.decryptString(str));
+      const decryptedValue = this.encryptStorage.decryptString(str);
+      resolve(decryptedValue);
     });
   }
 }

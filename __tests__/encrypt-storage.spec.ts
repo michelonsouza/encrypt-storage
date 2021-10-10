@@ -127,6 +127,30 @@ describe('EncryptStorage', () => {
     expect(storagedValue).toEqual(mockedValue);
   });
 
+  it('should calls localStorage.getItem for all items with this pattern and remove prefix key', () => {
+    const prefix = faker.random.word();
+    const safeStorage = makeSut({
+      prefix,
+    });
+    const pattern = faker.random.alphaNumeric(8);
+    const userKey = `${pattern}:user`;
+    const itemKey = `${pattern}:item`;
+
+    const mockedValue = {
+      [userKey]: { id: faker.datatype.number(1000) },
+      [itemKey]: { id: faker.datatype.number(1000) },
+    };
+
+    safeStorage.setItem(userKey, mockedValue[userKey]);
+    safeStorage.setItem(itemKey, mockedValue[itemKey]);
+
+    const storagedValue = safeStorage.getItemFromPattern(pattern);
+
+    expect(localStorage.getItem).toHaveBeenCalledWith(`${prefix}:${userKey}`);
+    expect(localStorage.getItem).toHaveBeenCalledWith(`${prefix}:${itemKey}`);
+    expect(storagedValue).toEqual(mockedValue);
+  });
+
   it('should calls localStorage.getItem with getItemFromPattern returns undefined', () => {
     const safeStorage = makeSut();
     const pattern = faker.random.alphaNumeric(8);
