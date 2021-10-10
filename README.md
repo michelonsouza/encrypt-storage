@@ -73,7 +73,7 @@ The `options` object is optional and consists of the following properties:
 |prefix             |`string`                                   |`''`           |
 |storageType        |`localStorage` or `sessionStorage`         |`localStorage` |
 |stateManagementUse |`boolean`                                  |`false`        |
-|encAlgorithm       |`AES | Rabbit | RC4 | RC4Drop`             |`AES`          |
+|encAlgorithm       |`AES` \| `Rabbit` \| `RC4` \| `RC4Drop`    |`AES`          |
 
 ## Usage
 
