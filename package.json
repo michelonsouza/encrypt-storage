@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "2.0.12",
+  "version": "2.0.2",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -41,7 +41,11 @@
     "encrypt cognito localStorage",
     "encrypt react localStorage",
     "encrypt vue localStorage",
-    "encrypt angular localStorage"
+    "encrypt angular localStorage",
+    "vuex-persist",
+    "redux-persist",
+    "persistors",
+    "state management persist"
   ],
   "author": {
     "email": "michelon.souza@gmail.com",
