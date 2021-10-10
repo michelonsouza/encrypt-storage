@@ -1,4 +1,4 @@
-# Encrypt Storage
+# Encrypt Storage `V1`
 ![npm](https://img.shields.io/npm/dm/encrypt-storage) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/master)](https://github.com/michelonsouza/encrypt-storage/blob/master/package.json) [![Build Status](https://travis-ci.com/michelonsouza/encrypt-storage.svg?branch=master)](https://travis-ci.com/michelonsouza/encrypt-storage) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage)
 
 The `Encrypt Storage` is a `wrapper` for native `Storage` of browser.
@@ -9,7 +9,7 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
 
 ## Table of Contents
 
-- [Encrypt Storage](#encrypt-storage)
+- [Encrypt Storage `V1`](#encrypt-storage-v1)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Installing](#installing)

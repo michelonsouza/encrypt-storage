@@ -9,7 +9,37 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
 
 > NOTE: Nothing on the front end is entirely secure. The library's proposal is to make it difficult for the user to see the data through the console, but as the secret key is on the front end, if the user searches hard enough, he will end up finding it. Just to make it clear that nothing is completely secure on the front end. Thank you for your attention.
 
-[TOC]
+- [Encrypt Storage](#encrypt-storage)
+  - [Features](#features)
+  - [Installing](#installing)
+  - [Options](#options)
+  - [Usage](#usage)
+    - [Conventions](#conventions)
+    - [Parameters](#parameters)
+    - [CommonJS](#commonjs)
+    - [JS Import (ES6+)](#js-import-es6)
+    - [Options implementation](#options-implementation)
+      - [*prefix*](#prefix)
+      - [*storageType*](#storagetype)
+      - [*stateManagementUse*](#statemanagementuse)
+      - [*encAlgorithm*](#encalgorithm)
+    - [Functions](#functions)
+      - [*setItem*](#setitem)
+      - [*getItem*](#getitem)
+      - [*removeItem*](#removeitem)
+      - [*getItemFromPattern*](#getitemfrompattern)
+      - [*removeItemFromPattern*](#removeitemfrompattern)
+      - [*key*](#key)
+      - [*length*](#length)
+      - [*clear*](#clear)
+      - [*encryptString*](#encryptstring)
+      - [*decryptString*](#decryptstring)
+    - [AsyncEncryptStorage](#asyncencryptstorage)
+    - [AWS Amplify](#aws-amplify)
+    - [State Management Persisters](#state-management-persisters)
+      - [*vuex-persist*](#vuex-persist)
+      - [*redux-persist*](#redux-persist)
+- [License](#license)
 
 ## Features
   - Save encrypted data in `localStorage` and `sessionStorage`
