@@ -104,10 +104,8 @@ export interface EncryptStorageTypes extends Storage {
  * @param {EncrytStorageOptions} options - A optional settings to set encryptData or select `sessionStorage` to browser storage
  */
 
-const KsecretKey = Symbol('secretKey');
+const secret = new WeakMap();
 export class EncryptStorage implements EncryptStorageTypes {
-  [KsecretKey]: string;
-
   private readonly encriptation: Encryptation;
 
   private readonly storage: Storage;
@@ -121,7 +119,8 @@ export class EncryptStorage implements EncryptStorageTypes {
       throw new InvalidSecretKeyError();
     }
 
-    this[KsecretKey] = secretKey.split('-').reverse().join('-');
+    secret.set(this, secretKey.split('-').reverse().join('-'));
+
     this.storage = window[options?.storageType || 'localStorage'];
     this.prefix = options?.prefix || '';
     this.stateManagementUse = options?.stateManagementUse || false;
@@ -132,7 +131,7 @@ export class EncryptStorage implements EncryptStorageTypes {
   }
 
   private getSecret(): string {
-    return this[KsecretKey].split('-').reverse().join('-');
+    return secret.get(this);
   }
 
   private getKey(key: string): string {
@@ -152,7 +151,7 @@ export class EncryptStorage implements EncryptStorageTypes {
     this.storage.setItem(storageKey, encryptedValue);
   }
 
-  public getItem<T = any>(key: string): T | string | undefined {
+  public getItem<T = string>(key: string): T | undefined {
     const storageKey = this.getKey(key);
     const item = this.storage.getItem(storageKey);
 
@@ -160,13 +159,13 @@ export class EncryptStorage implements EncryptStorageTypes {
       const decryptedValue = this.encriptation.decrypt(item);
 
       if (this.stateManagementUse) {
-        return decryptedValue;
+        return decryptedValue as unknown as T;
       }
 
       try {
         return JSON.parse(decryptedValue) as T;
       } catch (error) {
-        return decryptedValue;
+        return decryptedValue as unknown as T;
       }
     }
 
