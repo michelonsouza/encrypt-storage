@@ -1,9 +1,10 @@
 name: npm published
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  branches:
+    - master
+  release:
+    types: [created]
 
 jobs:
   build:
