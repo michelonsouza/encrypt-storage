@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches:
+      only:
+        - master
+  pull_requests:
+    branches:
+      only:
+        - master
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Unit tests
+        uses: actions/setup-node@v2
+        with:
+          - node-version: '14.x'
+      - run: npm i -g yarn
+      - run: yarn
+      - run: eslint 'src/**'
+      - run: npm run test:coveralls
+
