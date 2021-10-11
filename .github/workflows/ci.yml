@@ -33,4 +33,4 @@ jobs:
       env:
         NODE_COVERALLS_DEBUG: 1
       with:
-        github-token: ${{ secrets.REPO_TOKEN }}
+        github-token: ${{ github.token }}
