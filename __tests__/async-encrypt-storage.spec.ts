@@ -19,7 +19,7 @@ const makeSut = (
     stateManagementUse,
     noOptions,
     encAlgorithm,
-    secretKey = faker.datatype.uuid(),
+    secretKey = faker.random.alphaNumeric(10),
   } = params;
   const options = noOptions
     ? undefined

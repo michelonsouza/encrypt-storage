@@ -97,14 +97,13 @@ export interface EncryptStorageTypes extends Storage {
   decryptString(key: string): string;
 }
 
+const secret = new WeakMap();
 /**
  * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
  *
  * @param {string} secretKey - A secret to encrypt data must be contain min of 10 characters
  * @param {EncrytStorageOptions} options - A optional settings to set encryptData or select `sessionStorage` to browser storage
  */
-
-const secret = new WeakMap();
 export class EncryptStorage implements EncryptStorageTypes {
   private readonly encriptation: Encryptation;
 
