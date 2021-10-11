@@ -1,10 +1,10 @@
 {
   "name": "encrypt-storage",
-  "version": "2.1.15",
+  "version": "2.1.16",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "homepage": "https://github.com/michelonsouza/encrypt-storage",
+  "homepage": "https://github.com/michelonsouza/encrypt-storage#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/michelonsouza/encrypt-storage.git"
@@ -53,7 +53,7 @@
   "author": {
     "email": "michelon.souza@gmail.com",
     "name": "Michelon Souza",
-    "url": "https://github.com/michelonsouza/encrypt-storage"
+    "url": "https://github.com/michelonsouza"
   },
   "license": "MIT",
   "devDependencies": {
