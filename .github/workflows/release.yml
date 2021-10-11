@@ -1,0 +1,30 @@
+name: Publish Package
+
+on:
+  push:
+    branches: [ master ]
+    tags:
+      - '*'
+
+jobs:
+  release:
+    name: Publish Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Check package version
+        uses: technote-space/package-version-check-action@v1
+        with:
+          COMMIT_DISABLED: 1
+
+      - name: Install Package dependencies
+        run: yarn install
+      - name: Build
+        run: yarn build:minified
+      - name: Publish
+        run: |
+          npm config set //registry.npmjs.org/:_authToken=$NPM_PUBLISH_TOKEN
+          npm publish
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
