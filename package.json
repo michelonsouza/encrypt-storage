@@ -13,6 +13,7 @@
     "clean": "shx rm -rf _bundles lib lib-esm",
     "build": "tsc --declaration",
     "build:minified": "webpack",
+    "lint": "eslint 'src/**'",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "yarn test -- --watch",
     "test:staged": "yarn test -- --find-relatedTests",

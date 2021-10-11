@@ -24,7 +24,6 @@ jobs:
 
     - name: Test
       run: |
-        npm install -g yarn
         yarn install
-        eslint 'src/**'
+        yarn lint
         yarn test:coveralls
