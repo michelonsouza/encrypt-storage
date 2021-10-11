@@ -18,6 +18,7 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
     - [Parameters](#parameters)
     - [CommonJS](#commonjs)
     - [JS Import (ES6+)](#js-import-es6)
+    - [Multiple instances](#multiple-instances)
     - [Options implementation](#options-implementation)
       - [*prefix*](#prefix)
       - [*storageType*](#storagetype)
@@ -116,6 +117,32 @@ import { EncryptStorage } from 'encrypt-storage';
 
 export const encryptStorage = new EncryptStorage('secret-key', options);
 ```
+
+### Multiple instances
+
+To use `multiple instances`, it is `strictly necessary` to pass the `prefix` to `all` of them. As shown below:
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+
+export const encryptStorage1 = new EncryptStorage('secret-key', {
+  prefix: '@instance1',
+});
+
+export const encryptStorage2 = new EncryptStorage('secret-key', {
+  prefix: '@instance2',
+});
+
+encryptStorage1.setItem('any-key', 'any-value');
+encryptStorage2.setItem('any-key', 'any-value');
+```
+
+in your `storage`:
+
+|Key                   |Value                                      |
+|----------------------|-------------------------------------------|
+|`@instance1:any-key`  |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
+|`@instance2:any-key`  |`U2FsdGVkX1/w4QaIcyq5521ZXB5pqw2KEwOH+`... |
 
 ### Options implementation
 

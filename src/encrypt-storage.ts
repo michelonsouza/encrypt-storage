@@ -179,7 +179,13 @@ export class EncryptStorage implements EncryptStorageTypes {
 
   public removeItemFromPattern(pattern: string): void {
     const storageKeys = Object.keys(this.storage);
-    const filteredKeys = storageKeys.filter(key => key.includes(pattern));
+    const filteredKeys = storageKeys.filter(key => {
+      if (this.prefix) {
+        return key.includes(pattern) && key.includes(this.prefix);
+      }
+
+      return key.includes(pattern);
+    });
 
     filteredKeys.forEach(key => {
       this.storage.removeItem(key);
@@ -187,7 +193,13 @@ export class EncryptStorage implements EncryptStorageTypes {
   }
 
   public getItemFromPattern(pattern: string): Record<string, any> | undefined {
-    const keys = Object.keys(this.storage).filter(key => key.includes(pattern));
+    const keys = Object.keys(this.storage).filter(key => {
+      if (this.prefix) {
+        return key.includes(pattern) && key.includes(this.prefix);
+      }
+
+      return key.includes(pattern);
+    });
 
     if (!keys.length) {
       return undefined;

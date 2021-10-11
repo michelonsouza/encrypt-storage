@@ -175,6 +175,28 @@ describe('EncryptStorage', () => {
     expect(localStorage.removeItem).toHaveBeenCalledWith(itemKey);
   });
 
+  it('should calls localStorage.removeItem for all items with this pattern and prefix', () => {
+    const prefix = faker.random.word();
+    const safeStorage = makeSut({
+      prefix,
+    });
+    const pattern = faker.random.alphaNumeric(8);
+    const userKey = `${pattern}:user`;
+    const itemKey = `${pattern}:item`;
+
+    safeStorage.setItem(userKey, { id: 123 });
+    safeStorage.setItem(itemKey, { id: 456 });
+
+    safeStorage.removeItemFromPattern(pattern);
+
+    expect(localStorage.removeItem).toHaveBeenCalledWith(
+      `${prefix}:${userKey}`,
+    );
+    expect(localStorage.removeItem).toHaveBeenCalledWith(
+      `${prefix}:${itemKey}`,
+    );
+  });
+
   it('should calls localStorage.clear', () => {
     const safeStorage = makeSut();
     const key1 = faker.random.word();
