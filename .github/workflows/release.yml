@@ -1,8 +1,9 @@
 name: npm published
 
 on:
-  branches:
-    - master
+  push:
+    branches:
+      - master
   release:
     types: [created]
 
