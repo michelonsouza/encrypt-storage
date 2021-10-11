@@ -20,16 +20,14 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
-        repo-token: ${{ github.token }}
-        repository: ${{ github.repository }}
         node-version: ${{ matrix.node-version }}
-        GITHUB_TOKEN: ${{ github.token }}
 
     - name: Test
       run: |
         yarn install
         yarn lint
         yarn test:coveralls
+
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
