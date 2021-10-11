@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [14.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -30,5 +30,7 @@ jobs:
 
     - name: Coveralls
       uses: coverallsapp/github-action@master
+      env:
+        NODE_COVERALLS_DEBUG: 1
       with:
         github-token: ${{ secrets.REPO_TOKEN }}
