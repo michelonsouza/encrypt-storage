@@ -27,7 +27,7 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "./README.MD", to: "README.MD" },
+        { from: "./README.md", to: "README.md" },
         { from: "./LICENSE", to: "LICENSE.txt" },
       ],
     }),
