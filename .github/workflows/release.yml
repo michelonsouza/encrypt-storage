@@ -1,8 +1,8 @@
-name: npm publish
+name: npm published
 
 on:
-  release:
-    types: [created]
+  tags:
+    - 'v*.*.*'
 
 jobs:
   build:
