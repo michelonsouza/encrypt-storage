@@ -1,10 +1,10 @@
-name: CI
+name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
-      - run: npm i -g yarn
+        run: npm i -g yarn
       - run: yarn install
       - run: eslint 'src/**'
       - run: yarn test:coveralls
