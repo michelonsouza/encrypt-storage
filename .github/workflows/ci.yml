@@ -30,7 +30,7 @@ jobs:
         yarn install
         yarn lint
         yarn test:coveralls
-    - name: Coveralls Github Actions
-      uses: coverallsapp/github-action@v1.1.2
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
       with:
-        github-token: ${{ github.token }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
