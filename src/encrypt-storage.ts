@@ -119,7 +119,7 @@ export class EncryptStorage implements EncryptStorageTypes {
       throw new InvalidSecretKeyError();
     }
 
-    secret.set(this, secretKey.split('-').reverse().join('-'));
+    secret.set(this, secretKey.split('').reverse().join());
 
     this.storage = window[options?.storageType || 'localStorage'];
     this.prefix = options?.prefix || '';
@@ -131,7 +131,8 @@ export class EncryptStorage implements EncryptStorageTypes {
   }
 
   private getSecret(): string {
-    return secret.get(this);
+    const secretKey: string = secret.get(this);
+    return secretKey.split('').reverse().join('');
   }
 
   private getKey(key: string): string {
