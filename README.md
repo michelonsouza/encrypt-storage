@@ -1,5 +1,5 @@
 # Encrypt Storage
-![npm](https://img.shields.io/npm/dm/encrypt-storage) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/master)](https://github.com/michelonsouza/encrypt-storage/blob/master/package.json) [![Build Status](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI)](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/master/LICENSE) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml)
+[![npm](https://img.shields.io/npm/dm/encrypt-storage)](https://www.npmjs.com/package/encrypt-storage) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/master)](https://github.com/michelonsouza/encrypt-storage/blob/master/package.json) [![Build Status](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI)](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/master/LICENSE) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml)
 
 OBS: This is the new version of Encrypt Storage, it has braking changes that will not be described below. For version `1.3.X` documentation, access this [link](./docs/README_V1.md).
 
@@ -246,6 +246,7 @@ in your `storage`:
 |------------------|-------------------------------------------|
 |`@example:token`  |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
 
+
 ```typescript
 encryptStorage.removeItem('token');
 ```
@@ -267,6 +268,7 @@ in your `storage`:
 |`@example:fruit:grape`         |`U2FsdGVkX1/yq5521ZXB5pqw`                 |
 |`@example:vegetable:lettuce`   |`U2FsdGVkX1/tT67hnb*\afcb`                 |
 |`@example:token`               |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
+
 
 ```typescript
 const values = encryptStorage.getItemFromPattern('fruit');
@@ -292,6 +294,7 @@ in your `storage`:
 |`@example:vegetable:lettuce`   |`U2FsdGVkX1/tT67hnb*\afcb`                 |
 |`@example:token`               |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
 
+
 ```typescript
 encryptStorage.removeItemFromPattern('fruit');
 ```
@@ -312,6 +315,7 @@ in your `storage`:
 |-------------------------------|-------------------------------------------|
 |`@example:vegetable:lettuce`   |`U2FsdGVkX1/tT67hnb*\afcb`                 |
 |`@example:token`               |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
+
 
 ```typescript
 const key = encryptStorage.key(0);
@@ -350,6 +354,7 @@ in your `storage`:
 |-------------------------------|-------------------------------------------|
 |`@example:vegetable:lettuce`   |`U2FsdGVkX1/tT67hnb*\afcb`                 |
 |`@example:token`               |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
+
 
 ```typescript
 encryptStorage.clear();
