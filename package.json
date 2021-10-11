@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,6 +34,8 @@
     "encrypt persist",
     "lgpd",
     "LGPD",
+    "GDPR",
+    "gdpr",
     "aws-amplify",
     "encrypt amplify localStorage",
     "amplify",
