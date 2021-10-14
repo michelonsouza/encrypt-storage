@@ -8,6 +8,14 @@ export interface EncryptStorageOptions {
   encAlgorithm?: EncAlgorithm;
 }
 
+export interface RemoveFromPatternOptions {
+  exact?: boolean;
+}
+
+export interface GetFromPatternOptions extends RemoveFromPatternOptions {
+  multiple?: boolean;
+}
+
 export interface EncryptStorageTypes extends Storage {
   /**
    * `setItem` - Is the function to be set `safeItem` in `selected storage`
@@ -51,7 +59,10 @@ export interface EncryptStorageTypes extends Storage {
    *    // another itemKey = '12345678:item'
    * 		getItemFromPattern('12345678') -> {'12345678:user': 'value', '12345678:item': 'otherValue'}
    */
-  getItemFromPattern(pattern: string): Record<string, any> | undefined;
+  getItemFromPattern(
+    pattern: string,
+    options?: GetFromPatternOptions,
+  ): Record<string, any> | any | undefined;
 
   /**
    * `removeItemFromPattern` - Is the function to be remove `safeItem` in `selected storage` from `pattern` based
@@ -63,7 +74,10 @@ export interface EncryptStorageTypes extends Storage {
    *    // another itemKey = '12345678:item'
    * 		removeItem('12345678') -> item removed from `selected storage`
    */
-  removeItemFromPattern(pattern: string): void;
+  removeItemFromPattern(
+    pattern: string,
+    options?: RemoveFromPatternOptions,
+  ): void;
 
   /**
    * `clear` - Clear all selected storage
@@ -172,9 +186,17 @@ export class EncryptStorage implements EncryptStorageTypes {
     this.storage.removeItem(storageKey);
   }
 
-  public removeItemFromPattern(pattern: string): void {
+  public removeItemFromPattern(
+    pattern: string,
+    options: RemoveFromPatternOptions = {} as RemoveFromPatternOptions,
+  ): void {
+    const { exact = false } = options;
     const storageKeys = Object.keys(this.storage);
     const filteredKeys = storageKeys.filter(key => {
+      if (exact) {
+        return key === this.getKey(pattern);
+      }
+
       if (this.prefix) {
         return key.includes(pattern) && key.includes(this.prefix);
       }
@@ -187,8 +209,16 @@ export class EncryptStorage implements EncryptStorageTypes {
     });
   }
 
-  public getItemFromPattern(pattern: string): Record<string, any> | undefined {
+  public getItemFromPattern(
+    pattern: string,
+    options: GetFromPatternOptions = {} as GetFromPatternOptions,
+  ): Record<string, any> | undefined {
+    const { multiple = true, exact = false } = options;
     const keys = Object.keys(this.storage).filter(key => {
+      if (exact) {
+        return key === this.getKey(pattern);
+      }
+
       if (this.prefix) {
         return key.includes(pattern) && key.includes(this.prefix);
       }
@@ -198,6 +228,20 @@ export class EncryptStorage implements EncryptStorageTypes {
 
     if (!keys.length) {
       return undefined;
+    }
+
+    if (!multiple) {
+      const [key] = keys;
+
+      if (!key) {
+        return undefined;
+      }
+
+      const formattedKey = this.prefix
+        ? key.replace(`${this.prefix}:`, '')
+        : key;
+
+      return this.getItem(formattedKey);
     }
 
     const value = keys.reduce((accumulator: Record<string, any>, key) => {
