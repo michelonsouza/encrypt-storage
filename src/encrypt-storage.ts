@@ -233,10 +233,6 @@ export class EncryptStorage implements EncryptStorageTypes {
     if (!multiple) {
       const [key] = keys;
 
-      if (!key) {
-        return undefined;
-      }
-
       const formattedKey = this.prefix
         ? key.replace(`${this.prefix}:`, '')
         : key;

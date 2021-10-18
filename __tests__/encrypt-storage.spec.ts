@@ -151,6 +151,63 @@ describe('EncryptStorage', () => {
     expect(storagedValue).toEqual(mockedValue);
   });
 
+  it('should calls localStorage.getItem for item with this exact pattern', () => {
+    const safeStorage = makeSut();
+    const userKey = 'user';
+    const itemKey = 'item';
+
+    const mockedValue = {
+      [userKey]: { id: faker.datatype.number(1000) },
+      [itemKey]: { id: faker.datatype.number(1000) },
+    };
+
+    safeStorage.setItem(userKey, mockedValue[userKey]);
+    safeStorage.setItem(itemKey, mockedValue[itemKey]);
+
+    const storagedValue = safeStorage.getItemFromPattern(itemKey, {
+      exact: true,
+      multiple: false,
+    });
+
+    const notHaveValue = safeStorage.getItemFromPattern(faker.datatype.uuid(), {
+      exact: true,
+      multiple: false,
+    });
+
+    expect(localStorage.getItem).toHaveBeenCalledWith(itemKey);
+    expect(notHaveValue).toBe(undefined);
+    expect(storagedValue).toEqual(mockedValue[itemKey]);
+  });
+  it('should calls localStorage.getItem for item with this pattern and prefix no multiple', () => {
+    const pattern = faker.random.word();
+    const prefix = faker.random.word();
+    const safeStorage = makeSut({
+      prefix,
+    });
+    const userKey = `${pattern}:user`;
+    const itemKey = `${pattern}:item`;
+
+    const mockedValue = {
+      [userKey]: { id: faker.datatype.number(1000) },
+      [itemKey]: { id: faker.datatype.number(1000) },
+    };
+
+    safeStorage.setItem(userKey, mockedValue[userKey]);
+    safeStorage.setItem(itemKey, mockedValue[itemKey]);
+
+    const storagedValue = safeStorage.getItemFromPattern(itemKey, {
+      multiple: false,
+    });
+
+    const notHaveValue = safeStorage.getItemFromPattern(faker.datatype.uuid(), {
+      multiple: false,
+    });
+
+    expect(localStorage.getItem).toHaveBeenCalledWith(`${prefix}:${itemKey}`);
+    expect(notHaveValue).toBe(undefined);
+    expect(storagedValue).toEqual(mockedValue[itemKey]);
+  });
+
   it('should calls localStorage.getItem with getItemFromPattern returns undefined', () => {
     const safeStorage = makeSut();
     const pattern = faker.random.alphaNumeric(8);
@@ -195,6 +252,19 @@ describe('EncryptStorage', () => {
     expect(localStorage.removeItem).toHaveBeenCalledWith(
       `${prefix}:${itemKey}`,
     );
+  });
+
+  it('should calls localStorage.removeItem for all items with this exact pattern', () => {
+    const safeStorage = makeSut();
+    const userKey = 'user';
+    const itemKey = 'item';
+
+    safeStorage.setItem(userKey, { id: 123 });
+    safeStorage.setItem(itemKey, { id: 456 });
+
+    safeStorage.removeItemFromPattern(itemKey, { exact: true });
+
+    expect(localStorage.removeItem).toHaveBeenCalledWith(itemKey);
   });
 
   it('should calls localStorage.clear', () => {
