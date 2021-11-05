@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "yarn test -- --watch",
     "test:staged": "yarn test -- --find-relatedTests",
-    "test:ci": "yarn test -- --coverage",
+    "test:ci": "jest --no-cache --runInBand --coverage",
     "test:coveralls": "yarn test:ci && coveralls < coverage/lcov.info",
     "check": "npx npm-check -u -s"
   },
@@ -86,6 +86,7 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "crypto-js": "^4.1.1"
+    "crypto-js": "^4.1.1",
+    "jest-environment-node": "^27.3.1"
   }
 }
