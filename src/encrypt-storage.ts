@@ -121,7 +121,7 @@ const secret = new WeakMap();
 export class EncryptStorage implements EncryptStorageTypes {
   private readonly encriptation: Encryptation;
 
-  private readonly storage: Storage | undefined;
+  private readonly storage: Storage;
 
   private readonly prefix: string;
 
@@ -134,10 +134,7 @@ export class EncryptStorage implements EncryptStorageTypes {
 
     secret.set(this, secretKey);
 
-    this.storage =
-      typeof window !== 'undefined'
-        ? window[options?.storageType || 'localStorage']
-        : undefined;
+    this.storage = window[options?.storageType || 'localStorage'];
     this.prefix = options?.prefix || '';
     this.stateManagementUse = options?.stateManagementUse || false;
     this.encriptation = getEncriptation(
@@ -151,7 +148,7 @@ export class EncryptStorage implements EncryptStorageTypes {
   }
 
   public get length() {
-    return this.storage?.length || 0;
+    return this.storage.length || 0;
   }
 
   public setItem(key: string, value: any): void {
@@ -160,12 +157,12 @@ export class EncryptStorage implements EncryptStorageTypes {
       typeof value === 'object' ? JSON.stringify(value) : String(value);
     const encryptedValue = this.encriptation.encrypt(valueToString);
 
-    this.storage?.setItem(storageKey, encryptedValue);
+    this.storage.setItem(storageKey, encryptedValue);
   }
 
   public getItem<T = any>(key: string): T | undefined {
     const storageKey = this.getKey(key);
-    const item = this.storage?.getItem(storageKey);
+    const item = this.storage.getItem(storageKey);
 
     if (item) {
       const decryptedValue = this.encriptation.decrypt(item);
@@ -186,7 +183,7 @@ export class EncryptStorage implements EncryptStorageTypes {
 
   public removeItem(key: string): void {
     const storageKey = this.getKey(key);
-    this.storage?.removeItem(storageKey);
+    this.storage.removeItem(storageKey);
   }
 
   public removeItemFromPattern(
@@ -194,7 +191,7 @@ export class EncryptStorage implements EncryptStorageTypes {
     options: RemoveFromPatternOptions = {} as RemoveFromPatternOptions,
   ): void {
     const { exact = false } = options;
-    const storageKeys = Object.keys(this.storage || {});
+    const storageKeys = Object.keys(this.storage);
     const filteredKeys = storageKeys.filter(key => {
       if (exact) {
         return key === this.getKey(pattern);
@@ -207,11 +204,9 @@ export class EncryptStorage implements EncryptStorageTypes {
       return key.includes(pattern);
     });
 
-    if (filteredKeys.length) {
-      filteredKeys.forEach(key => {
-        this.storage && this.storage.removeItem(key);
-      });
-    }
+    filteredKeys.forEach(key => {
+      this.storage.removeItem(key);
+    });
   }
 
   public getItemFromPattern(
@@ -219,7 +214,7 @@ export class EncryptStorage implements EncryptStorageTypes {
     options: GetFromPatternOptions = {} as GetFromPatternOptions,
   ): Record<string, any> | undefined {
     const { multiple = true, exact = false } = options;
-    const keys = Object.keys(this.storage || {}).filter(key => {
+    const keys = Object.keys(this.storage).filter(key => {
       if (exact) {
         return key === this.getKey(pattern);
       }
@@ -259,11 +254,11 @@ export class EncryptStorage implements EncryptStorageTypes {
   }
 
   public clear(): void {
-    this.storage?.clear();
+    this.storage.clear();
   }
 
   public key(index: number): string | null {
-    return this.storage?.key(index) || null;
+    return this.storage.key(index) || null;
   }
 
   public encryptString(str: string): string {
