@@ -17,9 +17,9 @@ export class AsyncEncryptStorage {
     });
   }
 
-  public async getItem<T = any>(key: string): Promise<T | string | undefined> {
+  public async getItem<T = any>(key: string): Promise<T | undefined> {
     return new Promise(resolve => {
-      const storageValue = this.encryptStorage.getItem(key);
+      const storageValue = this.encryptStorage.getItem<T>(key);
       resolve(storageValue);
     });
   }

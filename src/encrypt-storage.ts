@@ -132,15 +132,19 @@ export class EncryptStorage implements EncryptStorageTypes {
       throw new InvalidSecretKeyError();
     }
 
+    const {
+      storageType = 'localStorage',
+      prefix = '',
+      stateManagementUse = false,
+      encAlgorithm = 'AES',
+    } = options || {};
+
     secret.set(this, secretKey);
 
-    this.storage = window[options?.storageType || 'localStorage'];
-    this.prefix = options?.prefix || '';
-    this.stateManagementUse = options?.stateManagementUse || false;
-    this.encriptation = getEncriptation(
-      options?.encAlgorithm || 'AES',
-      secret.get(this),
-    );
+    this.storage = window[storageType];
+    this.prefix = prefix;
+    this.stateManagementUse = stateManagementUse;
+    this.encriptation = getEncriptation(encAlgorithm, secret.get(this));
   }
 
   private getKey(key: string): string {

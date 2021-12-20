@@ -6,17 +6,17 @@ export type Encryptation = {
   decrypt(value: string): string;
 };
 
+const algorithms = {
+  AES,
+  Rabbit,
+  RC4,
+  RC4Drop,
+};
+
 export function getEncriptation(
   encAlgorithm: EncAlgorithm,
   secretKey: string,
 ): Encryptation {
-  const algorithms = {
-    AES,
-    Rabbit,
-    RC4,
-    RC4Drop,
-  };
-
   return {
     encrypt: (value: string): string => {
       return algorithms[encAlgorithm].encrypt(value, secretKey).toString();
