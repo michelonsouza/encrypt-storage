@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -58,7 +58,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
-    "@types/faker": "^6.6.9",
+    "@types/faker": "^5.5.9",
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.24",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
