@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 const {resolve} = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
 
@@ -17,8 +18,18 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
     fallback: {
-      "crypto": require.resolve('crypto-browserify'),
+      "crypto": require.resolve("crypto-browserify"),
+      "stream": require.resolve("stream-browserify"),
+      "assert": require.resolve("assert"),
+      "http": require.resolve("stream-http"),
+      "https": require.resolve("https-browserify"),
+      "os": require.resolve("os-browserify"),
+      "url": require.resolve("url"),
+      "buffer": require.resolve("buffer/")
     },
+    alias: {
+      process: "process/browser",
+    }
   },
   module: {
     rules: [{
@@ -28,6 +39,10 @@ module.exports = {
     }]
   },
   plugins: [
+    new webpack.ProvidePlugin({ 
+      process: 'process/browser', 
+      Buffer: ['buffer', 'Buffer'],
+   }),
     new CopyPlugin({
       patterns: [
         { from: "./README.md", to: "README.md" },
