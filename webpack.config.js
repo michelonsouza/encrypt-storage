@@ -1,6 +1,7 @@
 const webpack = require("webpack");
-const {resolve} = require('path');
+const { resolve } = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 module.exports = {
   mode: 'production',
@@ -11,9 +12,6 @@ module.exports = {
     library: 'encrypt-storage',
     libraryTarget: 'umd',
     umdNamedDefine: true
-  },
-  externals: {
-    'crypto': 'crypto',
   },
   resolve: {
     extensions: ['.ts', '.js'],
@@ -29,6 +27,7 @@ module.exports = {
     },
     alias: {
       process: "process/browser",
+      path: require.resolve("path-browserify"),
     }
   },
   module: {
@@ -39,8 +38,9 @@ module.exports = {
     }]
   },
   plugins: [
-    new webpack.ProvidePlugin({ 
-      process: 'process/browser', 
+    new NodePolyfillPlugin(),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
       Buffer: ['buffer', 'Buffer'],
    }),
     new CopyPlugin({
