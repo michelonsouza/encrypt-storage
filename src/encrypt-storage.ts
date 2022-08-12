@@ -10,13 +10,13 @@ import { getEncriptation } from './utils';
 
 const secret = new WeakMap();
 export class EncryptStorage implements EncryptStorageInterface {
-  private readonly encriptation: Encryptation;
+  readonly #encriptation: Encryptation;
 
   private readonly storage: Storage;
 
-  private readonly prefix: string;
+  readonly #prefix: string;
 
-  private readonly stateManagementUse: boolean;
+  readonly #stateManagementUse: boolean;
 
   /**
    * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
@@ -39,13 +39,13 @@ export class EncryptStorage implements EncryptStorageInterface {
     secret.set(this, secretKey);
 
     this.storage = window[storageType];
-    this.prefix = prefix;
-    this.stateManagementUse = stateManagementUse;
-    this.encriptation = getEncriptation(encAlgorithm, secret.get(this));
+    this.#prefix = prefix;
+    this.#stateManagementUse = stateManagementUse;
+    this.#encriptation = getEncriptation(encAlgorithm, secret.get(this));
   }
 
-  private getKey(key: string): string {
-    return this.prefix ? `${this.prefix}:${key}` : key;
+  #getKey(key: string): string {
+    return this.#prefix ? `${this.#prefix}:${key}` : key;
   }
 
   public get length() {
@@ -53,22 +53,22 @@ export class EncryptStorage implements EncryptStorageInterface {
   }
 
   public setItem(key: string, value: any): void {
-    const storageKey = this.getKey(key);
+    const storageKey = this.#getKey(key);
     const valueToString =
       typeof value === 'object' ? JSON.stringify(value) : String(value);
-    const encryptedValue = this.encriptation.encrypt(valueToString);
+    const encryptedValue = this.#encriptation.encrypt(valueToString);
 
     this.storage.setItem(storageKey, encryptedValue);
   }
 
   public getItem<T = any>(key: string): T | undefined {
-    const storageKey = this.getKey(key);
+    const storageKey = this.#getKey(key);
     const item = this.storage.getItem(storageKey);
 
     if (item) {
-      const decryptedValue = this.encriptation.decrypt(item);
+      const decryptedValue = this.#encriptation.decrypt(item);
 
-      if (this.stateManagementUse) {
+      if (this.#stateManagementUse) {
         return decryptedValue as unknown as T;
       }
 
@@ -83,7 +83,7 @@ export class EncryptStorage implements EncryptStorageInterface {
   }
 
   public removeItem(key: string): void {
-    const storageKey = this.getKey(key);
+    const storageKey = this.#getKey(key);
     this.storage.removeItem(storageKey);
   }
 
@@ -95,11 +95,11 @@ export class EncryptStorage implements EncryptStorageInterface {
     const storageKeys = Object.keys(this.storage);
     const filteredKeys = storageKeys.filter(key => {
       if (exact) {
-        return key === this.getKey(pattern);
+        return key === this.#getKey(pattern);
       }
 
-      if (this.prefix) {
-        return key.includes(pattern) && key.includes(this.prefix);
+      if (this.#prefix) {
+        return key.includes(pattern) && key.includes(this.#prefix);
       }
 
       return key.includes(pattern);
@@ -117,11 +117,11 @@ export class EncryptStorage implements EncryptStorageInterface {
     const { multiple = true, exact = false } = options;
     const keys = Object.keys(this.storage).filter(key => {
       if (exact) {
-        return key === this.getKey(pattern);
+        return key === this.#getKey(pattern);
       }
 
-      if (this.prefix) {
-        return key.includes(pattern) && key.includes(this.prefix);
+      if (this.#prefix) {
+        return key.includes(pattern) && key.includes(this.#prefix);
       }
 
       return key.includes(pattern);
@@ -134,16 +134,16 @@ export class EncryptStorage implements EncryptStorageInterface {
     if (!multiple) {
       const [key] = keys;
 
-      const formattedKey = this.prefix
-        ? key.replace(`${this.prefix}:`, '')
+      const formattedKey = this.#prefix
+        ? key.replace(`${this.#prefix}:`, '')
         : key;
 
       return this.getItem(formattedKey);
     }
 
     const value = keys.reduce((accumulator: Record<string, any>, key) => {
-      const formattedKey = this.prefix
-        ? key.replace(`${this.prefix}:`, '')
+      const formattedKey = this.#prefix
+        ? key.replace(`${this.#prefix}:`, '')
         : key;
 
       accumulator[formattedKey] = this.getItem(formattedKey);
@@ -163,13 +163,13 @@ export class EncryptStorage implements EncryptStorageInterface {
   }
 
   public encryptString(str: string): string {
-    const encryptedValue = this.encriptation.encrypt(str);
+    const encryptedValue = this.#encriptation.encrypt(str);
 
     return encryptedValue;
   }
 
   public decryptString(str: string): string {
-    const decryptedValue = this.encriptation.decrypt(str);
+    const decryptedValue = this.#encriptation.decrypt(str);
 
     return decryptedValue;
   }
