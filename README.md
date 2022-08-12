@@ -1,4 +1,6 @@
-# Encrypt Storage
+<img width="400" style="margin-bottom: 30px;" src="./docs/resources/encrypt-storage-logo.png" />
+
+
 [![npm](https://img.shields.io/npm/dm/encrypt-storage)](https://www.npmjs.com/package/encrypt-storage) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/master)](https://github.com/michelonsouza/encrypt-storage/blob/master/package.json) [![Build Status](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI)](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/master/LICENSE) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml)
 
 OBS: This is the new version of Encrypt Storage, it has braking changes that will not be described below. For version `1.3.X` documentation, access this [link](./docs/README_V1.md).

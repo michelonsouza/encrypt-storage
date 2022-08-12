@@ -131,7 +131,7 @@ export const encryptStorage = EncryptStorage('secret_key', {
 
 in your storage:
 
-![storageKeyValue](./docs/resources/storageKeyValue.png)
+![storageKeyValue](./resources/storage-key-value.png)
 
 ## Global state management persist solutions
 
