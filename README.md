@@ -40,6 +40,7 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
     - [State Management Persisters](#state-management-persisters)
       - [*vuex-persist*](#vuex-persist)
       - [*redux-persist*](#redux-persist)
+      - [*pinia-plugin-persist*](#pinia-plugin-persist)
 - [License](#license)
 
 ## Features
@@ -451,8 +452,6 @@ const vuexLocal = new VuexPersistence<RootState>({
 
 #### *redux-persist*
 
-**NOTE**: In the case of `redux-persist` it is `necessary` to use an `asynchronous` implementation, already provided by `EncryptStorage`.
-
 ```typescript
 // ...
 import { AsyncEncryptStorage } from 'encrypt-storage';
@@ -465,6 +464,32 @@ const persistConfig = {
   whitelist: ['navigation'],
   ...
 };
+```
+
+#### *pinia-plugin-persist*
+
+```typescript
+// ...
+import { encryptStorage } from 'path/to/encryptStorage';
+
+export const useUserStore = defineStore('storeUser', {
+  state () {
+    return {
+      firstName: 'S',
+      lastName: 'L',
+      accessToken: 'xxxxxxxxxxxxx',
+    }
+  },
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        storage: encryptStorage,
+        paths: ['accessToken']
+      },
+    ],
+  },
+})
 ```
 
 # License
