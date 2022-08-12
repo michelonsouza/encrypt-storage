@@ -3,7 +3,8 @@
 import 'jest-localstorage-mock';
 import faker from 'faker';
 
-import { EncryptStorageOptions, AsyncEncryptStorage } from '..';
+import { AsyncEncryptStorage } from '..';
+import { EncryptStorageOptions } from '../types';
 
 import { InvalidSecretKeyError } from '../errors';
 

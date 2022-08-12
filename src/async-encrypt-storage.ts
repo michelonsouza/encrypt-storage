@@ -1,4 +1,5 @@
-import { EncryptStorage, EncryptStorageOptions } from './encrypt-storage';
+import { EncryptStorage } from './encrypt-storage';
+import { EncryptStorageOptions } from './types';
 
 export class AsyncEncryptStorage {
   private encryptStorage: EncryptStorage;

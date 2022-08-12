@@ -1,10 +1,6 @@
 import { AES, Rabbit, RC4, RC4Drop, enc } from 'crypto-js';
 
-export type EncAlgorithm = 'AES' | 'Rabbit' | 'RC4' | 'RC4Drop';
-export type Encryptation = {
-  encrypt(value: string): string;
-  decrypt(value: string): string;
-};
+import { EncAlgorithm, Encryptation } from './types';
 
 const algorithms = {
   AES,
