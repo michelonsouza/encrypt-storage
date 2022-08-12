@@ -22,6 +22,7 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
     - [JS Import (ES6+)](#js-import-es6)
     - [Multiple instances](#multiple-instances)
     - [Options implementation](#options-implementation)
+      - [All Options](#all-options)
       - [*prefix*](#prefix)
       - [*storageType*](#storagetype)
       - [*stateManagementUse*](#statemanagementuse)
@@ -150,6 +151,15 @@ in your `storage`:
 |`@instance2:any-key`  |`U2FsdGVkX1/w4QaIcyq5521ZXB5pqw2KEwOH+`... |
 
 ### Options implementation
+
+#### All Options
+
+|Property name         |Default          |Type                                 |required  |
+|----------------------|-----------------|-------------------------------------|----------|
+|`prefix`              |`''`             |`string`                             |`false`   |
+|`storageType`         |`localStorage`   |[StorageType](./src/types.ts#L3)     |`false`   |
+|`encAlgorithm`        |`AES`            |[EncAlgorithm](./src/types.ts#L1)    |`false`   |
+|`stateManagementUse`  |`false`          |`boolean`                            |`false`   |
 
 #### *prefix*
 
