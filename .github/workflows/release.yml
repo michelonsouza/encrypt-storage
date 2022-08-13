@@ -3,7 +3,7 @@ name: npm published
 on:
   push:
     branches:
-      - master
+      - main
   release:
     types: [created]
 
