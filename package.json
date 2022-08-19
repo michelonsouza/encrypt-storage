@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "2.4.5",
+  "version": "2.4.6",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,7 +11,7 @@
   },
   "engines": {
     "npm": "You must run yarn in this project",
-    "yarn": "1.22.x"
+    "yarn": "^1.22.x"
   },
   "scripts": {
     "clean": "shx rm -rf _bundles lib lib-esm",
