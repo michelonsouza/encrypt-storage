@@ -1,7 +1,7 @@
 <img width="400" style="margin-bottom: 30px;" src="./docs/resources/encrypt-storage-logo.png" />
 
 
-[![npm](https://img.shields.io/npm/dm/encrypt-storage)](https://www.npmjs.com/package/encrypt-storage) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/main)](https://github.com/michelonsouza/encrypt-storage/blob/main/package.json) [![Build Status](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI)](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml)
+[![npm](https://img.shields.io/npm/dm/encrypt-storage)](https://www.npmjs.com/package/encrypt-storage) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/main)](https://github.com/michelonsouza/encrypt-storage/blob/main/package.json#L3) [![Build Status](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI)](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml)
 
 OBS: This is the new version of Encrypt Storage, it has braking changes that will not be described below. For version `1.3.X` documentation, access this [link](./docs/README_V1.md).
 
@@ -22,7 +22,6 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
     - [JS Import (ES6+)](#js-import-es6)
     - [Multiple instances](#multiple-instances)
     - [Options implementation](#options-implementation)
-      - [All Options](#all-options)
       - [*prefix*](#prefix)
       - [*storageType*](#storagetype)
       - [*stateManagementUse*](#statemanagementuse)
@@ -73,12 +72,12 @@ $ yarn add encrypt-storage
 
 The `options` object is optional and consists of the following properties:
 
-|propertie          |type                                       |default        |
-|-------------------|-------------------------------------------|---------------|
-|prefix             |`string`                                   |`''`           |
-|storageType        |`localStorage` or `sessionStorage`         |`localStorage` |
-|stateManagementUse |`boolean`                                  |`false`        |
-|encAlgorithm       |`AES` \| `Rabbit` \| `RC4` \| `RC4Drop`    |`AES`          |
+|Property name         |Default          |Type                                 |required  |
+|----------------------|-----------------|-------------------------------------|----------|
+|`prefix`              |`''`             |`string`                             |`false`   |
+|`storageType`         |`localStorage`   |[StorageType](./src/types.ts#L3)     |`false`   |
+|`encAlgorithm`        |`AES`            |[EncAlgorithm](./src/types.ts#L1)    |`false`   |
+|`stateManagementUse`  |`false`          |`boolean`                            |`false`   |
 
 ## Usage
 
@@ -152,15 +151,6 @@ in your `storage`:
 
 ### Options implementation
 
-#### All Options
-
-|Property name         |Default          |Type                                 |required  |
-|----------------------|-----------------|-------------------------------------|----------|
-|`prefix`              |`''`             |`string`                             |`false`   |
-|`storageType`         |`localStorage`   |[StorageType](./src/types.ts#L3)     |`false`   |
-|`encAlgorithm`        |`AES`            |[EncAlgorithm](./src/types.ts#L1)    |`false`   |
-|`stateManagementUse`  |`false`          |`boolean`                            |`false`   |
-
 #### *prefix*
 
 default `''` - is optional and is the prefix of all keys used in the selected storage as shown below:
@@ -228,13 +218,15 @@ Add `key` and `encrypted` value to selected `storage`.
 
 ```typescript
 encryptStorage.setItem('token', 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2');
+encryptStorage.setItem('token-not-encrypted', 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2', true);
 ```
 
 in your `storage`:
 
-|Key               |Value                                      |
-|------------------|-------------------------------------------|
-|`@example:token`  |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
+|Key                              |Value                                      |
+|---------------------------------|-------------------------------------------|
+|`@example:token`                 |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
+|`@example:token-not-encrypted`   |`edbe38e0-748a-49c8-9f8f-b68f38dbe5a2`     |
 
 #### *getItem*
 Returns the value `decrypted` or `undefined` by the `key` passed by `parameter`. Default type is `any`;
@@ -243,11 +235,13 @@ Returns the value `decrypted` or `undefined` by the `key` passed by `parameter`.
 
 ```typescript
 const value = encryptStorage.getItem<T = any>('token');
+const value2 = encryptStorage.getItem<T = any>('token-not-encrypted', true);
 ```
 
 result of `getItem`:
-```bash
-'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'
+```typescript
+const value = 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'
+const value2 = 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'
 ```
 
 #### *removeItem*

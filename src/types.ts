@@ -32,7 +32,7 @@ export interface EncryptStorageInterface extends Storage {
    * 		setItem('any_key', {key: 'value', another_key: 2})
    * 		setItem('any_key', 'any value')
    */
-  setItem(key: string, value: any): void;
+  setItem(key: string, value: any, doNotEncrypt?: boolean): void;
 
   /**
    * `getItem` - Is the faction to be get `safeItem` in `selected storage`
@@ -43,7 +43,7 @@ export interface EncryptStorageInterface extends Storage {
    * 		getItem('any_key') -> `{key: 'value', another_key: 2}`
    * 		getItem('any_key') -> `'any value'`
    */
-  getItem(key: string): string | any | undefined;
+  getItem(key: string, doNotDecrypt?: boolean): string | any | undefined;
 
   /**
    * `removeItem` - Is the faction to be remove `safeItem` in `selected storage`

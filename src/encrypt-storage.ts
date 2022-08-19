@@ -52,21 +52,25 @@ export class EncryptStorage implements EncryptStorageInterface {
     return this.storage.length || 0;
   }
 
-  public setItem(key: string, value: any): void {
+  public setItem(key: string, value: any, doNotEncrypt?: boolean): void {
     const storageKey = this.#getKey(key);
     const valueToString =
       typeof value === 'object' ? JSON.stringify(value) : String(value);
-    const encryptedValue = this.#encriptation.encrypt(valueToString);
+    const encryptedValue = doNotEncrypt
+      ? valueToString
+      : this.#encriptation.encrypt(valueToString);
 
     this.storage.setItem(storageKey, encryptedValue);
   }
 
-  public getItem<T = any>(key: string): T | undefined {
+  public getItem<T = any>(key: string, doNotDecrypt?: boolean): T | undefined {
     const storageKey = this.#getKey(key);
     const item = this.storage.getItem(storageKey);
 
     if (item) {
-      const decryptedValue = this.#encriptation.decrypt(item);
+      const decryptedValue = doNotDecrypt
+        ? item
+        : this.#encriptation.decrypt(item);
 
       if (this.#stateManagementUse) {
         return decryptedValue as unknown as T;
