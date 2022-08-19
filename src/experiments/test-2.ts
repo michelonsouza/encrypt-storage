@@ -79,6 +79,17 @@ export const test2 = () =>
       expect(storagedDecrypetdValue).toEqual(value);
     });
 
+    it('should localStorage.getItem returns correct value with doNotDecryptValue', async () => {
+      const safeStorage = makeSut();
+      const key = faker.random.word();
+      const value = { value: faker.random.word() };
+
+      await safeStorage.setItem(key, value, true);
+      const storagedDecrypetdValue = await safeStorage.getItem(key, true);
+
+      expect(storagedDecrypetdValue).toEqual(value);
+    });
+
     it('should localStorage.getItem returns correct decrypted value when is a string', async () => {
       const safeStorage = makeSut();
       const key = faker.random.word();

@@ -12,15 +12,22 @@ export class AsyncEncryptStorage {
     return Promise.resolve(this.encryptStorage.length);
   }
 
-  public async setItem(key: string, value: any): Promise<void> {
+  public async setItem(
+    key: string,
+    value: any,
+    dotNotEncrypt?: boolean,
+  ): Promise<void> {
     return new Promise(resolve => {
-      resolve(this.encryptStorage.setItem(key, value));
+      resolve(this.encryptStorage.setItem(key, value, dotNotEncrypt));
     });
   }
 
-  public async getItem<T = any>(key: string): Promise<T | undefined> {
+  public async getItem<T = any>(
+    key: string,
+    doNotDecrypt?: boolean,
+  ): Promise<T | undefined> {
     return new Promise(resolve => {
-      const storageValue = this.encryptStorage.getItem<T>(key);
+      const storageValue = this.encryptStorage.getItem<T>(key, doNotDecrypt);
       resolve(storageValue);
     });
   }
