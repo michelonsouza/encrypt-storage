@@ -12,6 +12,7 @@ export interface EncryptStorageOptions {
   stateManagementUse?: boolean;
   storageType?: StorageType;
   encAlgorithm?: EncAlgorithm;
+  doNotEncryptValues?: boolean;
 }
 
 export interface RemoveFromPatternOptions {
@@ -20,6 +21,7 @@ export interface RemoveFromPatternOptions {
 
 export interface GetFromPatternOptions extends RemoveFromPatternOptions {
   multiple?: boolean;
+  doNotDecrypt?: boolean;
 }
 
 export interface EncryptStorageInterface extends Storage {

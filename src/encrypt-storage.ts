@@ -18,6 +18,8 @@ export class EncryptStorage implements EncryptStorageInterface {
 
   readonly #stateManagementUse: boolean;
 
+  readonly #doNotEncryptValues: boolean;
+
   /**
    * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
    *
@@ -34,6 +36,7 @@ export class EncryptStorage implements EncryptStorageInterface {
       prefix = '',
       stateManagementUse = false,
       encAlgorithm = 'AES',
+      doNotEncryptValues = false,
     } = options || {};
 
     secret.set(this, secretKey);
@@ -41,6 +44,7 @@ export class EncryptStorage implements EncryptStorageInterface {
     this.storage = window[storageType];
     this.#prefix = prefix;
     this.#stateManagementUse = stateManagementUse;
+    this.#doNotEncryptValues = doNotEncryptValues;
     this.#encriptation = getEncriptation(encAlgorithm, secret.get(this));
   }
 
@@ -52,23 +56,25 @@ export class EncryptStorage implements EncryptStorageInterface {
     return this.storage.length || 0;
   }
 
-  public setItem(key: string, value: any, doNotEncrypt?: boolean): void {
+  public setItem(key: string, value: any, doNotEncrypt = false): void {
+    const encryptValues = this.#doNotEncryptValues || doNotEncrypt;
     const storageKey = this.#getKey(key);
     const valueToString =
       typeof value === 'object' ? JSON.stringify(value) : String(value);
-    const encryptedValue = doNotEncrypt
+    const encryptedValue = encryptValues
       ? valueToString
       : this.#encriptation.encrypt(valueToString);
 
     this.storage.setItem(storageKey, encryptedValue);
   }
 
-  public getItem<T = any>(key: string, doNotDecrypt?: boolean): T | undefined {
+  public getItem<T = any>(key: string, doNotDecrypt = false): T | undefined {
+    const decryptValues = this.#doNotEncryptValues || doNotDecrypt;
     const storageKey = this.#getKey(key);
     const item = this.storage.getItem(storageKey);
 
     if (item) {
-      const decryptedValue = doNotDecrypt
+      const decryptedValue = decryptValues
         ? item
         : this.#encriptation.decrypt(item);
 
@@ -118,7 +124,8 @@ export class EncryptStorage implements EncryptStorageInterface {
     pattern: string,
     options: GetFromPatternOptions = {} as GetFromPatternOptions,
   ): Record<string, any> | undefined {
-    const { multiple = true, exact = false } = options;
+    const { multiple = true, exact = false, doNotDecrypt = false } = options;
+    const decryptValues = this.#doNotEncryptValues || doNotDecrypt;
     const keys = Object.keys(this.storage).filter(key => {
       if (exact) {
         return key === this.#getKey(pattern);
@@ -142,7 +149,7 @@ export class EncryptStorage implements EncryptStorageInterface {
         ? key.replace(`${this.#prefix}:`, '')
         : key;
 
-      return this.getItem(formattedKey);
+      return this.getItem(formattedKey, decryptValues);
     }
 
     const value = keys.reduce((accumulator: Record<string, any>, key) => {
