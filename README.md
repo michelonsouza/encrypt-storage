@@ -78,6 +78,7 @@ The `options` object is optional and consists of the following properties:
 |`storageType`         |`localStorage`   |[StorageType](./src/types.ts#L3)     |`false`   |
 |`encAlgorithm`        |`AES`            |[EncAlgorithm](./src/types.ts#L1)    |`false`   |
 |`stateManagementUse`  |`false`          |`boolean`                            |`false`   |
+|`doNotEncryptValues`  |`false`          |`boolean`                            |`false`   |
 
 ## Usage
 
@@ -158,7 +159,7 @@ default `''` - is optional and is the prefix of all keys used in the selected st
 ```typescript
 import { EncryptStorage } from 'encrypt-storage';
 
-export const encryptStorage = new EncryptStorage('secret-key', {
+export const encryptStorage = new EncryptStorage('secret-key-value', {
   prefix: '@example',
 });
 ```
@@ -170,7 +171,7 @@ default `localStorage` - is the type of storage that will be used, at the moment
 ```typescript
 import { EncryptStorage } from 'encrypt-storage';
 
-export const encryptStorage = new EncryptStorage('secret-key', {
+export const encryptStorage = new EncryptStorage('secret-key-value', {
   storageType: 'sessionStorage',
 });
 ```
@@ -184,7 +185,7 @@ default `false` - is a `boolean` value that, when true allows the use of it with
 ```typescript
 import { EncryptStorage } from 'encrypt-storage';
 
-export const encryptStorage = new EncryptStorage('secret-key', {
+export const encryptStorage = new EncryptStorage('secret-key-value', {
   stateManagementUse: true,
 });
 ```
@@ -196,8 +197,20 @@ default `AES` - Is the selected encryption algorithm.:
 ```typescript
 import { EncryptStorage } from 'encrypt-storage';
 
-export const encryptStorage = new EncryptStorage('secret-key', {
+export const encryptStorage = new EncryptStorage('secret-key-value', {
   encAlgorithm: 'Rabbit',
+});
+```
+
+#### *doNotEncryptValues*
+
+default `false` - This option `NOT` encrypt values, but use those options like `prefix` our `multiple-instances`.:
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+
+export const encryptStorage = new EncryptStorage('secret-key-value', {
+  doNotEncryptValues: true,
 });
 ```
 
@@ -208,7 +221,7 @@ From here, we will have the following code as the EncryptStorage instance model:
 ```typescript
 import { EncryptStorage } from 'encrypt-storage';
 
-export const encryptStorage = new EncryptStorage('secret-key', {
+export const encryptStorage = new EncryptStorage('secret-key-value', {
   prefix: '@example',
 });
 ```
@@ -408,7 +421,7 @@ example:
 ```typescript
 import { AsyncEncryptStorage } from 'encrypt-storage';
 
-export const encryptStorage = new AsyncEncryptStorage('secret-key', options);
+export const encryptStorage = new AsyncEncryptStorage('secret-key-value', options);
 
 async function getDecryptedValue('key'): Promise<any | undefined> {
   const value = await encryptStorage.getItem('key');
@@ -423,7 +436,7 @@ In the case of `aws-amplify`, if you want to use the facility of not needing to 
 import Amplify from 'aws-amplify';
 import { EncryptStorage } from 'encrypt-storage';
 
-const encryptStorage = new EncryptStorage('secret_key', {
+const encryptStorage = new EncryptStorage('secret-key-value', {
   ...,
   stateManagementUse: true,
 });
@@ -462,7 +475,7 @@ const vuexLocal = new VuexPersistence<RootState>({
 // ...
 import { AsyncEncryptStorage } from 'encrypt-storage';
 
-export const encryptStorage = new AsyncEncryptStorage('secret-key', options);
+export const encryptStorage = new AsyncEncryptStorage('secret-key-value', options);
 
 const persistConfig = {
   key: 'root',
