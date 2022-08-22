@@ -41,6 +41,10 @@ export const test2 = () =>
       localStorage.clear();
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should enshure localStorage been called', async () => {
       const safeStorage = makeSut();
       const key = faker.random.word();

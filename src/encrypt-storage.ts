@@ -12,7 +12,7 @@ const secret = new WeakMap();
 export class EncryptStorage implements EncryptStorageInterface {
   readonly #encriptation: Encryptation;
 
-  private readonly storage: Storage;
+  private readonly storage: Storage | null;
 
   readonly #prefix: string;
 
@@ -41,7 +41,7 @@ export class EncryptStorage implements EncryptStorageInterface {
 
     secret.set(this, secretKey);
 
-    this.storage = window[storageType];
+    this.storage = typeof window === 'object' ? window[storageType] : null;
     this.#prefix = prefix;
     this.#stateManagementUse = stateManagementUse;
     this.#doNotEncryptValues = doNotEncryptValues;
@@ -53,7 +53,7 @@ export class EncryptStorage implements EncryptStorageInterface {
   }
 
   public get length() {
-    return this.storage.length || 0;
+    return this.storage?.length || 0;
   }
 
   public setItem(key: string, value: any, doNotEncrypt = false): void {
@@ -65,13 +65,13 @@ export class EncryptStorage implements EncryptStorageInterface {
       ? valueToString
       : this.#encriptation.encrypt(valueToString);
 
-    this.storage.setItem(storageKey, encryptedValue);
+    this.storage?.setItem(storageKey, encryptedValue);
   }
 
   public getItem<T = any>(key: string, doNotDecrypt = false): T | undefined {
     const decryptValues = this.#doNotEncryptValues || doNotDecrypt;
     const storageKey = this.#getKey(key);
-    const item = this.storage.getItem(storageKey);
+    const item = this.storage?.getItem(storageKey);
 
     if (item) {
       const decryptedValue = decryptValues
@@ -94,7 +94,7 @@ export class EncryptStorage implements EncryptStorageInterface {
 
   public removeItem(key: string): void {
     const storageKey = this.#getKey(key);
-    this.storage.removeItem(storageKey);
+    this.storage?.removeItem(storageKey);
   }
 
   public removeItemFromPattern(
@@ -102,7 +102,7 @@ export class EncryptStorage implements EncryptStorageInterface {
     options: RemoveFromPatternOptions = {} as RemoveFromPatternOptions,
   ): void {
     const { exact = false } = options;
-    const storageKeys = Object.keys(this.storage);
+    const storageKeys = Object.keys(this.storage || {});
     const filteredKeys = storageKeys.filter(key => {
       if (exact) {
         return key === this.#getKey(pattern);
@@ -116,7 +116,8 @@ export class EncryptStorage implements EncryptStorageInterface {
     });
 
     filteredKeys.forEach(key => {
-      this.storage.removeItem(key);
+      /* istanbul ignore next */
+      this.storage?.removeItem(key);
     });
   }
 
@@ -126,7 +127,7 @@ export class EncryptStorage implements EncryptStorageInterface {
   ): Record<string, any> | undefined {
     const { multiple = true, exact = false, doNotDecrypt = false } = options;
     const decryptValues = this.#doNotEncryptValues || doNotDecrypt;
-    const keys = Object.keys(this.storage).filter(key => {
+    const keys = Object.keys(this.storage || {}).filter(key => {
       if (exact) {
         return key === this.#getKey(pattern);
       }
@@ -166,11 +167,11 @@ export class EncryptStorage implements EncryptStorageInterface {
   }
 
   public clear(): void {
-    this.storage.clear();
+    this.storage?.clear();
   }
 
   public key(index: number): string | null {
-    return this.storage.key(index) || null;
+    return this.storage?.key(index) || null;
   }
 
   public encryptString(str: string): string {
