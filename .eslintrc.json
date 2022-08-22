@@ -22,6 +22,7 @@
     "no-unused-expressions": "off",
     "no-useless-constructor": "off",
     "class-methods-use-this": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
     "import/prefer-default-export": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
