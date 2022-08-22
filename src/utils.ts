@@ -9,7 +9,7 @@ const algorithms = {
   RC4Drop,
 };
 
-export function getEncriptation(
+export function getEncryptation(
   encAlgorithm: EncAlgorithm,
   secretKey: string,
 ): Encryptation {
