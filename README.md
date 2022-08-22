@@ -37,6 +37,8 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
       - [*clear*](#clear)
       - [*encryptString*](#encryptstring)
       - [*decryptString*](#decryptstring)
+      - [*encryptValue*](#encryptvalue)
+      - [*decryptValue*](#decryptvalue)
     - [AsyncEncryptStorage](#asyncencryptstorage)
     - [AWS Amplify](#aws-amplify)
     - [State Management Persisters](#state-management-persisters)
@@ -408,6 +410,42 @@ const value = encryptStorage.decryptString('U2FsdGVkX1/tT67hnb*\afcb');
 result of `decryptString`:
 ```typescript
 const value = 'John Doe';
+```
+
+#### *encryptValue*
+Encrypts a `value` passed by `parameter`.
+
+```typescript
+const value = encryptStorage.encryptValue({
+  id: '123456',
+  name: 'John Doe',
+});
+```
+
+result of `encryptValue`:
+```typescript
+const value = 'U2FsdGVkX1/tT67hnb*\afcb';
+```
+
+#### *decryptValue*
+Decrypts a `string` passed by `parameter`.
+
+```typescript
+// Using typescript
+interface User {
+  id: string;
+  name: string;
+}
+
+const value = encryptStorage.decryptValue<User>('U2FsdGVkX1/tT67hnb*\afcb');
+```
+
+result of `decryptValue`:
+```typescript
+const value = {
+  id: '123456',
+  name: 'John Doe',
+};
 ```
 
 ### AsyncEncryptStorage

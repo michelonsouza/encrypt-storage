@@ -366,11 +366,35 @@ export const test1 = () =>
       expect(result).not.toEqual(value);
     });
 
-    it('should dencrypt string and return decrypted value', () => {
+    it('should encrypt value and return encrypted value', () => {
+      const safeStorage = makeSut();
+      const value = {
+        name: faker.random.word(),
+        id: faker.datatype.uuid(),
+      };
+      const result = safeStorage.encryptValue(value);
+
+      expect(result).not.toEqual(value);
+    });
+
+    it('should decrypt string and return decrypted value', () => {
       const safeStorage = makeSut();
       const value = faker.random.word();
       const encryptedValue = safeStorage.encryptString(value);
       const decryptedValue = safeStorage.decryptString(encryptedValue);
+
+      expect(decryptedValue).toEqual(value);
+    });
+
+    it('should decrypt value and return decrypted value', () => {
+      const safeStorage = makeSut();
+      const value = {
+        name: faker.random.word(),
+        id: faker.datatype.uuid(),
+      };
+      const encryptedValue = safeStorage.encryptValue(value);
+      const decryptedValue =
+        safeStorage.decryptValue<typeof value>(encryptedValue);
 
       expect(decryptedValue).toEqual(value);
     });

@@ -106,7 +106,7 @@ export interface EncryptStorageInterface extends Storage {
    * @usage
    * 		encryptString('any_string') -> 'encrypted value'
    */
-  encryptString(key: string): string;
+  encryptString(str: string): string;
 
   /**
    * `decryptString` - Is the faction to be `decrypt` any string encrypted by `encryptString` and return decrypted value
@@ -116,5 +116,25 @@ export interface EncryptStorageInterface extends Storage {
    * @usage
    * 		decryptString('any_string') -> 'decrypted value'
    */
-  decryptString(key: string): string;
+  decryptString(str: string): string;
+
+  /**
+   * `encryptValue` - Is the function to be `encrypt` any value and return encrypted value
+   * @param {string} value - A `value|object|array` to be encrypted.
+   * @return {string} result
+   * Returns `string`.
+   * @usage
+   * 		encryptString('any_string') -> 'encrypted value'
+   */
+  encryptValue(value: any): string;
+
+  /**
+   * `decryptString` - Is the function to be `decrypt` any value encrypted by `encryptValue` and return decrypted value
+   * @param {string} value - A `value|object|array` to be decrypted.
+   * @return {T|any} result
+   * Returns `string`.
+   * @usage
+   * 		decryptString('any_value') -> '{value: "decrypted value"}'
+   */
+  decryptValue<T = any>(key: string): T;
 }

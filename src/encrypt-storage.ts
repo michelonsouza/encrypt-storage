@@ -6,11 +6,11 @@ import {
   EncryptStorageInterface,
   RemoveFromPatternOptions,
 } from './types';
-import { getEncriptation } from './utils';
+import { getEncryptation } from './utils';
 
 const secret = new WeakMap();
 export class EncryptStorage implements EncryptStorageInterface {
-  readonly #encriptation: Encryptation;
+  readonly #encryptation: Encryptation;
 
   private readonly storage: Storage | null;
 
@@ -45,7 +45,7 @@ export class EncryptStorage implements EncryptStorageInterface {
     this.#prefix = prefix;
     this.#stateManagementUse = stateManagementUse;
     this.#doNotEncryptValues = doNotEncryptValues;
-    this.#encriptation = getEncriptation(encAlgorithm, secret.get(this));
+    this.#encryptation = getEncryptation(encAlgorithm, secret.get(this));
   }
 
   #getKey(key: string): string {
@@ -63,7 +63,7 @@ export class EncryptStorage implements EncryptStorageInterface {
       typeof value === 'object' ? JSON.stringify(value) : String(value);
     const encryptedValue = encryptValues
       ? valueToString
-      : this.#encriptation.encrypt(valueToString);
+      : this.#encryptation.encrypt(valueToString);
 
     this.storage?.setItem(storageKey, encryptedValue);
   }
@@ -76,7 +76,7 @@ export class EncryptStorage implements EncryptStorageInterface {
     if (item) {
       const decryptedValue = decryptValues
         ? item
-        : this.#encriptation.decrypt(item);
+        : this.#encryptation.decrypt(item);
 
       if (this.#stateManagementUse) {
         return decryptedValue as unknown as T;
@@ -175,15 +175,27 @@ export class EncryptStorage implements EncryptStorageInterface {
   }
 
   public encryptString(str: string): string {
-    const encryptedValue = this.#encriptation.encrypt(str);
+    const encryptedValue = this.#encryptation.encrypt(str);
 
     return encryptedValue;
   }
 
   public decryptString(str: string): string {
-    const decryptedValue = this.#encriptation.decrypt(str);
+    const decryptedValue = this.#encryptation.decrypt(str);
 
     return decryptedValue;
+  }
+
+  public encryptValue(value: any): string {
+    const encryptedValue = this.#encryptation.encrypt(JSON.stringify(value));
+
+    return encryptedValue;
+  }
+
+  public decryptValue<T = any>(value: string): T {
+    const decryptedValue = this.#encryptation.decrypt(value);
+
+    return JSON.parse(decryptedValue) as T;
   }
 }
 
