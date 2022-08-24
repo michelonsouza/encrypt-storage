@@ -1,6 +1,7 @@
 import { InvalidSecretKeyError } from './errors';
 import {
   Encryptation,
+  NotifyHandler,
   GetFromPatternOptions,
   EncryptStorageOptions,
   EncryptStorageInterface,
@@ -20,6 +21,8 @@ export class EncryptStorage implements EncryptStorageInterface {
 
   readonly #doNotEncryptValues: boolean;
 
+  readonly #notifyHandler: NotifyHandler | undefined;
+
   /**
    * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
    *
@@ -37,15 +40,17 @@ export class EncryptStorage implements EncryptStorageInterface {
       stateManagementUse = false,
       encAlgorithm = 'AES',
       doNotEncryptValues = false,
+      notifyHandler,
     } = options || {};
 
     secret.set(this, secretKey);
 
-    this.storage = typeof window === 'object' ? window[storageType] : null;
     this.#prefix = prefix;
+    this.#notifyHandler = notifyHandler;
     this.#stateManagementUse = stateManagementUse;
     this.#doNotEncryptValues = doNotEncryptValues;
     this.#encryptation = getEncryptation(encAlgorithm, secret.get(this));
+    this.storage = typeof window === 'object' ? window[storageType] : null;
   }
 
   #getKey(key: string): string {
@@ -53,7 +58,16 @@ export class EncryptStorage implements EncryptStorageInterface {
   }
 
   public get length() {
-    return this.storage?.length || 0;
+    const value = this.storage?.length || 0;
+
+    if (this.#notifyHandler) {
+      this.#notifyHandler({
+        type: 'length',
+        value,
+      });
+    }
+
+    return value;
   }
 
   public setItem(key: string, value: any, doNotEncrypt = false): void {
@@ -66,6 +80,14 @@ export class EncryptStorage implements EncryptStorageInterface {
       : this.#encryptation.encrypt(valueToString);
 
     this.storage?.setItem(storageKey, encryptedValue);
+
+    if (this.#notifyHandler) {
+      this.#notifyHandler({
+        type: 'set',
+        key,
+        value: valueToString,
+      });
+    }
   }
 
   public getItem<T = any>(key: string, doNotDecrypt = false): T | undefined {
@@ -79,14 +101,46 @@ export class EncryptStorage implements EncryptStorageInterface {
         : this.#encryptation.decrypt(item);
 
       if (this.#stateManagementUse) {
+        if (this.#notifyHandler) {
+          this.#notifyHandler({
+            type: 'get',
+            key,
+            value: decryptedValue,
+          });
+        }
         return decryptedValue as unknown as T;
       }
 
       try {
-        return JSON.parse(decryptedValue) as T;
+        const value = JSON.parse(decryptedValue) as T;
+
+        if (this.#notifyHandler) {
+          this.#notifyHandler({
+            type: 'get',
+            key,
+            value,
+          });
+        }
+
+        return value;
       } catch (error) {
+        if (this.#notifyHandler) {
+          this.#notifyHandler({
+            type: 'get',
+            key,
+            value: decryptedValue,
+          });
+        }
         return decryptedValue as unknown as T;
       }
+    }
+
+    if (this.#notifyHandler) {
+      this.#notifyHandler({
+        type: 'get',
+        key,
+        value: undefined,
+      });
     }
 
     return undefined;
@@ -95,6 +149,13 @@ export class EncryptStorage implements EncryptStorageInterface {
   public removeItem(key: string): void {
     const storageKey = this.#getKey(key);
     this.storage?.removeItem(storageKey);
+
+    if (this.#notifyHandler) {
+      this.#notifyHandler({
+        type: 'remove',
+        key,
+      });
+    }
   }
 
   public removeItemFromPattern(
@@ -114,6 +175,16 @@ export class EncryptStorage implements EncryptStorageInterface {
 
       return key.includes(pattern);
     });
+
+    if (this.#notifyHandler) {
+      const keys = filteredKeys.map(key =>
+        this.#prefix ? key.split(`${this.#prefix}:`)[1] : key,
+      );
+      this.#notifyHandler({
+        type: 'remove',
+        key: keys,
+      });
+    }
 
     filteredKeys.forEach(key => {
       /* istanbul ignore next */
@@ -150,6 +221,13 @@ export class EncryptStorage implements EncryptStorageInterface {
         ? key.replace(`${this.#prefix}:`, '')
         : key;
 
+      if (this.#notifyHandler) {
+        this.#notifyHandler({
+          type: 'remove',
+          key: formattedKey,
+        });
+      }
+
       return this.getItem(formattedKey, decryptValues);
     }
 
@@ -163,15 +241,39 @@ export class EncryptStorage implements EncryptStorageInterface {
       return accumulator;
     }, {});
 
+    if (this.#notifyHandler) {
+      this.#notifyHandler({
+        type: 'get',
+        key: keys,
+        value,
+      });
+    }
+
     return value;
   }
 
   public clear(): void {
     this.storage?.clear();
+
+    if (this.#notifyHandler) {
+      this.#notifyHandler({
+        type: 'clear',
+      });
+    }
   }
 
   public key(index: number): string | null {
-    return this.storage?.key(index) || null;
+    const value = this.storage?.key(index) || null;
+
+    if (this.#notifyHandler) {
+      this.#notifyHandler({
+        type: 'key',
+        index,
+        value,
+      });
+    }
+
+    return value;
   }
 
   public encryptString(str: string): string {

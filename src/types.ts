@@ -2,6 +2,17 @@ export type EncAlgorithm = 'AES' | 'Rabbit' | 'RC4' | 'RC4Drop';
 
 type StorageType = 'localStorage' | 'sessionStorage';
 
+type ChangeType = 'set' | 'get' | 'remove' | 'clear' | 'length' | 'key';
+
+export interface NotifyHandlerParams {
+  type: ChangeType;
+  key?: string | string[];
+  value?: any;
+  index?: number;
+}
+
+export type NotifyHandler = (params: NotifyHandlerParams) => void;
+
 export interface Encryptation {
   encrypt(value: string): string;
   decrypt(value: string): string;
@@ -13,6 +24,7 @@ export interface EncryptStorageOptions {
   storageType?: StorageType;
   encAlgorithm?: EncAlgorithm;
   doNotEncryptValues?: boolean;
+  notifyHandler?: NotifyHandler;
 }
 
 export interface RemoveFromPatternOptions {
