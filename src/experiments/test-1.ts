@@ -4,7 +4,7 @@ import 'jest-localstorage-mock';
 import faker from 'faker';
 
 import { EncryptStorage } from '..';
-import { EncryptStorageOptions } from '../types';
+import { EncryptStorageOptions, NotifyHandlerParams } from '../types';
 
 import { InvalidSecretKeyError } from '../errors';
 
@@ -12,6 +12,12 @@ interface makeSutParams extends EncryptStorageOptions {
   secretKey?: string;
   noOptions?: boolean;
 }
+
+const mockNotify = {
+  mockedFn: jest.fn().mockImplementation((params: NotifyHandlerParams) => {
+    return params;
+  }),
+};
 
 export const makeSut = (
   params: makeSutParams = {} as makeSutParams,
@@ -22,6 +28,7 @@ export const makeSut = (
     stateManagementUse,
     noOptions,
     encAlgorithm,
+    notifyHandler = mockNotify.mockedFn,
     secretKey = faker.random.alphaNumeric(10),
   } = params;
   const options = noOptions
@@ -31,6 +38,7 @@ export const makeSut = (
         storageType,
         stateManagementUse,
         encAlgorithm,
+        notifyHandler,
       };
   return new EncryptStorage(secretKey, options);
 };
@@ -66,10 +74,16 @@ export const test1 = () =>
     it('should calls localStorage.getItem with correct key', () => {
       const safeStorage = makeSut();
       const key = faker.random.word();
+      const spy = jest.spyOn(mockNotify, 'mockedFn');
 
-      safeStorage.getItem(key);
+      const result = safeStorage.getItem<string>(key);
 
       expect(localStorage.getItem).toHaveBeenCalledWith(key);
+      expect(spy).toHaveBeenCalledWith({
+        value: result,
+        key,
+        type: 'get',
+      });
     });
 
     it('should localStorage.getItem returns correct decrypted value', () => {

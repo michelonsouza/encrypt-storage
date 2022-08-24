@@ -26,6 +26,7 @@ Using the `crypto-js` library as an encryption engine, it saves the encrypted da
       - [*storageType*](#storagetype)
       - [*stateManagementUse*](#statemanagementuse)
       - [*encAlgorithm*](#encalgorithm)
+      - [*notifyHandler*](#notifyhandler)
     - [Methods](#methods)
       - [*setItem*](#setitem)
       - [*getItem*](#getitem)
@@ -74,13 +75,14 @@ $ yarn add encrypt-storage
 
 The `options` object is optional and consists of the following properties:
 
-|Property name         |Default          |Type                                 |required  |
-|----------------------|-----------------|-------------------------------------|----------|
-|`prefix`              |`''`             |`string`                             |`false`   |
-|`storageType`         |`localStorage`   |[StorageType](./src/types.ts#L3)     |`false`   |
-|`encAlgorithm`        |`AES`            |[EncAlgorithm](./src/types.ts#L1)    |`false`   |
-|`stateManagementUse`  |`false`          |`boolean`                            |`false`   |
-|`doNotEncryptValues`  |`false`          |`boolean`                            |`false`   |
+|Property name           |Default          |Type                                   |required  |
+|------------------------|-----------------|---------------------------------------|----------|
+|`prefix`                |`''`             |`string`                               |`false`   |
+|`storageType`           |`localStorage`   |[StorageType](./src/types.ts#L3)       |`false`   |
+|`encAlgorithm`          |`AES`            |[EncAlgorithm](./src/types.ts#L1)      |`false`   |
+|`notifyHandler`         |`undefined`      |[NotifyHandler](./src/types.ts#L14)    |`false`   |
+|`stateManagementUse`    |`false`          |`boolean`                              |`false`   |
+|`doNotEncryptValues`    |`false`          |`boolean`                              |`false`   |
 
 ## Usage
 
@@ -215,6 +217,33 @@ export const encryptStorage = new EncryptStorage('secret-key-value', {
   doNotEncryptValues: true,
 });
 ```
+
+
+#### *notifyHandler*
+
+default `undefined` - is a `function` that is `called` every time another `EncryptStorage function` is `called`. Good for logging API and monitoring `localStorage/sessionStorage`.:
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+
+export const encryptStorage = new EncryptStorage('secret-key-value', {
+  notifyHandler: (params: NotifyHandlerParams) => console.info({ params }),
+});
+```
+
+console:
+```bash
+{
+  params: {
+    type: 'get'
+    key: 'any-key',
+    value: 'any-value',
+    index: 1,
+  }
+}
+```
+
+**OBS**: Check [NotifyHandlerParams](./src/types.ts#L7) for more information.
 
 ### Methods
 
