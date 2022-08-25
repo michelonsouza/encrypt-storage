@@ -103,7 +103,7 @@
     "husky": "^8.0.1",
     "jest": "^28.1.3",
     "jest-environment-jsdom": "^28.1.3",
-    "jest-environment-node": "^28.1.3",
+    "jest-environment-node": "^29.0.0",
     "jest-localstorage-mock": "^2.4.22",
     "lint-staged": "^13.0.3",
     "node-polyfill-webpack-plugin": "^2.0.1",
