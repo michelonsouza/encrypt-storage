@@ -72,6 +72,15 @@ Or yarn:
 $ yarn add encrypt-storage
 ```
 
+Using `unpkg`
+
+```html
+<body>
+  <!-- ...after other codes -->
+  <script src="https://unpkg.com/encrypt-storage@latest/dist/index.js"></script>
+</body>
+```
+
 ## Options
 
 The `options` object is optional and consists of the following properties:
