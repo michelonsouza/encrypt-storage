@@ -79,3 +79,6 @@ export class AsyncEncryptStorage {
     });
   }
 }
+
+/* istanbul ignore next */
+(window as any).AsyncEncryptStorage = AsyncEncryptStorage;
