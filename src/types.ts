@@ -49,6 +49,24 @@ export interface EncryptStorageInterface extends Storage {
   setItem(key: string, value: any, doNotEncrypt?: boolean): void;
 
   /**
+   * `hash` - Is the function to be `hash` value width SHA256 encryptation
+   * @param {any} value - Value to be `hashed`, the same being a `string`.
+   * @return {string} `hashed string`
+   * @usage
+   * 		hash('any_string')
+   */
+  hash(value: string): string;
+
+  /**
+   * `md5Hash` - Is the function to be `hash` value width MD5 encryptation
+   * @param {any} value - Value to be `hashed`, the same being a `string`.
+   * @return {string} `hashed string`
+   * @usage
+   * 		md5Hash('any_string')
+   */
+  md5Hash(value: string): string;
+
+  /**
    * `getItem` - Is the faction to be get `safeItem` in `selected storage`
    * @param {string} key - Is the key of `data` in `selected storage`.
    * @return {string | any | undefined} - Returns a formatted value when the same is an object or string when not.

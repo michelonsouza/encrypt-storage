@@ -1,4 +1,4 @@
-import { AES, Rabbit, RC4, RC4Drop, enc } from 'crypto-js';
+import { AES, Rabbit, RC4, RC4Drop, enc, SHA256, MD5 } from 'crypto-js';
 
 import { EncAlgorithm, Encryptation } from './types';
 
@@ -23,4 +23,20 @@ export function getEncryptation(
         .toString(enc.Utf8);
     },
   };
+}
+
+export function hashSHA256(value: string, secret: string): string {
+  const hashedValue = SHA256(value, {
+    secret,
+  });
+
+  return hashedValue.toString();
+}
+
+export function hashMD5(value: string, secret: string): string {
+  const hashedValue = MD5(value, {
+    secret,
+  });
+
+  return hashedValue.toString();
 }

@@ -465,4 +465,22 @@ export const test1 = () =>
         expect(error).toBeInstanceOf(InvalidSecretKeyError);
       }
     });
+
+    it('should be hash any string to SHA256 encrypted string', () => {
+      const safeStorage = makeSut();
+      const value = faker.random.words(3);
+
+      const result = safeStorage.hash(value);
+
+      expect(result).not.toEqual(value);
+    });
+
+    it('should be hash any string to MD5 encrypted string', () => {
+      const safeStorage = makeSut();
+      const value = faker.random.words(3);
+
+      const result = safeStorage.md5Hash(value);
+
+      expect(result).not.toEqual(value);
+    });
   });
