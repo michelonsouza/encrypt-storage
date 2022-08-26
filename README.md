@@ -1,6 +1,6 @@
 <img width="400" style="margin-bottom: 30px;" src="./docs/resources/encrypt-storage-logo.png" />
 
-[![npm](https://img.shields.io/npm/dm/encrypt-storage)](https://www.npmjs.com/package/encrypt-storage) ![sponsors](https://img.shields.io/github/sponsors/michelonsouza?logo=github-sponsors) ![package size](https://img.shields.io/bundlephobia/min/encrypt-storage?color=%232ebd4f&label=package%20size&logo=npm) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/main)](https://github.com/michelonsouza/encrypt-storage/blob/main/package.json#L3) [![Build Status](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI)](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![CodeQL](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml)
+[![stargazers count](https://img.shields.io/github/stars/michelonsouza/encrypt-storage?style=social)](https://github.com/michelonsouza/encrypt-storage/stargazers) ![maintenance](https://img.shields.io/npms-io/maintenance-score/encrypt-storage) [![npm](https://img.shields.io/npm/dm/encrypt-storage)](https://www.npmjs.com/package/encrypt-storage) ![sponsors](https://img.shields.io/github/sponsors/michelonsouza?logo=github-sponsors) ![package size](https://img.shields.io/bundlephobia/min/encrypt-storage?color=%232ebd4f&label=package%20size&logo=npm) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/main)](https://github.com/michelonsouza/encrypt-storage/blob/main/package.json#L3) [![Build Status](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI)](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![CodeQL](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml)
 
 OBS: This is the new version of Encrypt Storage, it has braking changes that will not be described below. For version `1.3.X` documentation, access this [link](./docs/README_V1.md).
 
@@ -39,6 +39,8 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
       - [*decryptString*](#decryptstring)
       - [*encryptValue*](#encryptvalue)
       - [*decryptValue*](#decryptvalue)
+      - [*hash*](#hash)
+      - [*md5Hash*](#md5hash)
     - [AsyncEncryptStorage](#asyncencryptstorage)
     - [AWS Amplify](#aws-amplify)
     - [State Management Persisters](#state-management-persisters)
@@ -476,6 +478,30 @@ const value = {
 };
 ```
 
+#### *hash*
+Encrypts a `string` passed by `parameter` with `SHA256` encryptation.
+
+```typescript
+const value = encryptStorage.hash('John Doe');
+```
+
+result of `hashed value`:
+```typescript
+const value = '52bec733f066a11182798f4defec648ea00e374a1cda73111a443b295fd8e028';
+```
+
+#### *md5Hash*
+Encrypts a `string` passed by `parameter` with `MD5` encryptation.
+
+```typescript
+const value = encryptStorage.md5Hash('John Doe');
+```
+
+result of `hashed value`:
+```typescript
+const value = '284e512750fb7d41f1cc5284a2c56a13';
+```
+
 ### AsyncEncryptStorage
 
 EncryptStorage can also be used asynchronously, simply using its corresponding version already exported by the library.
@@ -519,7 +545,7 @@ Amplify.configure({
 
 ### State Management Persisters
 
-This library can be used to encrypt data from `state management persisters` like [vuex-persist](https://www.npmjs.com/package/vuex-persist) and [redux-persist](https://www.npmjs.com/package/redux-persist). Below are their respective implementations:
+This library can be used to encrypt data from `state management persisters` like [vuex-persist](https://www.npmjs.com/package/vuex-persist), [redux-persist](https://www.npmjs.com/package/redux-persist) and [pinia-plugin-persist](https://www.npmjs.com/package/pinia-plugin-persist). Below are their respective implementations:
 
 **NOTE**: the `stateManagementUse` option must be used in the `EncryptStorage` instance to work `correctly`.
 

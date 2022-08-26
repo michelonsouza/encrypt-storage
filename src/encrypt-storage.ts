@@ -7,7 +7,7 @@ import {
   EncryptStorageInterface,
   RemoveFromPatternOptions,
 } from './types';
-import { getEncryptation } from './utils';
+import { getEncryptation, hashSHA256, hashMD5 } from './utils';
 
 const secret = new WeakMap();
 export class EncryptStorage implements EncryptStorageInterface {
@@ -299,6 +299,17 @@ export class EncryptStorage implements EncryptStorageInterface {
 
     return JSON.parse(decryptedValue) as T;
   }
+
+  public hash(value: string): string {
+    return hashSHA256(value, secret.get(this));
+  }
+
+  public md5Hash(value: string): string {
+    return hashMD5(value, secret.get(this));
+  }
 }
+
+/* istanbul ignore next */
+(window as any).EncryptStorage = EncryptStorage;
 
 export default EncryptStorage;
