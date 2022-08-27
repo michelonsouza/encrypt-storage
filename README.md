@@ -78,6 +78,9 @@ Using `unpkg`
 <body>
   <!-- ...after other codes -->
   <script src="https://unpkg.com/encrypt-storage@latest/dist/index.js"></script>
+  <script>
+    const encryptStorage = new EncryptStorage('secret-key-value');
+  </script>
 </body>
 ```
 
@@ -123,7 +126,7 @@ const { EncryptStorage } = require('encrypt-storage');
 
 // Example of secret_key variable in an .env file
 // const encryptStorage = new EncryptStorage(process.env.SECRET_KEY, options);
-const encryptStorage = new EncryptStorage('secret-key', options);
+const encryptStorage = new EncryptStorage('secret-key-value', options);
 
 module.exports = encryptStorage
 ```
@@ -135,7 +138,7 @@ import { EncryptStorage } from 'encrypt-storage';
 
 // Example of secret_key variable in an .env file
 // const encryptStorage = new EncryptStorage(process.env.SECRET_KEY, options);
-export const encryptStorage = new EncryptStorage('secret-key', options);
+export const encryptStorage = new EncryptStorage('secret-key-value', options);
 ```
 
 ### Multiple instances
@@ -145,11 +148,11 @@ To use `multiple instances`, it is `strictly necessary` to pass the `prefix` to 
 ```typescript
 import { EncryptStorage } from 'encrypt-storage';
 
-export const encryptStorage1 = new EncryptStorage('secret-key', {
+export const encryptStorage1 = new EncryptStorage('secret-key-value', {
   prefix: '@instance1',
 });
 
-export const encryptStorage2 = new EncryptStorage('secret-key', {
+export const encryptStorage2 = new EncryptStorage('secret-key-value', {
   prefix: '@instance2',
 });
 
