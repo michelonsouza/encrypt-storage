@@ -82,3 +82,5 @@ export class AsyncEncryptStorage {
 
 /* istanbul ignore next */
 (window as any).AsyncEncryptStorage = AsyncEncryptStorage;
+/* istanbul ignore next */
+(globalThis as any).AsyncEncryptStorage = AsyncEncryptStorage;
