@@ -30,7 +30,9 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
       - [*notifyHandler*](#notifyhandler)
     - [Methods](#methods)
       - [*setItem*](#setitem)
+      - [*setMultipleItems*](#setmultipleitems)
       - [*getItem*](#getitem)
+      - [*getMultipleItems*](#getmultipleites)
       - [*removeItem*](#removeitem)
       - [*getItemFromPattern*](#getitemfrompattern)
       - [*removeItemFromPattern*](#removeitemfrompattern)
@@ -302,6 +304,27 @@ in your `storage`:
 |`@example:token`                 |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
 |`@example:token-not-encrypted`   |`edbe38e0-748a-49c8-9f8f-b68f38dbe5a2`     |
 
+
+#### *setMultipleItems*
+Add `keys` and `encrypted` values to selected `storage`.
+
+```typescript
+encryptStorage.setMultipleItems([
+  ['token', 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'],
+  ['user', {
+    id: '123456',
+    name: 'John Doe',
+  }],
+]);
+```
+
+in your `storage`:
+
+|Key                              |Value                                      |
+|---------------------------------|-------------------------------------------|
+|`@example:token`                 |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
+|`@example:user`   |`edbe38e0-748a-49c8-9f8f-b68f38dbe5a2`     |
+
 #### *getItem*
 Returns the value `decrypted` or `undefined` by the `key` passed by `parameter`. Default type is `any`;
 
@@ -316,6 +339,27 @@ result of `getItem`:
 ```typescript
 const value = 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'
 const value2 = 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'
+```
+
+#### *getMultipleItems*
+Returns the key value pairs `decrypted` or `undefined` by the `keys` passed by `parameter`. Default type is `any`;
+
+**NOTE**: It is possible to pass a `generics` (typescript case) to obtain a consistent and typed return for better use in the `typescript`.
+
+```typescript
+const value = encryptStorage.getMultipleItems(['token', 'user', 'any-key']);
+```
+
+result of `getMultipleItems`:
+```typescript
+const value = {
+  token: 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2',
+  user: {
+    id: '123456',
+    name: 'John Doe'
+    'any-key': undefined,
+  }
+}
 ```
 
 #### *removeItem*

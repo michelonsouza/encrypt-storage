@@ -13,7 +13,7 @@ const secret = new WeakMap();
 export class EncryptStorage implements EncryptStorageInterface {
   readonly #encryptation: Encryptation;
 
-  private readonly storage: Storage | null;
+  public readonly storage: Storage | null;
 
   readonly #prefix: string;
 
@@ -90,6 +90,15 @@ export class EncryptStorage implements EncryptStorageInterface {
     }
   }
 
+  public setMultipleItems(
+    param: [string, any][],
+    doNotEncrypt?: boolean,
+  ): void {
+    param.forEach(([key, value]) => {
+      this.setItem(key, value, doNotEncrypt);
+    });
+  }
+
   public getItem<T = any>(key: string, doNotDecrypt = false): T | undefined {
     const decryptValues = this.#doNotEncryptValues || doNotDecrypt;
     const storageKey = this.#getKey(key);
@@ -144,6 +153,19 @@ export class EncryptStorage implements EncryptStorageInterface {
     }
 
     return undefined;
+  }
+
+  public getMultipleItems(
+    keys: string[],
+    doNotDecrypt?: boolean,
+  ): Record<string, any> {
+    const result = keys.reduce((accumulator: Record<string, any>, key) => {
+      accumulator[key] = this.getItem(key, doNotDecrypt);
+
+      return accumulator;
+    }, {});
+
+    return result;
   }
 
   public removeItem(key: string): void {
