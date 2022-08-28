@@ -323,7 +323,7 @@ in your `storage`:
 |Key                              |Value                                      |
 |---------------------------------|-------------------------------------------|
 |`@example:token`                 |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
-|`@example:user`   |`edbe38e0-748a-49c8-9f8f-b68f38dbe5a2`     |
+|`@example:user`                  |`U2FsdGVkX1/tT67hnb*\afcb`...              |
 
 #### *getItem*
 Returns the value `decrypted` or `undefined` by the `key` passed by `parameter`. Default type is `any`;
@@ -342,9 +342,7 @@ const value2 = 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'
 ```
 
 #### *getMultipleItems*
-Returns the key value pairs `decrypted` or `undefined` by the `keys` passed by `parameter`. Default type is `any`;
-
-**NOTE**: It is possible to pass a `generics` (typescript case) to obtain a consistent and typed return for better use in the `typescript`.
+Returns the key value pairs `decrypted` or `undefined` by the `keys` passed by `parameter`.;
 
 ```typescript
 const value = encryptStorage.getMultipleItems(['token', 'user', 'any-key']);
