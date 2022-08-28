@@ -32,7 +32,7 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
       - [*setItem*](#setitem)
       - [*setMultipleItems*](#setmultipleitems)
       - [*getItem*](#getitem)
-      - [*getMultipleItems*](#getmultipleites)
+      - [*getMultipleItems*](#getmultipleitems)
       - [*removeItem*](#removeitem)
       - [*getItemFromPattern*](#getitemfrompattern)
       - [*removeItemFromPattern*](#removeitemfrompattern)
@@ -355,8 +355,8 @@ const value = {
   user: {
     id: '123456',
     name: 'John Doe'
-    'any-key': undefined,
-  }
+  },
+  'any-key': undefined,
 }
 ```
 

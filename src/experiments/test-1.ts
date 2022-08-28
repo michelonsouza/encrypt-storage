@@ -113,7 +113,9 @@ export const test1 = () =>
       const key1 = faker.random.word();
       const key2 = faker.random.word();
       const value1 = faker.random.word();
-      const value2 = faker.random.objectElement<Record<string, any>>();
+      const value2 = {
+        [faker.random.word()]: faker.random.alphaNumeric(),
+      };
 
       safeStorage.setMultipleItems([
         [key1, value1],

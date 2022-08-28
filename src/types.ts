@@ -2,7 +2,15 @@ export type EncAlgorithm = 'AES' | 'Rabbit' | 'RC4' | 'RC4Drop';
 
 type StorageType = 'localStorage' | 'sessionStorage';
 
-type ChangeType = 'set' | 'get' | 'remove' | 'clear' | 'length' | 'key';
+type ChangeType =
+  | 'set'
+  | 'get'
+  | 'getMultiple'
+  | 'setMultiple'
+  | 'remove'
+  | 'clear'
+  | 'length'
+  | 'key';
 
 export interface NotifyHandlerParams {
   type: ChangeType;
