@@ -17,6 +17,8 @@ export class EncryptStorage implements EncryptStorageInterface {
 
   readonly #prefix: string;
 
+  #multiple = false;
+
   readonly #stateManagementUse: boolean;
 
   readonly #doNotEncryptValues: boolean;
@@ -81,7 +83,7 @@ export class EncryptStorage implements EncryptStorageInterface {
 
     this.storage?.setItem(storageKey, encryptedValue);
 
-    if (this.#notifyHandler) {
+    if (this.#notifyHandler && !this.#multiple) {
       this.#notifyHandler({
         type: 'set',
         key,
@@ -94,9 +96,24 @@ export class EncryptStorage implements EncryptStorageInterface {
     param: [string, any][],
     doNotEncrypt?: boolean,
   ): void {
+    this.#multiple = true;
     param.forEach(([key, value]) => {
       this.setItem(key, value, doNotEncrypt);
     });
+
+    if (this.#notifyHandler) {
+      const keys = param.map(([key]) => key);
+      const values = param.map(([_, value]) =>
+        typeof value === 'object' ? JSON.stringify(value) : String(value),
+      );
+      this.#notifyHandler({
+        type: 'setMultiple',
+        key: keys,
+        value: values,
+      });
+
+      this.#multiple = false;
+    }
   }
 
   public getItem<T = any>(key: string, doNotDecrypt = false): T | undefined {
@@ -109,7 +126,7 @@ export class EncryptStorage implements EncryptStorageInterface {
         ? item
         : this.#encryptation.decrypt(item);
 
-      if (this.#stateManagementUse) {
+      if (this.#stateManagementUse && !this.#multiple) {
         if (this.#notifyHandler) {
           this.#notifyHandler({
             type: 'get',
@@ -159,11 +176,22 @@ export class EncryptStorage implements EncryptStorageInterface {
     keys: string[],
     doNotDecrypt?: boolean,
   ): Record<string, any> {
+    this.#multiple = true;
     const result = keys.reduce((accumulator: Record<string, any>, key) => {
       accumulator[key] = this.getItem(key, doNotDecrypt);
 
       return accumulator;
     }, {});
+
+    if (this.#notifyHandler) {
+      this.#notifyHandler({
+        type: 'getMultiple',
+        key: keys,
+        value: result,
+      });
+
+      this.#multiple = false;
+    }
 
     return result;
   }
