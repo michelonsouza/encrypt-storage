@@ -49,6 +49,17 @@ export interface EncryptStorageInterface extends Storage {
   setItem(key: string, value: any, doNotEncrypt?: boolean): void;
 
   /**
+   * `setMultipeItems` - Is the function to be set `safeItem` in `selected storage`
+   * @param {[string, any][]} param - .
+   * @param {any} value - It's an `array` of `tuples` to be set at once...
+   * @return {void} `void`
+   * @usage
+   * 		setItem(['any_key', {key: 'value', another_key: 2}])
+   * 		setItem(['any_key', 'any value'])
+   */
+  setMultipleItems(param: [string, any][], doNotEncrypt?: boolean): void;
+
+  /**
    * `hash` - Is the function to be `hash` value width SHA256 encryptation
    * @param {any} value - Value to be `hashed`, the same being a `string`.
    * @return {string} `hashed string`
@@ -76,6 +87,17 @@ export interface EncryptStorageInterface extends Storage {
    * 		getItem('any_key') -> `'any value'`
    */
   getItem(key: string, doNotDecrypt?: boolean): string | any | undefined;
+
+  /**
+   * `getMulpleItems` - Is the faction to be get `safeItems` in `selected storage`
+   * @param {string[]} keys - Is the keys of `data` in `selected storage`.
+   * @return {Record<string, any> | undefined} - Returns a formatted value when the same is an object or string when not.
+   * Returns `undefined` when value not exists.
+   * @usage
+   * 		getMultipleItems(['any_key']) -> `{any_key: {key: 'value', another_key: 2}}`
+   * 		getMultipleItems(['any_key']) -> `{any_key: 'any value'}`
+   */
+  getMultipleItems(keys: string[], doNotDecrypt?: boolean): Record<string, any>;
 
   /**
    * `removeItem` - Is the faction to be remove `safeItem` in `selected storage`

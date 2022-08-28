@@ -1,6 +1,6 @@
 <img width="400" style="margin-bottom: 30px;" src="./docs/resources/encrypt-storage-logo.png" />
 
-[![stargazers count](https://img.shields.io/github/stars/michelonsouza/encrypt-storage?style=social)](https://github.com/michelonsouza/encrypt-storage/stargazers) ![maintenance](https://img.shields.io/npms-io/maintenance-score/encrypt-storage) [![npm](https://img.shields.io/npm/dm/encrypt-storage)](https://www.npmjs.com/package/encrypt-storage) ![sponsors](https://img.shields.io/github/sponsors/michelonsouza?logo=github-sponsors) ![package size](https://img.shields.io/bundlephobia/min/encrypt-storage?color=%232ebd4f&label=package%20size&logo=npm) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/main)](https://github.com/michelonsouza/encrypt-storage/blob/main/package.json#L3) [![Build Status](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI)](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![CodeQL](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml)
+[![stargazers count](https://img.shields.io/github/stars/michelonsouza/encrypt-storage?style=social)](https://github.com/michelonsouza/encrypt-storage) ![maintenance](https://img.shields.io/npms-io/maintenance-score/encrypt-storage) [![npm](https://img.shields.io/npm/dm/encrypt-storage)](https://www.npmjs.com/package/encrypt-storage) ![sponsors](https://img.shields.io/github/sponsors/michelonsouza?logo=github-sponsors) ![package size](https://img.shields.io/bundlephobia/min/encrypt-storage?color=%232ebd4f&label=package%20size&logo=npm) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/main)](https://github.com/michelonsouza/encrypt-storage/blob/main/package.json#L3) [![Build Status](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI)](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![CodeQL](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml) [![jsdelivery](https://img.shields.io/jsdelivr/npm/hm/encrypt-storage)](https://www.jsdelivr.com/package/npm/encrypt-storage)
 
 OBS: This is the new version of Encrypt Storage, it has braking changes that will not be described below. For version `1.3.X` documentation, access this [link](./docs/README_V1.md).
 
@@ -8,7 +8,9 @@ The `Encrypt Storage` is a `wrapper` for native `Storage` of browser.
 
 Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encryption engine, it saves the encrypted data on the `selected storage` in the same way as the native `Storage`.
 
-> NOTE: Nothing on the front end is entirely secure. The library's proposal is to make it difficult for the user to see the data through the console, but as the secret key is on the front end, if the user searches hard enough, he will end up finding it. Just to make it clear that nothing is completely secure on the front end. Thank you for your attention.
+> **HELP THIS PROJECT**: Your Github `star` can help this project. Leave a `star`, it costs nothing.
+
+> NOTE: Nothing on the front end is entirely s ecure. The library's proposal is to make it difficult for the user to see the data through the console, but as the secret key is on the front end, if the user searches hard enough, he will end up finding it. Just to make it clear that nothing is completely secure on the front end. Thank you for your attention.
 
 - [Encrypt Storage](#encrypt-storage)
   - [Features](#features)
@@ -28,7 +30,9 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
       - [*notifyHandler*](#notifyhandler)
     - [Methods](#methods)
       - [*setItem*](#setitem)
+      - [*setMultipleItems*](#setmultipleitems)
       - [*getItem*](#getitem)
+      - [*getMultipleItems*](#getmultipleites)
       - [*removeItem*](#removeitem)
       - [*getItemFromPattern*](#getitemfrompattern)
       - [*removeItemFromPattern*](#removeitemfrompattern)
@@ -72,12 +76,27 @@ Or yarn:
 $ yarn add encrypt-storage
 ```
 
-Using `unpkg`
+Using `CDNs`:
+
+`Unpkg`:
 
 ```html
 <body>
   <!-- ...after other codes -->
   <script src="https://unpkg.com/encrypt-storage@latest/dist/index.js"></script>
+  <script>
+    const encryptStorage = new EncryptStorage('secret-key-value');
+  </script>
+</body>
+```
+OBS: `Unpkg` doesn't have a counter badge
+
+`JS Delivery`:
+
+```html
+<body>
+  <!-- ...after other codes -->
+  <script src="https://cdn.jsdelivr.net/npm/encrypt-storage@latest/dist/index.js"></script>
   <script>
     const encryptStorage = new EncryptStorage('secret-key-value');
   </script>
@@ -285,6 +304,27 @@ in your `storage`:
 |`@example:token`                 |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
 |`@example:token-not-encrypted`   |`edbe38e0-748a-49c8-9f8f-b68f38dbe5a2`     |
 
+
+#### *setMultipleItems*
+Add `keys` and `encrypted` values to selected `storage`.
+
+```typescript
+encryptStorage.setMultipleItems([
+  ['token', 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'],
+  ['user', {
+    id: '123456',
+    name: 'John Doe',
+  }],
+]);
+```
+
+in your `storage`:
+
+|Key                              |Value                                      |
+|---------------------------------|-------------------------------------------|
+|`@example:token`                 |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
+|`@example:user`   |`edbe38e0-748a-49c8-9f8f-b68f38dbe5a2`     |
+
 #### *getItem*
 Returns the value `decrypted` or `undefined` by the `key` passed by `parameter`. Default type is `any`;
 
@@ -299,6 +339,27 @@ result of `getItem`:
 ```typescript
 const value = 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'
 const value2 = 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'
+```
+
+#### *getMultipleItems*
+Returns the key value pairs `decrypted` or `undefined` by the `keys` passed by `parameter`. Default type is `any`;
+
+**NOTE**: It is possible to pass a `generics` (typescript case) to obtain a consistent and typed return for better use in the `typescript`.
+
+```typescript
+const value = encryptStorage.getMultipleItems(['token', 'user', 'any-key']);
+```
+
+result of `getMultipleItems`:
+```typescript
+const value = {
+  token: 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2',
+  user: {
+    id: '123456',
+    name: 'John Doe'
+    'any-key': undefined,
+  }
+}
 ```
 
 #### *removeItem*

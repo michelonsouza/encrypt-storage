@@ -108,6 +108,48 @@ export const test1 = () =>
       expect(storagedDecrypetdValue).toEqual(value);
     });
 
+    it('should localStorage.setItem called when setMultipleItems is called', () => {
+      const safeStorage = makeSut();
+      const key1 = faker.random.word();
+      const key2 = faker.random.word();
+      const value1 = faker.random.word();
+      const value2 = faker.random.objectElement<Record<string, any>>();
+
+      safeStorage.setMultipleItems([
+        [key1, value1],
+        [key2, value2],
+      ]);
+
+      expect(localStorage.setItem).toHaveBeenCalledTimes(2);
+    });
+
+    it('should localStorage.getItem returns correct decrypted value when getMultipleItems is called', () => {
+      const safeStorage = makeSut();
+      const key1 = faker.random.word();
+      const key2 = faker.random.word();
+      const key3 = faker.random.word();
+      const value1 = faker.random.word();
+      const value2 = faker.random.objectElement<Record<string, any>>();
+
+      safeStorage.setMultipleItems([
+        [key1, value1],
+        [key2, value2],
+      ]);
+
+      const storagedDecrypetdValue = safeStorage.getMultipleItems([
+        key1,
+        key2,
+        key3,
+      ]);
+      const expectedValue = {
+        [key1]: value1,
+        [key2]: value2,
+        [key3]: undefined,
+      };
+
+      expect(storagedDecrypetdValue).toEqual(expectedValue);
+    });
+
     it('should localStorage.getItem returns correct decrypted value when is a string', () => {
       const safeStorage = makeSut();
       const key = faker.random.word();
@@ -214,6 +256,7 @@ export const test1 = () =>
       expect(notHaveValue).toBe(undefined);
       expect(storagedValue).toEqual(mockedValue[itemKey]);
     });
+
     it('should calls localStorage.getItem for item with this pattern and prefix no multiple', () => {
       const pattern = faker.random.word();
       const prefix = faker.random.word();
