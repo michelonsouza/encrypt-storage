@@ -4,3 +4,5 @@ dist
 lib-esm
 _bundles
 .eslintcache
+
+*.log
