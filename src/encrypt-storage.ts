@@ -140,7 +140,7 @@ export class EncryptStorage implements EncryptStorageInterface {
       try {
         const value = JSON.parse(decryptedValue) as T;
 
-        if (this.#notifyHandler) {
+        if (this.#notifyHandler && !this.#multiple) {
           this.#notifyHandler({
             type: 'get',
             key,
@@ -150,7 +150,7 @@ export class EncryptStorage implements EncryptStorageInterface {
 
         return value;
       } catch (error) {
-        if (this.#notifyHandler) {
+        if (this.#notifyHandler && !this.#multiple) {
           this.#notifyHandler({
             type: 'get',
             key,
@@ -161,7 +161,7 @@ export class EncryptStorage implements EncryptStorageInterface {
       }
     }
 
-    if (this.#notifyHandler) {
+    if (this.#notifyHandler && !this.#multiple) {
       this.#notifyHandler({
         type: 'get',
         key,
