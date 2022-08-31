@@ -200,12 +200,28 @@ export class EncryptStorage implements EncryptStorageInterface {
     const storageKey = this.#getKey(key);
     this.storage?.removeItem(storageKey);
 
-    if (this.#notifyHandler) {
+    if (this.#notifyHandler && !this.#multiple) {
       this.#notifyHandler({
         type: 'remove',
         key,
       });
     }
+  }
+
+  public removeMultipleItems(keys: string[]): void {
+    this.#multiple = true;
+    keys.forEach(key => {
+      this.removeItem(key);
+    });
+
+    if (this.#notifyHandler) {
+      this.#notifyHandler({
+        type: 'removeMultiple',
+        key: keys,
+      });
+    }
+
+    this.#multiple = false;
   }
 
   public removeItemFromPattern(

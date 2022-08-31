@@ -8,6 +8,7 @@ type ChangeType =
   | 'getMultiple'
   | 'setMultiple'
   | 'remove'
+  | 'removeMultiple'
   | 'clear'
   | 'length'
   | 'key';
@@ -86,7 +87,7 @@ export interface EncryptStorageInterface extends Storage {
   md5Hash(value: string): string;
 
   /**
-   * `getItem` - Is the faction to be get `safeItem` in `selected storage`
+   * `getItem` - Is the function to be get `safeItem` in `selected storage`
    * @param {string} key - Is the key of `data` in `selected storage`.
    * @return {string | any | undefined} - Returns a formatted value when the same is an object or string when not.
    * Returns `undefined` when value not exists.
@@ -97,7 +98,7 @@ export interface EncryptStorageInterface extends Storage {
   getItem(key: string, doNotDecrypt?: boolean): string | any | undefined;
 
   /**
-   * `getMulpleItems` - Is the faction to be get `safeItems` in `selected storage`
+   * `getMulpleItems` - Is the function to be get `safeItems` in `selected storage`
    * @param {string[]} keys - Is the keys of `data` in `selected storage`.
    * @return {Record<string, any> | undefined} - Returns a formatted value when the same is an object or string when not.
    * Returns `undefined` when value not exists.
@@ -108,7 +109,7 @@ export interface EncryptStorageInterface extends Storage {
   getMultipleItems(keys: string[], doNotDecrypt?: boolean): Record<string, any>;
 
   /**
-   * `removeItem` - Is the faction to be remove `safeItem` in `selected storage`
+   * `removeItem` - Is the function to be remove `safeItem` in `selected storage`
    * @param {string} key - Is the key of `data` in `selected storage`.
    * @return {void}
    * Returns `void`.
@@ -116,6 +117,16 @@ export interface EncryptStorageInterface extends Storage {
    * 		removeItem('any_key')
    */
   removeItem(key: string): void;
+
+  /**
+   * `removeMultipleItems` - Is the function to be remove `safeItems` in `selected storage`
+   * @param {string[]} keys - Is the keys of `data` in `selected storage`.
+   * @return {void}
+   * Returns `void`.
+   * @usage
+   * 		removeMultipleItems(['any_key_1'm 'any_key_2'])
+   */
+  removeMultipleItems(keys: string[]): void;
 
   /**
    * `getItemFromPattern` - Is the function to be get `safeItem` in `selected storage` from `pattern` based
@@ -159,7 +170,7 @@ export interface EncryptStorageInterface extends Storage {
   key(index: number): string | null;
 
   /**
-   * `encryptString` - Is the faction to be `encrypt` any string and return encrypted value
+   * `encryptString` - Is the function to be `encrypt` any string and return encrypted value
    * @param {string} str - A `string` to be encrypted.
    * @return {string} result
    * Returns `string`.
@@ -169,7 +180,7 @@ export interface EncryptStorageInterface extends Storage {
   encryptString(str: string): string;
 
   /**
-   * `decryptString` - Is the faction to be `decrypt` any string encrypted by `encryptString` and return decrypted value
+   * `decryptString` - Is the function to be `decrypt` any string encrypted by `encryptString` and return decrypted value
    * @param {string} str - A `string` to be decrypted.
    * @return {string} result
    * Returns `string`.

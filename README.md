@@ -34,6 +34,7 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
       - [*getItem*](#getitem)
       - [*getMultipleItems*](#getmultipleitems)
       - [*removeItem*](#removeitem)
+      - [*removeMultipleItems*](#removemultipleitem)
       - [*getItemFromPattern*](#getitemfrompattern)
       - [*removeItemFromPattern*](#removeitemfrompattern)
       - [*key*](#key)
@@ -372,6 +373,27 @@ in your `storage`:
 
 ```typescript
 encryptStorage.removeItem('token');
+```
+
+now in your `storage`:
+
+|Key               |Value                                      |
+|------------------|-------------------------------------------|
+|` `               |` `                                        |
+
+#### *removeMultipleItems*
+Remove items from selected `storage`.
+
+in your `storage`:
+
+|Key               |Value                                      |
+|------------------|-------------------------------------------|
+|`@example:token`  |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
+|`@example:user`  |`U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
+
+
+```typescript
+encryptStorage.removeMultipleItems(['token', 'user']);
 ```
 
 now in your `storage`:
