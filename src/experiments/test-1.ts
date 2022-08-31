@@ -351,6 +351,20 @@ export const test1 = () =>
       expect(localStorage.removeItem).toHaveBeenCalledWith(itemKey);
     });
 
+    it('should calls localStorage.removeItem when removeMultipleItems is called', () => {
+      const safeStorage = makeSut();
+      const userKey = 'user';
+      const itemKey = 'item';
+
+      safeStorage.setItem(userKey, { id: 123 });
+      safeStorage.setItem(itemKey, { id: 456 });
+
+      safeStorage.removeMultipleItems([userKey, itemKey]);
+
+      expect(localStorage.removeItem).toHaveBeenCalledWith(userKey);
+      expect(localStorage.removeItem).toHaveBeenCalledWith(itemKey);
+    });
+
     it('should calls localStorage.clear', () => {
       const safeStorage = makeSut();
       const key1 = faker.random.word();
