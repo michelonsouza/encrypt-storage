@@ -37,8 +37,9 @@ module.exports = {
     rules: [{
       test: /\.ts$/,
       use: 'ts-loader',
-      exclude: '/node_modules/'
-    }]
+      include: ['/src/**/'],
+      exclude: ['/node_modules/', '/src/experiments/'],
+    }],
   },
   plugins: [
     new NodePolyfillPlugin(),
