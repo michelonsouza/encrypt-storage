@@ -30,8 +30,8 @@
     "check": "npx npm-check -u -s",
     "pre-commit": "lint-staged",
     "prepare": "husky install",
-    "prepublish": "node ./prepulbish.js",
-    "postpublish": "node ./postpulbish.js"
+    "prepublish": "node ./prepublish.js",
+    "postpublish": "node ./postpublish.js"
   },
   "keywords": [
     "localStorage",
