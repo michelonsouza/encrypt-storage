@@ -30,8 +30,8 @@
     "check": "npx npm-check -u -s",
     "pre-commit": "lint-staged",
     "prepare": "husky install",
-    "prepublish": "node ./prepublish.js",
-    "postpublish": "node ./postpublish.js"
+    "prepublish": "node ./prepublish.js && yarn prettier -c -w ./package.json",
+    "postpublish": "node ./postpublish.js && yarn prettier -c -w ./package.json"
   },
   "keywords": [
     "localStorage",
