@@ -37,12 +37,7 @@ module.exports = {
     rules: [{
       test: /\.ts$/,
       use: 'ts-loader',
-<<<<<<< HEAD
       exclude: '/node_modules/'
-=======
-      include: ['/src/**/'],
-      exclude: ['/node_modules/', '/src/experiments/'],
->>>>>>> main
     }],
   },
   plugins: [
