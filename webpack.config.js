@@ -11,8 +11,11 @@ module.exports = {
     filename: 'index.js',
     library: 'encrypt-storage',
     libraryTarget: 'umd',
-    umdNamedDefine: true
+    umdNamedDefine: true,
+
   },
+  devtool: 'cheap-module-source-map',
+  // devtool: 'nosources-source-map',
   resolve: {
     extensions: ['.ts', '.js'],
     fallback: {
