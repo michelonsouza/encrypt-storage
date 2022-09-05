@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "2.12.3",
+  "version": "2.12.4",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
