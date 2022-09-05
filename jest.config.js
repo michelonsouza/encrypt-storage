@@ -5,6 +5,8 @@ module.exports = {
     '!<rootDir>/src/types.ts',
     '!<rootDir>/src/experiments/*.ts',
     '!**/*.d.ts',
+    '!./prepublish.js',
+    '!./postpublish.js',
   ],
   setupFiles: ['jest-localstorage-mock'],
   coverageDirectory: 'coverage',

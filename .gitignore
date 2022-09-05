@@ -4,5 +4,8 @@ dist
 lib-esm
 _bundles
 .eslintcache
+.yarn
+.yarnrc.yml
+package.txt
 
 *.log
