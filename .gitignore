@@ -6,5 +6,6 @@ _bundles
 .eslintcache
 .yarn
 .yarnrc.yml
+package.txt
 
 *.log
