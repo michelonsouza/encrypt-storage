@@ -170,6 +170,7 @@ export interface EncryptStorageInterface extends Storage {
   key(index: number): string | null;
 
   /**
+   *
    * `encryptString` - Is the function to be `encrypt` any string and return encrypted value
    * @param {string} str - A `string` to be encrypted.
    * @return {string} result
@@ -180,6 +181,7 @@ export interface EncryptStorageInterface extends Storage {
   encryptString(str: string): string;
 
   /**
+   *
    * `decryptString` - Is the function to be `decrypt` any string encrypted by `encryptString` and return decrypted value
    * @param {string} str - A `string` to be decrypted.
    * @return {string} result
