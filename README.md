@@ -34,7 +34,7 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
       - [*getItem*](#getitem)
       - [*getMultipleItems*](#getmultipleitems)
       - [*removeItem*](#removeitem)
-      - [*removeMultipleItems*](#removemultipleitem)
+      - [*removeMultipleItems*](#removemultipleitems)
       - [*getItemFromPattern*](#getitemfrompattern)
       - [*removeItemFromPattern*](#removeitemfrompattern)
       - [*key*](#key)
