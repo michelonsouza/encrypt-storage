@@ -342,12 +342,18 @@ export class EncryptStorage implements EncryptStorageInterface {
     return value;
   }
 
+  /**
+   * @deprecated This function will be `deprecated` in ^3.x versions in favor of the encryptValue function and will be removed in the future.
+   */
   public encryptString(str: string): string {
     const encryptedValue = this.#encryptation.encrypt(str);
 
     return encryptedValue;
   }
 
+  /**
+   * @deprecated This function will be `deprecated` in ^3.x versions in favor of the decryptValue function and will be removed in the future.
+   */
   public decryptString(str: string): string {
     const decryptedValue = this.#encryptation.decrypt(str);
 
