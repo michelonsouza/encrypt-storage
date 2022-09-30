@@ -113,7 +113,7 @@ The `options` object is optional and consists of the following properties:
 |`prefix`                |`''`             |`string`                               |`false`   |
 |`storageType`           |`localStorage`   |[StorageType](./src/types.ts#L3)       |`false`   |
 |`encAlgorithm`          |`AES`            |[EncAlgorithm](./src/types.ts#L1)      |`false`   |
-|`notifyHandler`         |`undefined`      |[NotifyHandler](./src/types.ts#L14)    |`false`   |
+|`notifyHandler`         |`undefined`      |[NotifyHandler](./src/types.ts#L23)    |`false`   |
 |`stateManagementUse`    |`false`          |`boolean`                              |`false`   |
 |`doNotEncryptValues`    |`false`          |`boolean`                              |`false`   |
 

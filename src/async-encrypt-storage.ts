@@ -85,9 +85,12 @@ export class AsyncEncryptStorage {
 }
 
 /* istanbul ignore next */
-if (window && window?.globalThis) {
+if (window) {
   /* istanbul ignore next */
   (window as any).AsyncEncryptStorage = AsyncEncryptStorage;
+}
+/* istanbul ignore next */
+if (window && window?.globalThis) {
   /* istanbul ignore next */
   (window?.globalThis as any).AsyncEncryptStorage = AsyncEncryptStorage;
 }
