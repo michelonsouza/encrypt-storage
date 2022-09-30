@@ -382,11 +382,11 @@ export class EncryptStorage implements EncryptStorageInterface {
 }
 
 /* istanbul ignore next */
-if (window && globalThis) {
+if (window && window?.globalThis) {
   /* istanbul ignore next */
   (window as any).EncryptStorage = EncryptStorage;
   /* istanbul ignore next */
-  (globalThis as any).EncryptStorage = EncryptStorage;
+  (window?.globalThis as any).EncryptStorage = EncryptStorage;
 }
 
 export default EncryptStorage;
