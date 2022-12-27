@@ -2,7 +2,7 @@
 
 [![stargazers count](https://img.shields.io/github/stars/michelonsouza/encrypt-storage?style=social)](https://github.com/michelonsouza/encrypt-storage) ![maintenance](https://img.shields.io/npms-io/maintenance-score/encrypt-storage) [![npm](https://img.shields.io/npm/dm/encrypt-storage)](https://www.npmjs.com/package/encrypt-storage) ![sponsors](https://img.shields.io/github/sponsors/michelonsouza?logo=github-sponsors) ![package size](https://img.shields.io/bundlephobia/min/encrypt-storage?color=%232ebd4f&label=package%20size&logo=npm) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/main)](https://github.com/michelonsouza/encrypt-storage/blob/main/package.json#L3) [![Build Status](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI)](https://img.shields.io/github/workflow/status/michelonsouza/encrypt-storage/NodeJS%20CI) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE) [![Node CI](https://github.com/michelonsouza/encrypt-storage/actions/workflows/ci.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml) [![CodeQL](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml) [![jsdelivery](https://img.shields.io/jsdelivr/npm/hm/encrypt-storage)](https://www.jsdelivr.com/package/npm/encrypt-storage)
 
-OBS: This is the new version of Encrypt Storage, it has braking changes that will not be described below. For version `1.3.X` documentation, access this [link](./docs/README_V1.md).
+OBS: This is the new version of Encrypt Storage, it has breaking changes that will not be described below. For version `1.3.X` documentation, access this [link](./docs/README_V1.md).
 
 The `Encrypt Storage` is a `wrapper` for native `Storage` of browser.
 
@@ -10,7 +10,7 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
 
 > **HELP THIS PROJECT**: Your Github `star` can help this project. Leave a `star`, it costs nothing.
 
-> NOTE: Nothing on the front end is entirely s ecure. The library's proposal is to make it difficult for the user to see the data through the console, but as the secret key is on the front end, if the user searches hard enough, he will end up finding it. Just to make it clear that nothing is completely secure on the front end. Thank you for your attention.
+> NOTE: Nothing on the front end is entirely secure. The library's proposal is to make it difficult for the user to see the data through the console, but as the secret key is on the front end, if the user searches hard enough, he will end up finding it. Just to make it clear that nothing is completely secure on the front end. Thank you for your attention.
 
 - [Encrypt Storage](#encrypt-storage)
   - [Features](#features)
