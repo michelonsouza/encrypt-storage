@@ -1972,6 +1972,14 @@ commander@^9.4.1:
   resolved "https://registry.yarnpkg.com/commander/-/commander-9.5.0.tgz#bc08d1eb5cedf7ccb797a96199d41c7bc3e60d30"
   integrity sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==
 
+commit-msg-linter@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/commit-msg-linter/-/commit-msg-linter-1.0.0.tgz#45a29e9c38d8bb71e98d4da67f230abf01b46463"
+  integrity sha512-Di9oAjfjIwAcASQ8abW1936twemUdDQq4D1dBL42Y+S6rNXykauIBPztj8Ej4/MjI6zIziLVzfhmdkg0z4I4rg==
+  dependencies:
+    did-you-mean "^0.0.1"
+    supports-color "^8.1.1"
+
 compare-func@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/compare-func/-/compare-func-2.0.0.tgz#fb65e75edbddfd2e568554e8b5b05fff7a51fcb3"
@@ -3007,14 +3015,13 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-git-commit-msg-linter@^4.9.3:
-  version "4.9.3"
-  resolved "https://registry.yarnpkg.com/git-commit-msg-linter/-/git-commit-msg-linter-4.9.3.tgz#6e37a909c794de86f5afdfdf866aa009365fa6e3"
-  integrity sha512-fJutoy/F1z8o9PqMr3mWhyT0WrCefn/TQzMQf2zpbrwY72hHHzkGJMu5qoMcaC/EG0VLPlUMPutQ/6bRsMGUyg==
+git-commit-msg-linter@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/git-commit-msg-linter/-/git-commit-msg-linter-5.0.4.tgz#c89aefd82902948196821850dfd5a2ac584a8d92"
+  integrity sha512-XxdvLbgQDbPlZwru9Tns2zgFvk4UhcWT+LVVNP2tSiAjkY0RJws9zqhUgolXJvpiPDvSbbDMpGu3EtXiKN/IeA==
   dependencies:
     chalk "^2.4.2"
-    did-you-mean "^0.0.1"
-    supports-color "^8.1.1"
+    commit-msg-linter "^1.0.0"
 
 git-raw-commits@^2.0.11:
   version "2.0.11"
