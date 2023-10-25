@@ -92,5 +92,5 @@ if (window) {
 /* istanbul ignore next */
 if (window && window?.globalThis) {
   /* istanbul ignore next */
-  (window?.globalThis as any).AsyncEncryptStorage = AsyncEncryptStorage;
+  (window.globalThis as any).AsyncEncryptStorage = AsyncEncryptStorage;
 }
