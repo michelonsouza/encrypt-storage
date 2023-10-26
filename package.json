@@ -95,7 +95,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-prettier": "^5.0.1",
     "faker": "^5.5.3",
     "git-commit-msg-linter": "^5.0.4",
     "https-browserify": "^1.0.0",
