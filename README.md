@@ -10,7 +10,7 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
 
 > **HELP THIS PROJECT**: Your Github `star` can help this project. Leave a `star`, it costs nothing.
 
-> NOTE: Nothing on the front end is entirely secure. The library's proposal is to make it difficult for the user to see the data through the console, but as the secret key is on the front end, if the user searches hard enough, he will end up finding it. Just to make it clear that nothing is completely secure on the front end. Thank you for your attention.
+> [!WARNING]: Nothing on the front end is entirely secure. The library's proposal is to make it difficult for the user to see the data through the console, but as the secret key is on the front end, if the user searches hard enough, he will end up finding it. Just to make it clear that nothing is completely secure on the front end. Thank you for your attention.
 
 - [Encrypt Storage](#encrypt-storage)
   - [Features](#features)
