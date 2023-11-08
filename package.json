@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "2.12.21",
+  "version": "2.12.22",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,7 +28,7 @@
     "prepare": "husky install",
     "prepublish": "node ./prepublish.js && yarn prettier -c -w ./package.json",
     "postpublish": "node ./postpublish.js && yarn prettier -c -w ./package.json",
-    "update:dev-dependencies": "yarn add -D @commitlint/cli @commitlint/config-conventional @types/crypto-js @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser assert buffer copy-webpack-plugin coveralls eslint eslint-config-airbnb-base eslint-config-prettier git-commit-msg-linter https-browserify husky jest jest-environment-jsdom jest-environment-node jest-localstorage-mock lint-staged node-polyfill-webpack-plugin os-browserify path-browserify prettier process stream-browserify stream-http ts-jest ts-loader webpack webpack-cli typescript url eslint-import-resolver-typescript"
+    "update:dev-dependencies": "yarn add -D @commitlint/cli @commitlint/config-conventional @types/crypto-js @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser assert buffer copy-webpack-plugin coveralls eslint eslint-config-airbnb-base eslint-config-prettier git-commit-msg-linter https-browserify husky jest jest-environment-jsdom jest-environment-node jest-localstorage-mock lint-staged node-polyfill-webpack-plugin os-browserify path-browserify prettier process stream-browserify stream-http ts-jest ts-loader webpack webpack-cli typescript url eslint-import-resolver-typescript webpack webpack-cli"
   },
   "keywords": [
     "localStorage",
@@ -78,19 +78,19 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@commitlint/cli": "^18.1.0",
+    "@commitlint/cli": "^18.2.0",
     "@commitlint/config-conventional": "^18.1.0",
-    "@types/crypto-js": "^4.1.3",
+    "@types/crypto-js": "^4.2.1",
     "@types/faker": "^5.5.9",
-    "@types/jest": "^29.5.6",
-    "@types/node": "^20.8.9",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
+    "@types/jest": "^29.5.8",
+    "@types/node": "^20.9.0",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
     "assert": "^2.1.0",
     "buffer": "^6.0.3",
     "copy-webpack-plugin": "^11.0.0",
     "coveralls": "^3.1.1",
-    "eslint": "^8.52.0",
+    "eslint": "^8.53.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
