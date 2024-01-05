@@ -390,7 +390,7 @@ if (window) {
 /* istanbul ignore next */
 if (window && window?.globalThis) {
   /* istanbul ignore next */
-  (window?.globalThis as any).EncryptStorage = EncryptStorage;
+  (window.globalThis as any).EncryptStorage = EncryptStorage;
 }
 
 export default EncryptStorage;
