@@ -33,6 +33,7 @@ export interface EncryptStorageOptions {
   storageType?: StorageType;
   encAlgorithm?: EncAlgorithm;
   doNotEncryptValues?: boolean;
+  doNotParseValues?: boolean;
   notifyHandler?: NotifyHandler;
 }
 

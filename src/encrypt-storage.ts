@@ -23,6 +23,8 @@ export class EncryptStorage implements EncryptStorageInterface {
 
   readonly #doNotEncryptValues: boolean;
 
+  readonly #doNotParseValues: boolean;
+
   readonly #notifyHandler: NotifyHandler | undefined;
 
   /**
@@ -43,6 +45,7 @@ export class EncryptStorage implements EncryptStorageInterface {
       encAlgorithm = 'AES',
       doNotEncryptValues = false,
       notifyHandler,
+      doNotParseValues = false,
     } = options || {};
 
     secret.set(this, secretKey);
@@ -51,6 +54,7 @@ export class EncryptStorage implements EncryptStorageInterface {
     this.#notifyHandler = notifyHandler;
     this.#stateManagementUse = stateManagementUse;
     this.#doNotEncryptValues = doNotEncryptValues;
+    this.#doNotParseValues = doNotParseValues;
     this.#encryptation = getEncryptation(encAlgorithm, secret.get(this));
     this.storage = typeof window === 'object' ? window[storageType] : null;
   }
@@ -75,8 +79,13 @@ export class EncryptStorage implements EncryptStorageInterface {
   public setItem(key: string, value: any, doNotEncrypt = false): void {
     const encryptValues = this.#doNotEncryptValues || doNotEncrypt;
     const storageKey = this.#getKey(key);
-    const valueToString =
+    let valueToString =
       typeof value === 'object' ? JSON.stringify(value) : String(value);
+
+    if (this.#doNotParseValues) {
+      valueToString = value;
+    }
+
     const encryptedValue = encryptValues
       ? valueToString
       : this.#encryptation.encrypt(valueToString);
@@ -138,7 +147,9 @@ export class EncryptStorage implements EncryptStorageInterface {
       }
 
       try {
-        const value = JSON.parse(decryptedValue) as T;
+        const value = this.#doNotParseValues
+          ? decryptedValue
+          : JSON.parse(decryptedValue);
 
         if (this.#notifyHandler && !this.#multiple) {
           this.#notifyHandler({
@@ -148,7 +159,7 @@ export class EncryptStorage implements EncryptStorageInterface {
           });
         }
 
-        return value;
+        return value as T;
       } catch (error) {
         if (this.#notifyHandler && !this.#multiple) {
           this.#notifyHandler({
@@ -361,7 +372,8 @@ export class EncryptStorage implements EncryptStorageInterface {
   }
 
   public encryptValue(value: any): string {
-    const encryptedValue = this.#encryptation.encrypt(JSON.stringify(value));
+    const parsedValue = this.#doNotParseValues ? value : JSON.stringify(value);
+    const encryptedValue = this.#encryptation.encrypt(parsedValue);
 
     return encryptedValue;
   }
@@ -369,7 +381,9 @@ export class EncryptStorage implements EncryptStorageInterface {
   public decryptValue<T = any>(value: string): T {
     const decryptedValue = this.#encryptation.decrypt(value);
 
-    return JSON.parse(decryptedValue) as T;
+    return (
+      this.#doNotParseValues ? decryptedValue : JSON.parse(decryptedValue)
+    ) as T;
   }
 
   public hash(value: string): string {

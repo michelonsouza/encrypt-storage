@@ -28,6 +28,7 @@ export const makeSut = (
     stateManagementUse,
     noOptions,
     encAlgorithm,
+    doNotParseValues = false,
     notifyHandler = mockNotify.mockedFn,
     secretKey = faker.random.alphaNumeric(10),
   } = params;
@@ -39,6 +40,7 @@ export const makeSut = (
         stateManagementUse,
         encAlgorithm,
         notifyHandler,
+        doNotParseValues,
       };
   return new EncryptStorage(secretKey, options);
 };
@@ -90,6 +92,20 @@ export const test1 = () =>
       const safeStorage = makeSut();
       const key = faker.random.word();
       const value = { value: faker.random.word() };
+
+      safeStorage.setItem(key, value);
+      const storagedDecrypetdValue = safeStorage.getItem(key);
+
+      expect(storagedDecrypetdValue).toEqual(value);
+    });
+
+    it('should localStorage.getItem returns correct decrypted value with doNotParseValues option', () => {
+      const safeStorage = makeSut({
+        doNotParseValues: true,
+      });
+      const values = ['[]', '{}', 'null', 'undefined', 'true', 'false', '123'];
+      const key = faker.random.word();
+      const value = faker.random.arrayElement(values);
 
       safeStorage.setItem(key, value);
       const storagedDecrypetdValue = safeStorage.getItem(key);
@@ -450,6 +466,18 @@ export const test1 = () =>
       expect(result).not.toEqual(value);
     });
 
+    it('should encrypt value and return encrypted value with doNotParseValues option', () => {
+      const safeStorage = makeSut({ doNotParseValues: true });
+      const value = {
+        name: faker.random.word(),
+        id: faker.datatype.uuid(),
+      };
+      const stringfyValue = JSON.stringify(value);
+      const result = safeStorage.encryptValue(stringfyValue);
+
+      expect(result).not.toEqual(stringfyValue);
+    });
+
     it('should decrypt string and return decrypted value', () => {
       const safeStorage = makeSut();
       const value = faker.random.word();
@@ -470,6 +498,20 @@ export const test1 = () =>
         safeStorage.decryptValue<typeof value>(encryptedValue);
 
       expect(decryptedValue).toEqual(value);
+    });
+
+    it('should decrypt value and return decrypted value with doNotParseValues option', () => {
+      const safeStorage = makeSut({ doNotParseValues: true });
+      const value = {
+        name: faker.random.word(),
+        id: faker.datatype.uuid(),
+      };
+      const stringfyValue = JSON.stringify(value);
+      const encryptedValue = safeStorage.encryptValue(stringfyValue);
+      const decryptedValue =
+        safeStorage.decryptValue<typeof value>(encryptedValue);
+
+      expect(decryptedValue).toEqual(stringfyValue);
     });
 
     it('should test encryptStorage without options', () => {

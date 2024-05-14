@@ -10,7 +10,7 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
 
 > **HELP THIS PROJECT**: Your Github `star` can help this project. Leave a `star`, it costs nothing.
 
-> **⚠️  IMPORTANT**: Nothing on the front end is entirely secure. The library's proposal is to make it difficult for the user to see the data through the console, but as the secret key is on the front end, if the user searches hard enough, he will end up finding it. Just to make it clear that nothing is completely secure on the front end. Thank you for your attention.
+> **⚠️ IMPORTANT**: Nothing on the front end is entirely secure. The library's proposal is to make it difficult for the user to see the data through the console, but as the secret key is on the front end, if the user searches hard enough, he will end up finding it. Just to make it clear that nothing is completely secure on the front end. Thank you for your attention.
 
 - [Encrypt Storage](#encrypt-storage)
   - [Features](#features)
@@ -46,6 +46,7 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
       - [_decryptValue_](#decryptvalue)
       - [_hash_](#hash)
       - [_md5Hash_](#md5hash)
+    - [NextJS](#nextjs)
     - [AsyncEncryptStorage](#asyncencryptstorage)
     - [AWS Amplify](#aws-amplify)
     - [State Management Persisters](#state-management-persisters)
@@ -627,6 +628,41 @@ result of `hashed value`:
 
 ```typescript
 const value = '284e512750fb7d41f1cc5284a2c56a13';
+```
+
+### NextJS
+
+When used in NextJS, validation must be done.
+
+example:
+
+```typescript
+// utils/storage.(ts|js)
+import { EncryptStorage } from 'encrypt-storage';
+
+const encryptStorage = (): EncryptStorage | null => {
+  const isInClientSide =
+    typeof window !== 'undefined' && typeof window?.self !== 'undefined';
+
+  if (isInClientSide) {
+    return new EncryptStorage(
+      String(process.env.NEXT_PUBLIC_STORAGE_SECRET),
+      // options,
+    );
+  }
+
+  return null;
+};
+```
+
+usage:
+
+```typescript
+'use client';
+import { encryptStorage } from '../utils/storage.ts';
+
+// ...rest of code
+encryptStorage()?.setItem('any-key', { name: 'John Doe', age: 40 });
 ```
 
 ### AsyncEncryptStorage
