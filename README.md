@@ -28,6 +28,8 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
       - [_stateManagementUse_](#statemanagementuse)
       - [_encAlgorithm_](#encalgorithm)
       - [_notifyHandler_](#notifyhandler)
+      - [_doNotEncryptValues_](#doNotEncryptValues)
+      - [_doNotParseValues_](#doNotParseValues)
     - [Methods](#methods)
       - [_setItem_](#setitem)
       - [_setMultipleItems_](#setmultipleitems)
@@ -120,6 +122,7 @@ The `options` object is optional and consists of the following properties:
 | `notifyHandler`      | `undefined`    | [NotifyHandler](./src/types.ts#L23) | `false`  |
 | `stateManagementUse` | `false`        | `boolean`                           | `false`  |
 | `doNotEncryptValues` | `false`        | `boolean`                           | `false`  |
+| `doNotParseValues`   | `false`        | `boolean`                           | `false`  |
 
 ## Usage
 
@@ -256,6 +259,25 @@ export const encryptStorage = new EncryptStorage('secret-key-value', {
   doNotEncryptValues: true,
 });
 ```
+
+#### _doNotParseValues_
+
+default `false` - This option `NOT` parse values, but use those options like `prefix` our `multiple-instances`.:
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+
+export const encryptStorage = new EncryptStorage('secret-key-value', {
+  doNotParseValues: true,
+});
+
+encryptStorage.setItem('key', JSON.stringfy({ name: 'John Doe' }));
+
+const value = JSON.parse(encryptStorage.getItem('key')); // { name: 'John Doe' }
+```
+
+> NOTE: This option `does not` `JSON.stringify` or `JSON.parse` the data, making `return typing` useless or unnecessary.
+> **This is similar to standard browser behavior.**
 
 #### _notifyHandler_
 
