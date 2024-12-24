@@ -6,6 +6,9 @@ import {
   EncryptStorageOptions,
   EncryptStorageInterface,
   RemoveFromPatternOptions,
+  CookieInterface,
+  CookieOptions,
+  RemoveCookieOptions,
 } from './types';
 import { getEncryptation, hashSHA256, hashMD5 } from './utils';
 
@@ -125,7 +128,10 @@ export class EncryptStorage implements EncryptStorageInterface {
     }
   }
 
-  public getItem<T = any>(key: string, doNotDecrypt = false): T | undefined {
+  public getItem<DataType = any>(
+    key: string,
+    doNotDecrypt = false,
+  ): DataType | undefined {
     const decryptValues = this.#doNotEncryptValues || doNotDecrypt;
     const storageKey = this.#getKey(key);
     const item = this.storage?.getItem(storageKey);
@@ -143,7 +149,7 @@ export class EncryptStorage implements EncryptStorageInterface {
             value: decryptedValue,
           });
         }
-        return decryptedValue as unknown as T;
+        return decryptedValue as unknown as DataType;
       }
 
       try {
@@ -159,8 +165,8 @@ export class EncryptStorage implements EncryptStorageInterface {
           });
         }
 
-        return value as T;
-      } catch (error) {
+        return value as DataType;
+      } catch {
         if (this.#notifyHandler && !this.#multiple) {
           this.#notifyHandler({
             type: 'get',
@@ -168,7 +174,7 @@ export class EncryptStorage implements EncryptStorageInterface {
             value: decryptedValue,
           });
         }
-        return decryptedValue as unknown as T;
+        return decryptedValue as unknown as DataType;
       }
     }
 
@@ -378,12 +384,12 @@ export class EncryptStorage implements EncryptStorageInterface {
     return encryptedValue;
   }
 
-  public decryptValue<T = any>(value: string): T {
+  public decryptValue<DataType = any>(value: string): DataType {
     const decryptedValue = this.#encryptation.decrypt(value);
 
     return (
       this.#doNotParseValues ? decryptedValue : JSON.parse(decryptedValue)
-    ) as T;
+    ) as DataType;
   }
 
   public hash(value: string): string {
@@ -393,6 +399,110 @@ export class EncryptStorage implements EncryptStorageInterface {
   public md5Hash(value: string): string {
     return hashMD5(value, secret.get(this));
   }
+
+  public cookie: CookieInterface = {
+    set: (key: string, value: any, options?: CookieOptions): void => {
+      if (
+        typeof document === 'undefined' ||
+        typeof document.cookie === 'undefined' ||
+        typeof window === 'undefined'
+      ) {
+        return;
+      }
+      let interntValue = this.#doNotParseValues ? value : JSON.stringify(value);
+
+      if (!this.#doNotEncryptValues) {
+        interntValue = this.encryptValue(interntValue);
+      }
+
+      let cookieString = `${encodeURIComponent(this.#getKey(key))}=${encodeURIComponent(interntValue)}`;
+
+      if (options?.expires) {
+        const expires =
+          options.expires instanceof Date
+            ? options.expires.toUTCString()
+            : new Date(Date.now() + options.expires * 1000).toUTCString();
+        cookieString += `; expires=${expires}`;
+      }
+
+      if (options?.path) {
+        cookieString += `; path=${options.path}`;
+      }
+
+      if (options?.domain) {
+        cookieString += `; domain=${options.domain}`;
+      }
+
+      if (options?.secure) {
+        cookieString += `; secure`;
+      }
+      if (options?.sameSite) {
+        cookieString += `; samesite=${options.sameSite}`;
+      }
+
+      document.cookie = cookieString;
+
+      if (this.#notifyHandler) {
+        this.#notifyHandler({
+          type: 'set:cookie',
+          key,
+          value: undefined,
+        });
+      }
+    },
+    get: <DataType = any>(key: string): DataType | null => {
+      if (
+        typeof document === 'undefined' ||
+        typeof document.cookie === 'undefined' ||
+        typeof window === 'undefined'
+      ) {
+        return null;
+      }
+
+      const match = document.cookie.match(
+        new RegExp(`(?:^|; )${encodeURIComponent(this.#getKey(key))}=([^;]*)`),
+      );
+
+      let internValue = match ? match[1] : null;
+
+      if (!this.#doNotEncryptValues && internValue) {
+        internValue = this.decryptValue(decodeURIComponent(internValue));
+      }
+
+      if (this.#doNotParseValues) {
+        return internValue as unknown as DataType;
+      }
+
+      if (this.#notifyHandler) {
+        this.#notifyHandler({
+          type: 'get:cookie',
+          key,
+          value: undefined,
+        });
+      }
+
+      return internValue ? (JSON.parse(internValue) as DataType) : null;
+    },
+    remove: (key: string, options: RemoveCookieOptions = {}): void => {
+      if (
+        typeof document === 'undefined' ||
+        typeof document.cookie === 'undefined' ||
+        typeof window === 'undefined'
+      ) {
+        return;
+      }
+
+      this.cookie.set(this.#getKey(key), '', { ...options, expires: -1 });
+
+      if (this.#notifyHandler) {
+        this.#notifyHandler({
+          type: 'remove:cookie',
+          key,
+          value: undefined,
+        });
+      }
+    },
+  };
 }
 
 /* istanbul ignore next */

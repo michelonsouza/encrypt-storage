@@ -4,10 +4,13 @@ type StorageType = 'localStorage' | 'sessionStorage';
 
 type ChangeType =
   | 'set'
+  | 'set:cookie'
   | 'get'
+  | 'get:cookie'
   | 'getMultiple'
   | 'setMultiple'
   | 'remove'
+  | 'remove:cookie'
   | 'removeMultiple'
   | 'clear'
   | 'length'
@@ -46,26 +49,66 @@ export interface GetFromPatternOptions extends RemoveFromPatternOptions {
   doNotDecrypt?: boolean;
 }
 
+export interface SetItemWithTTLParams {
+  key: string;
+  value: any;
+  doNotEncrypt?: boolean;
+  /**
+   * in seconds
+   */
+  ttl: number | Date;
+}
+
+export interface CookieOptions {
+  expires?: number | Date;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  sameSite?: 'strict' | 'lax' | 'none';
+}
+
+export interface RemoveCookieOptions {
+  path?: string;
+  domain?: string;
+}
+export interface CookieInterface {
+  set(key: string, value: any, options?: CookieOptions): void;
+  get<DataType = any>(key: string): DataType | null;
+  remove(key: string, options?: RemoveCookieOptions): void;
+}
+
 export interface EncryptStorageInterface extends Storage {
   /**
    * `setItem` - Is the function to be set `safeItem` in `selected storage`
    * @param {string} key - Is the key of `data` in `selected storage`.
    * @param {any} value - Value to be `encrypted`, the same being a `string` or `object`.
    * @return {void} `void`
-   * @usage
-   * 		setItem('any_key', {key: 'value', another_key: 2})
-   * 		setItem('any_key', 'any value')
+   * @example
+   * encryptStorage.setItem('any_key', {key: 'value', another_key: 2});
+   * encryptStorage.setItem('any_key', 'any value');
    */
   setItem(key: string, value: any, doNotEncrypt?: boolean): void;
+  /**
+   * `setItemWithTTL` - Is the function to set an `safeItem` with `ttl` in `selected storage`
+   * @param {SetItemWithTTLParams} params - Is de `params` of function.
+   * @return {void} `void`
+   * @example
+   * encryptStorage.setItemWithTTL({
+   *    key: 'any_key',
+   *    value: { key: 'value', another_key: 2 },
+   *    ttl: 60, // in seconds or Date
+   * });
+   */
+  setItemWithTTL?: (params: SetItemWithTTLParams) => void;
 
   /**
    * `setMultipeItems` - Is the function to be set `safeItem` in `selected storage`
    * @param {[string, any][]} param - .
    * @param {any} value - It's an `array` of `tuples` to be set at once...
    * @return {void} `void`
-   * @usage
-   * 		setItem(['any_key', {key: 'value', another_key: 2}])
-   * 		setItem(['any_key', 'any value'])
+   * @example
+   * encryptStorage.setItem(['any_key', {key: 'value', another_key: 2}])
+   * encryptStorage.setItem(['any_key', 'any value'])
    */
   setMultipleItems(param: [string, any][], doNotEncrypt?: boolean): void;
 
@@ -73,8 +116,8 @@ export interface EncryptStorageInterface extends Storage {
    * `hash` - Is the function to be `hash` value width SHA256 encryptation
    * @param {any} value - Value to be `hashed`, the same being a `string`.
    * @return {string} `hashed string`
-   * @usage
-   * 		hash('any_string')
+   * @example
+   * encryptStorage.hash('any_string')
    */
   hash(value: string): string;
 
@@ -82,8 +125,8 @@ export interface EncryptStorageInterface extends Storage {
    * `md5Hash` - Is the function to be `hash` value width MD5 encryptation
    * @param {any} value - Value to be `hashed`, the same being a `string`.
    * @return {string} `hashed string`
-   * @usage
-   * 		md5Hash('any_string')
+   * @example
+   * md5Hash('any_string')
    */
   md5Hash(value: string): string;
 
@@ -92,9 +135,9 @@ export interface EncryptStorageInterface extends Storage {
    * @param {string} key - Is the key of `data` in `selected storage`.
    * @return {string | any | undefined} - Returns a formatted value when the same is an object or string when not.
    * Returns `undefined` when value not exists.
-   * @usage
-   * 		getItem('any_key') -> `{key: 'value', another_key: 2}`
-   * 		getItem('any_key') -> `'any value'`
+   * @example
+   * encryptStorage.getItem('any_key') -> `{key: 'value', another_key: 2}`
+   * encryptStorage.getItem('any_key') -> `'any value'`
    */
   getItem(key: string, doNotDecrypt?: boolean): string | any | undefined;
 
@@ -103,9 +146,9 @@ export interface EncryptStorageInterface extends Storage {
    * @param {string[]} keys - Is the keys of `data` in `selected storage`.
    * @return {Record<string, any> | undefined} - Returns a formatted value when the same is an object or string when not.
    * Returns `undefined` when value not exists.
-   * @usage
-   * 		getMultipleItems(['any_key']) -> `{any_key: {key: 'value', another_key: 2}}`
-   * 		getMultipleItems(['any_key']) -> `{any_key: 'any value'}`
+   * @example
+   * encryptStorage.getMultipleItems(['any_key']) -> `{any_key: {key: 'value', another_key: 2}}`
+   * encryptStorage.getMultipleItems(['any_key']) -> `{any_key: 'any value'}`
    */
   getMultipleItems(keys: string[], doNotDecrypt?: boolean): Record<string, any>;
 
@@ -114,8 +157,8 @@ export interface EncryptStorageInterface extends Storage {
    * @param {string} key - Is the key of `data` in `selected storage`.
    * @return {void}
    * Returns `void`.
-   * @usage
-   * 		removeItem('any_key')
+   * @example
+   * encryptStorage.removeItem('any_key')
    */
   removeItem(key: string): void;
 
@@ -124,8 +167,8 @@ export interface EncryptStorageInterface extends Storage {
    * @param {string[]} keys - Is the keys of `data` in `selected storage`.
    * @return {void}
    * Returns `void`.
-   * @usage
-   * 		removeMultipleItems(['any_key_1'm 'any_key_2'])
+   * @example
+   * encryptStorage.removeMultipleItems(['any_key_1'm 'any_key_2'])
    */
   removeMultipleItems(keys: string[]): void;
 
@@ -134,10 +177,10 @@ export interface EncryptStorageInterface extends Storage {
    * @param {string} pattern - Is the pattern existent in keys of `selected storage`.
    * @return {any | Record<string, any> | undefined}
    * Returns `void`.
-   * @usage
-   *    // itemKey = '12345678:user'
-   *    // another itemKey = '12345678:item'
-   * 		getItemFromPattern('12345678') -> {'12345678:user': 'value', '12345678:item': 'otherValue'}
+   * @example
+   * // itemKey = '12345678:user'
+   * // another itemKey = '12345678:item'
+   * encryptStorage.getItemFromPattern('12345678'); // -> {'12345678:user': 'value', '12345678:item': 'otherValue'}
    */
   getItemFromPattern(
     pattern: string,
@@ -149,10 +192,10 @@ export interface EncryptStorageInterface extends Storage {
    * @param {string} pattern - Is the pattern existent in keys of `selected storage`.
    * @return {void}
    * Returns `void`.
-   * @usage
-   *    // itemKey = '12345678:user'
-   *    // another itemKey = '12345678:item'
-   * 		removeItem('12345678') -> item removed from `selected storage`
+   * @example
+   * // itemKey = '12345678:user'
+   * // another itemKey = '12345678:item'
+   * encryptStorage.removeItem('12345678'); // -> item removed from `selected storage`
    */
   removeItemFromPattern(
     pattern: string,
@@ -161,12 +204,16 @@ export interface EncryptStorageInterface extends Storage {
 
   /**
    * `clear` - Clear all selected storage
+   * @example
+   * encryptStorage.clear();
    */
   clear(): void;
 
   /**
    * `key` - Return a `key` in selected storage index or `null`
    * @param {number} index - Index of `key` in `selected storage`
+   * @example
+   * encryptStorage.key(0); // -> 'any_key'
    */
   key(index: number): string | null;
 
@@ -176,8 +223,8 @@ export interface EncryptStorageInterface extends Storage {
    * @param {string} str - A `string` to be encrypted.
    * @return {string} result
    * Returns `string`.
-   * @usage
-   * 		encryptString('any_string') -> 'encrypted value'
+   * @example
+   * encryptStorage.encryptString('any_string'); // -> 'encrypted value'
    */
   encryptString(str: string): string;
 
@@ -186,9 +233,8 @@ export interface EncryptStorageInterface extends Storage {
    * `decryptString` - Is the function to be `decrypt` any string encrypted by `encryptString` and return decrypted value
    * @param {string} str - A `string` to be decrypted.
    * @return {string} result
-   * Returns `string`.
-   * @usage
-   * 		decryptString('any_string') -> 'decrypted value'
+   * @example
+   * encryptStorage.decryptString('any_string'); // -> 'decrypted value'
    */
   decryptString(str: string): string;
 
@@ -197,8 +243,8 @@ export interface EncryptStorageInterface extends Storage {
    * @param {string} value - A `value|object|array` to be encrypted.
    * @return {string} result
    * Returns `string`.
-   * @usage
-   * 		encryptString('any_string') -> 'encrypted value'
+   * @example
+   * encryptStorage.encryptString('any_string'); // -> 'encrypted value'
    */
   encryptValue(value: any): string;
 
@@ -207,8 +253,10 @@ export interface EncryptStorageInterface extends Storage {
    * @param {string} value - A `value|object|array` to be decrypted.
    * @return {T|any} result
    * Returns `string`.
-   * @usage
-   * 		decryptString('any_value') -> '{value: "decrypted value"}'
+   * @example
+   * encryptStorage.decryptString('any_value'); // -> '{value: "decrypted value"}'
    */
-  decryptValue<T = any>(key: string): T;
+  decryptValue<DataType = any>(key: string): DataType;
+
+  cookie: CookieInterface;
 }

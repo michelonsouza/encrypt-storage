@@ -51,6 +51,10 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
     - [NextJS](#nextjs)
     - [AsyncEncryptStorage](#asyncencryptstorage)
     - [AWS Amplify](#aws-amplify)
+    - [Cookie](#cookie)
+      - [_set_](#set)
+      - [_get_](#get)
+      - [_remove_](#remove)
     - [State Management Persisters](#state-management-persisters)
       - [_vuex-persist_](#vuex-persist)
       - [_redux-persist_](#redux-persist)
@@ -60,7 +64,7 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
 
 ## Features
 
-- Save encrypted data in `localStorage` and `sessionStorage`
+- Save encrypted data in `localStorage`, `sessionStorage` and `cookies`
 - Recover encrypted data with `get` functions
 - Use in the same way as native `Web Storage` (localStorage and sessionStorage)
 - If you use the `stateManagementUse` option, the data acquired in `get` functions will `not` have their return transformed into `Javascript objects`.
@@ -703,6 +707,95 @@ export const encryptStorage = new AsyncEncryptStorage('secret-key-value', option
 async function getDecryptedValue('key'): Promise<any | undefined> {
   const value = await encryptStorage.getItem('key');
 }
+```
+
+### Cookie
+
+Encryptstorage can also be used to encrypt data in cookies. See below for ways to use it.
+
+#### _set_
+
+Set a `encrypted` cookie value passed by parameter.
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+const encryptStorage = new EncryptStorage('secret-key-value', {
+  prefix: '@encrypt-storage',
+});
+
+encryptStorage.cookie.set('any-key', { value: 'any-value' });
+
+// document.cookie
+// any-key=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw...
+```
+
+You can pass parameters to the set method, which are normally used in cookies. View params in [CookieOptions](./src/types.ts#L62).
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+const encryptStorage = new EncryptStorage('secret-key-value', {
+  prefix: '@encrypt-storage',
+});
+
+encryptStorage.cookie.set(
+  'any-key',
+  { value: 'any-value' },
+  {
+    path: '/',
+    domain: 'example.com',
+    expires: new Date(Date.now() + 86400000),
+    secure: true,
+    sameSite: 'strict',
+  },
+);
+
+// document.cookie
+// any-key=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw; path=/; domain=example.com; expires=Tue, 24 Dec 2024 18:51:07 GMT; secure
+```
+
+#### _get_
+
+Set a `encrypted` cookie value passed by parameter.
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+const encryptStorage = new EncryptStorage('secret-key-value', {
+  prefix: '@encrypt-storage',
+});
+
+const value = { value: 'any-value' };
+
+encryptStorage.cookie.set('any-key', value);
+
+// document.cookie
+// any-key=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw...
+
+const decryptedValue = encryptStorage.cookie.get('any-key');
+
+// { value: 'any-value' }
+```
+
+#### _remove_
+
+Set a `encrypted` cookie value passed by parameter.
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+const encryptStorage = new EncryptStorage('secret-key-value', {
+  prefix: '@encrypt-storage',
+});
+
+const value = { value: 'any-value' };
+
+encryptStorage.cookie.set('any-key', value);
+
+// document.cookie
+// any-key=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw...
+
+encryptStorage.cookie.remove('any-key');
+
+// document.cookie
+// ''
 ```
 
 ### AWS Amplify
