@@ -492,7 +492,7 @@ export class EncryptStorage implements EncryptStorageInterface {
         return;
       }
 
-      this.cookie.set(this.#getKey(key), '', { ...options, expires: -1 });
+      this.cookie.set(key, '', { ...options, expires: -1 });
 
       if (this.#notifyHandler) {
         this.#notifyHandler({
