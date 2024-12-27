@@ -109,7 +109,7 @@ export class EncryptStorage implements EncryptStorageInterface {
     return value;
   }
 
-  public clear(): void {
+  public clear(cookieOptions?: CookieOptions): void {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
       return;
     }
@@ -117,7 +117,10 @@ export class EncryptStorage implements EncryptStorageInterface {
     const type = this.#storageType === 'cookies' ? 'clear:cookie' : 'clear';
 
     if (this.#storageType === 'cookies') {
-      clearCookies(this.#clientKeys, this.#clientKeysToRemoveOptions);
+      clearCookies(
+        this.#clientKeys,
+        cookieOptions || this.#clientKeysToRemoveOptions,
+      );
     } else {
       this.storage?.clear();
     }

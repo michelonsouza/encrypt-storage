@@ -81,7 +81,7 @@ export function getCookieLength() {
 
 export function clearCookies(
   clientKeys: string[] = [],
-  clientKeysToRemoveOptions: Record<string, CookieOptions> = {},
+  clientKeysToRemoveOptions: Record<string, CookieOptions> | CookieOptions = {},
 ): void {
   const cookies = document?.cookie?.split('; ') || [];
 
@@ -94,8 +94,9 @@ export function clearCookies(
 
     let cookieString = `${name}=; expires=${new Date(Date.now() - 1000)}`;
 
-    if (clientKeysToRemoveOptions[name]) {
-      const { path, domain, secure } = clientKeysToRemoveOptions[name];
+    if (clientKeysToRemoveOptions || clientKeysToRemoveOptions[name]) {
+      const { path, domain, secure } =
+        clientKeysToRemoveOptions || clientKeysToRemoveOptions[name];
 
       cookieString += `; path=${path || '/'}`;
 
