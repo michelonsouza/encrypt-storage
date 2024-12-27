@@ -1,8 +1,4 @@
-import {
-  InvalidSecretKeyError,
-  WindowIsNotDefinedError,
-  DocumentIsNotDefinedError,
-} from '@/errors';
+import { InvalidSecretKeyError } from '@/errors';
 import {
   getEncryptation,
   hashSHA256,
@@ -58,17 +54,6 @@ export class EncryptStorage implements EncryptStorageInterface {
   constructor(secretKey: string, options?: EncryptStorageOptions) {
     if (secretKey.length < 10) {
       throw new InvalidSecretKeyError();
-    }
-
-    if (typeof window === 'undefined') {
-      throw new WindowIsNotDefinedError();
-    }
-
-    if (
-      typeof document === 'undefined' ||
-      typeof document?.cookie === 'undefined'
-    ) {
-      throw new DocumentIsNotDefinedError();
     }
 
     const {
@@ -470,6 +455,7 @@ export class EncryptStorage implements EncryptStorageInterface {
     const keys: string[] = [];
 
     items.forEach(item => {
+      /* c8 ignore next 1 */
       const [key, cookieOptions] = Array.isArray(item) ? item : [item];
 
       this.removeItem(key, cookieOptions);

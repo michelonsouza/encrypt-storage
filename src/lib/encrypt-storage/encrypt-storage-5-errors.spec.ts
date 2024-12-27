@@ -1,11 +1,7 @@
 import { fakerPT_BR as faker } from '@faker-js/faker';
 import { MockInstance } from 'vitest';
 
-import {
-  InvalidSecretKeyError,
-  WindowIsNotDefinedError,
-  DocumentIsNotDefinedError,
-} from '@/errors';
+import { InvalidSecretKeyError } from '@/errors';
 import { clearCookies } from '@/utils';
 import { makeSut } from '@/utils/test-utils';
 
@@ -49,17 +45,5 @@ describe('EncryptStorage: throw errors', () => {
     expect(() =>
       makeSut({ secretKey: faker.string.alphanumeric(8) }),
     ).toThrowError(InvalidSecretKeyError);
-  });
-
-  it('should throws DocumentIsNotDefinedError if document is not defined', () => {
-    cookieGetSpy?.mockImplementation(() => undefined);
-    (document.cookie as unknown as any) = undefined;
-
-    expect(() => makeSut()).toThrowError(DocumentIsNotDefinedError);
-  });
-
-  it('should throws WindowIsNotDefinedError if window is not defined', () => {
-    windowSpy?.mockImplementation(() => undefined);
-    expect(() => makeSut()).toThrowError(WindowIsNotDefinedError);
   });
 });

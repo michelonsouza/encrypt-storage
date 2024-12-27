@@ -4,11 +4,11 @@
 
 Supported versions for security updates.
 
-| Version | Supported |
-| ------- | --------- |
-| 1.x.x   | ❌        |
-| >2.x.x  | ✅        |
-| >3.x.x  | ✅        |
+| Version | Supported | Observations      |
+| ------- | --------- | ----------------- |
+| 1.x.x   | ❌        | `not suported`    |
+| 2.x.x   | ⚠️        | `partial suport`  |
+| >3.x.x  | ✅        | `fully supported` |
 
 ## Reporting a Vulnerability
 

@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "3.0.0-beta.5",
+  "version": "3.0.0-beta.6",
   "description": "Wrapper for encrypted localStorage, sessionStorage and cookie in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -36,6 +36,7 @@
     "test:ui:coverage": "npm run test:ui -- --coverage.enabled=true",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:coveralls": "yarn test:ci && coveralls < coverage/lcov.info",
     "test:staged": "vitest related --run"
   },
   "keywords": [
@@ -102,6 +103,7 @@
     "@vitest/ui": "^2.1.8",
     "assert": "^2.1.0",
     "buffer": "^6.0.3",
+    "coveralls": "^3.1.1",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-prettier": "^9.1.0",

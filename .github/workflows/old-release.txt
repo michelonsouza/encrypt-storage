@@ -1,12 +1,12 @@
-name: 'npm publish'
+name: 'npm publish beta'
 
 on:
   release:
-    types: [created]
+    types: [prereleased]
 
 jobs:
-  pubish:
-    name: 'publish to npm'
+  publish-beta:
+    name: 'puplish beta version to npm'
     runs-on: ubuntu-latest
 
     steps:
@@ -29,9 +29,9 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > ~/.npmrc
 
       - name: 'publish to npm'
-        run: npm publish ./dist
+        run: npm publish ./dist --tag beta
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
       - name: 'verify published package'
-        run: yarn pack --dry-run
+        run: npm pack --dry-run

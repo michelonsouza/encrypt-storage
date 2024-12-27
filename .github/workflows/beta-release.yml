@@ -1,4 +1,4 @@
-name: npm publish beta
+name: 'npm publish beta'
 
 on:
   release:
@@ -6,32 +6,32 @@ on:
 
 jobs:
   publish-beta:
-    name: Puplish beta version to npm
+    name: 'puplish beta version to npm'
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout code
+      - name: 'checkout code'
         uses: actions/checkout@v3
 
-      - name: setup node.js
+      - name: 'setup node.js'
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
           cache: 'yarn'
 
-      - name: install dependencies
+      - name: 'install dependencies'
         run: yarn install
 
       - name: build
         run: yarn build
 
-      - name: set npm auth token
+      - name: 'set npm auth token'
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > ~/.npmrc
 
-      - name: publish to npm
+      - name: 'publish to npm'
         run: npm publish ./dist --tag beta
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
-      - name: verify published package
-        run: npm pack --dry-run
+      - name: 'verify published package'
+        run: yarn pack --dry-run

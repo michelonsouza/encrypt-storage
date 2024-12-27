@@ -2,7 +2,7 @@
 
 [![stargazers count](https://img.shields.io/github/stars/michelonsouza/encrypt-storage?style=social)](https://github.com/michelonsouza/encrypt-storage) ![maintenance](https://img.shields.io/npms-io/maintenance-score/encrypt-storage) [![npm](https://img.shields.io/npm/dm/encrypt-storage)](https://www.npmjs.com/package/encrypt-storage) ![sponsors](https://img.shields.io/github/sponsors/michelonsouza?logo=github-sponsors) ![package size](https://img.shields.io/bundlephobia/min/encrypt-storage?color=%232ebd4f&label=package%20size&logo=npm) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/main)](https://github.com/michelonsouza/encrypt-storage/blob/main/package.json#L3) [![Build Status](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/ci.yml)](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE) [![Node CI](https://github.com/michelonsouza/encrypt-storage/actions/workflows/ci.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml) [![CodeQL](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml) [![jsdelivery](https://img.shields.io/jsdelivr/npm/hm/encrypt-storage)](https://www.jsdelivr.com/package/npm/encrypt-storage)
 
-OBS: This is the new version of Encrypt Storage, it has breaking changes that will not be described below. For version `1.3.X` documentation, access this [link](./docs/README_V1.md) and version `2.x` access this [link](./docs/README_V2.md).
+OBS: This is the new version of Encrypt Storage, it has breaking changes that will not be described below. For version `1.3.X` documentation, access this [link](./docs/README_V1.md).
 
 The `Encrypt Storage` is a `wrapper` for native `Storage` of browser.
 
@@ -51,6 +51,10 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
     - [NextJS](#nextjs)
     - [AsyncEncryptStorage](#asyncencryptstorage)
     - [AWS Amplify](#aws-amplify)
+    - [Cookie](#cookie)
+      - [_set_](#set)
+      - [_get_](#get)
+      - [_remove_](#remove)
     - [State Management Persisters](#state-management-persisters)
       - [_vuex-persist_](#vuex-persist)
       - [_redux-persist_](#redux-persist)
@@ -63,9 +67,8 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
 - Save encrypted data in `localStorage`, `sessionStorage` and `cookies`
 - Recover encrypted data with `get` functions
 - Use in the same way as native `Web Storage` (localStorage and sessionStorage)
-- In this version, when `storageType` is `cookies`, use the same `Web Storage` interface
 - If you use the `stateManagementUse` option, the data acquired in `get` functions will `not` have their return transformed into `Javascript objects`.
-- Use with `stateManagement` persisters (`vuex-persist`, `pinia` and `redux-persist`\*)
+- Use with `stateManagement` persisters (`vuex-persist` and `redux-persist`\*)
 
 ## Installing
 
@@ -115,15 +118,15 @@ OBS: `Unpkg` doesn't have a counter badge
 
 The `options` object is optional and consists of the following properties:
 
-| Property name        | Default        | Type                                              | required |
-| -------------------- | -------------- | ------------------------------------------------- | -------- |
-| `prefix`             | `''`           | `string`                                          | `false`  |
-| `storageType`        | `localStorage` | [StorageType](./src/@types/types/common.ts#L5)    | `false`  |
-| `encAlgorithm`       | `AES`          | [EncAlgorithm](./src/@types/types/common.ts#L3)   | `false`  |
-| `notifyHandler`      | `undefined`    | [NotifyHandler](./src/@types/types/common.ts#L41) | `false`  |
-| `stateManagementUse` | `false`        | `boolean`                                         | `false`  |
-| `doNotEncryptValues` | `false`        | `boolean`                                         | `false`  |
-| `doNotParseValues`   | `false`        | `boolean`                                         | `false`  |
+| Property name        | Default        | Type                                | required |
+| -------------------- | -------------- | ----------------------------------- | -------- |
+| `prefix`             | `''`           | `string`                            | `false`  |
+| `storageType`        | `localStorage` | [StorageType](./src/types.ts#L3)    | `false`  |
+| `encAlgorithm`       | `AES`          | [EncAlgorithm](./src/types.ts#L1)   | `false`  |
+| `notifyHandler`      | `undefined`    | [NotifyHandler](./src/types.ts#L23) | `false`  |
+| `stateManagementUse` | `false`        | `boolean`                           | `false`  |
+| `doNotEncryptValues` | `false`        | `boolean`                           | `false`  |
+| `doNotParseValues`   | `false`        | `boolean`                           | `false`  |
 
 ## Usage
 
@@ -328,7 +331,7 @@ encryptStorage.setItem('token', 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2');
 encryptStorage.setItem(
   'token-not-encrypted',
   'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2',
-  { doNotEncrypt: true },
+  true,
 );
 ```
 
@@ -338,25 +341,6 @@ in your `storage`:
 | ------------------------------ | ------------------------------------------ |
 | `@example:token`               | `U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
 | `@example:token-not-encrypted` | `edbe38e0-748a-49c8-9f8f-b68f38dbe5a2`     |
-
-When `storageType` is `cookies`.
-
-```typescript
-encryptStorage.setItem(
-  'token',
-  'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'
-  { expires: 84600, domain: 'example.com', path: '/' },
-);
-encryptStorage.setItem(
-  'token-not-encrypted',
-  'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2',
-  { doNotEncrypt: true, domain: 'example.com', path: '/' },
-);
-```
-
-in your `document.cookie`:
-
-`%40example%3Atoken=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw; expires=Fri, 27 Dec 2024 18:30:10 GMT; domain=example.com; path=/; %40example%3Atoken-not-encrypted=edbe38e0-748a-49c8-9f8f-b68f38dbe5a2; domain=example.com; path=/;`
 
 #### _setMultipleItems_
 
@@ -382,32 +366,6 @@ in your `storage`:
 | `@example:token` | `U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
 | `@example:user`  | `U2FsdGVkX1/tT67hnb*\afcb`...              |
 
-When `storageType` is `cookies`.
-
-```typescript
-encryptStorage.setMultipleItems(
-  [
-    ['token', 'edbe38e0-748a-49c8-9f8f-b68f38dbe5a2'],
-    [
-      'user',
-      {
-        id: '123456',
-        name: 'John Doe',
-      },
-    ],
-  ],
-  {
-    expires: 84600,
-    domain: 'example.com',
-    path: '/',
-  },
-);
-```
-
-in your `document.cookie`:
-
-`%40example%3Atoken=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw; domain=example.com; path=/; expires=Fri, 27 Dec 2024 18:30:10 GMT; %40example%3Auser=U2FsdGVkX1/tT67hnb*\afcb; domain=example.com; path=/;`
-
 #### _getItem_
 
 Returns the value `decrypted` or `undefined` by the `key` passed by `parameter`. Default type is `any`;
@@ -415,8 +373,8 @@ Returns the value `decrypted` or `undefined` by the `key` passed by `parameter`.
 **NOTE**: It is possible to pass a `generics` (typescript case) to obtain a consistent and typed return for better use in the `typescript`.
 
 ```typescript
-const value = encryptStorage.getItem<DataType = any>('token');
-const value2 = encryptStorage.getItem<DataType = any>('token-not-encrypted', true);
+const value = encryptStorage.getItem<T = any>('token');
+const value2 = encryptStorage.getItem<T = any>('token-not-encrypted', true);
 ```
 
 result of `getItem`:
@@ -488,20 +446,6 @@ now in your `storage`:
 | --- | ----- |
 | ` ` | ` `   |
 
-When `storageType` is `cookies`.
-
-in your `document.cookie`
-
-`%40example%3Atoken=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw; domain=example.com; path=/; expires=Fri, 27 Dec 2024 18:30:10 GMT; %40example%3Auser=U2FsdGVkX1/tT67hnb*\afcb; domain=example.com; path=/;`
-
-```typescript
-encryptStorage.removeMultipleItems(['token', 'user']);
-```
-
-now in your `document.cookie`
-
-`''`
-
 #### _getItemFromPattern_
 
 Returns an `object` containing the `original` keys (no prefix) and `decrypted` values or `undefined` when no value found.
@@ -514,10 +458,6 @@ in your `storage`:
 | `@example:fruit:grape`       | `U2FsdGVkX1/yq5521ZXB5pqw`                 |
 | `@example:vegetable:lettuce` | `U2FsdGVkX1/tT67hnb*\afcb`                 |
 | `@example:token`             | `U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
-
-or in your `document.cookie`:
-
-`%40example%3Afruit%3Aapple=U2FsdGVkX1/2KEwOH+w4QaIc; domain=example.com; path=/; %40example%3Afruit%3Agrape=U2FsdGVkX1/yq5521ZXB5pqw; domain=example.com; path=/; %40example%3Avegetable%3Alettuce=U2FsdGVkX1/tT67hnb*\afcb; domain=example.com; path=/; %40example%3Atoken=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw; domain=example.com; path=/;`
 
 ```typescript
 const values = encryptStorage.getItemFromPattern('fruit');
@@ -545,10 +485,6 @@ in your `storage`:
 | `@example:vegetable:lettuce` | `U2FsdGVkX1/tT67hnb*\afcb`                 |
 | `@example:token`             | `U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
 
-or in your `document.cookie`:
-
-`%40example%3Afruit%3Aapple=U2FsdGVkX1/2KEwOH+w4QaIc; domain=example.com; path=/; %40example%3Afruit%3Agrape=U2FsdGVkX1/yq5521ZXB5pqw; domain=example.com; path=/; %40example%3Avegetable%3Alettuce=U2FsdGVkX1/tT67hnb*\afcb; domain=example.com; path=/; %40example%3Atoken=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw; domain=example.com; path=/;`
-
 ```typescript
 encryptStorage.removeItemFromPattern('fruit');
 ```
@@ -560,10 +496,6 @@ now in your `storage`:
 | `@example:vegetable:lettuce` | `U2FsdGVkX1/tT67hnb*\afcb`                 |
 | `@example:token`             | `U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
 
-or in your `document.cookie`:
-
-`%40example%3Avegetable%3Alettuce=U2FsdGVkX1/tT67hnb*\afcb; domain=example.com; path=/; %40example%3Atoken=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw; domain=example.com; path=/;`
-
 #### _key_
 
 Returns the `key` corresponding to the `index` passed by `parameter` or `null`.
@@ -574,10 +506,6 @@ in your `storage`:
 | ---------------------------- | ------------------------------------------ |
 | `@example:vegetable:lettuce` | `U2FsdGVkX1/tT67hnb*\afcb`                 |
 | `@example:token`             | `U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
-
-or in your `document.cookie`:
-
-`%40example%3Avegetable%3Alettuce=U2FsdGVkX1/tT67hnb*\afcb; domain=example.com; path=/; %40example%3Atoken=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw; domain=example.com; path=/;`
 
 ```typescript
 const key = encryptStorage.key(0);
@@ -600,10 +528,6 @@ in your `storage`:
 | `@example:vegetable:lettuce` | `U2FsdGVkX1/tT67hnb*\afcb`                 |
 | `@example:token`             | `U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
 
-or in your `document.cookie`:
-
-`%40example%3Avegetable%3Alettuce=U2FsdGVkX1/tT67hnb*\afcb; domain=example.com; path=/; %40example%3Atoken=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw; domain=example.com; path=/;`
-
 ```typescript
 const length = encryptStorage.length;
 ```
@@ -625,10 +549,6 @@ in your `storage`:
 | `@example:vegetable:lettuce` | `U2FsdGVkX1/tT67hnb*\afcb`                 |
 | `@example:token`             | `U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw`... |
 
-or in your `document.cookie`:
-
-`%40example%3Avegetable%3Alettuce=U2FsdGVkX1/tT67hnb*\afcb; domain=example.com; path=/; %40example%3Atoken=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw; domain=example.com; path=/;`
-
 ```typescript
 encryptStorage.clear();
 ```
@@ -638,10 +558,6 @@ now in your `storage`:
 | Key | Value |
 | --- | ----- |
 | ` ` | ` `   |
-
-or in your `document.cookie`:
-
-`''`
 
 #### _encryptString_
 
@@ -791,6 +707,95 @@ export const encryptStorage = new AsyncEncryptStorage('secret-key-value', option
 async function getDecryptedValue('key'): Promise<any | undefined> {
   const value = await encryptStorage.getItem('key');
 }
+```
+
+### Cookie
+
+Encryptstorage can also be used to encrypt data in cookies. See below for ways to use it.
+
+#### _set_
+
+Set a `encrypted` cookie value passed by parameter.
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+const encryptStorage = new EncryptStorage('secret-key-value', {
+  prefix: '@encrypt-storage',
+});
+
+encryptStorage.cookie.set('any-key', { value: 'any-value' });
+
+// document.cookie
+// any-key=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw...
+```
+
+You can pass parameters to the set method, which are normally used in cookies. View params in [CookieOptions](./src/types.ts#L62).
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+const encryptStorage = new EncryptStorage('secret-key-value', {
+  prefix: '@encrypt-storage',
+});
+
+encryptStorage.cookie.set(
+  'any-key',
+  { value: 'any-value' },
+  {
+    path: '/',
+    domain: 'example.com',
+    expires: new Date(Date.now() + 86400000),
+    secure: true,
+    sameSite: 'strict',
+  },
+);
+
+// document.cookie
+// any-key=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw; path=/; domain=example.com; expires=Tue, 24 Dec 2024 18:51:07 GMT; secure
+```
+
+#### _get_
+
+Set a `encrypted` cookie value passed by parameter.
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+const encryptStorage = new EncryptStorage('secret-key-value', {
+  prefix: '@encrypt-storage',
+});
+
+const value = { value: 'any-value' };
+
+encryptStorage.cookie.set('any-key', value);
+
+// document.cookie
+// any-key=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw...
+
+const decryptedValue = encryptStorage.cookie.get('any-key');
+
+// { value: 'any-value' }
+```
+
+#### _remove_
+
+Set a `encrypted` cookie value passed by parameter.
+
+```typescript
+import { EncryptStorage } from 'encrypt-storage';
+const encryptStorage = new EncryptStorage('secret-key-value', {
+  prefix: '@encrypt-storage',
+});
+
+const value = { value: 'any-value' };
+
+encryptStorage.cookie.set('any-key', value);
+
+// document.cookie
+// any-key=U2FsdGVkX1/2KEwOH+w4QaIcyq5521ZXB5pqw...
+
+encryptStorage.cookie.remove('any-key');
+
+// document.cookie
+// ''
 ```
 
 ### AWS Amplify

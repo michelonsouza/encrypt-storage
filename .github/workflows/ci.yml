@@ -1,10 +1,10 @@
-name: CI
+name: ci
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   run-tests:
@@ -15,22 +15,22 @@ jobs:
         node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Test
-      run: |
-        yarn install
-        yarn lint
-        yarn test:ci
+      - name: test
+        run: |
+          yarn install
+          yarn lint
+          yarn test:ci
 
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      env:
-        NODE_COVERALLS_DEBUG: 1
-      with:
-        github-token: ${{ github.token }}
+      - name: coveralls
+        uses: coverallsapp/github-action@master
+        env:
+          NODE_COVERALLS_DEBUG: 1
+        with:
+          github-token: ${{ github.token }}
