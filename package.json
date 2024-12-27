@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "3.0.0-beta.8",
+  "version": "3.0.0-beta.9",
   "description": "Wrapper for encrypted localStorage, sessionStorage and cookie in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,8 +23,8 @@
     "prepush": "npm run test",
     "prebuild": "rm -rf dist",
     "postbuild": "rm -rf dist/src/lib/**/*.spec.*",
-    "prepublish": "node ./prepublish.js && yarn prettier -c -w ./package.json",
-    "postpublish": "node ./postpublish.js && yarn prettier -c -w ./package.json",
+    "__prepublish": "node ./prepublish.js && yarn prettier -c -w ./package.json",
+    "__postpublish": "node ./postpublish.js && yarn prettier -c -w ./package.json",
     "build": "tsc && vite build",
     "bundle:visualizer": "vite-bundle-visualizer",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --config .eslintrc.json",
