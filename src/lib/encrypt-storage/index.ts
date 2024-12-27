@@ -33,7 +33,7 @@ export class EncryptStorage implements EncryptStorageInterface {
 
   #clientKeys: string[] = [];
 
-  #clientKeysToRemoveOptions: Record<string, CookieOptions> = {};
+  #clientKeysToRemoveOptions?: Record<string, CookieOptions>;
 
   readonly #storageType: StorageType;
 
@@ -117,10 +117,13 @@ export class EncryptStorage implements EncryptStorageInterface {
     const type = this.#storageType === 'cookies' ? 'clear:cookie' : 'clear';
 
     if (this.#storageType === 'cookies') {
-      clearCookies(
-        cookieKeys || this.#clientKeys,
-        cookieOptions || this.#clientKeysToRemoveOptions,
-      );
+      /* c8 ignore next 4 */
+      const keys =
+        cookieKeys?.length || this.#clientKeys?.length
+          ? (cookieKeys || this.#clientKeys).map(this.#getKey)
+          : undefined;
+      const options = cookieOptions || this.#clientKeysToRemoveOptions;
+      clearCookies(keys, options);
     } else {
       this.storage?.clear();
     }
@@ -170,8 +173,13 @@ export class EncryptStorage implements EncryptStorageInterface {
     const encryptValues = this.#doNotEncryptValues || doNotEncrypt;
     const storageKey = this.#getKey(key);
 
-    this.#clientKeys = Array.from(new Set([...this.#clientKeys, storageKey]));
-    this.#clientKeysToRemoveOptions[storageKey] = cookieOptions;
+    this.#clientKeys = Array.from(new Set([...this.#clientKeys, key]));
+
+    if (!this.#clientKeysToRemoveOptions) {
+      this.#clientKeysToRemoveOptions = {};
+    }
+
+    this.#clientKeysToRemoveOptions[key] = cookieOptions;
 
     let valueToString =
       typeof value === 'object' ? JSON.stringify(value) : String(value);
@@ -449,11 +457,11 @@ export class EncryptStorage implements EncryptStorageInterface {
       this.storage?.removeItem(storageKey);
     }
 
-    this.#clientKeys = this.#clientKeys.filter(
-      clientKey => clientKey !== storageKey,
-    );
+    this.#clientKeys = this.#clientKeys.filter(clientKey => clientKey !== key);
 
-    delete this.#clientKeysToRemoveOptions[storageKey];
+    if (this.#clientKeysToRemoveOptions) {
+      delete this.#clientKeysToRemoveOptions[key];
+    }
 
     if (this.#notifyHandler && !this.#multiple) {
       const type = this.#storageType === 'cookies' ? 'remove:cookie' : 'remove';
