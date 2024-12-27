@@ -117,12 +117,15 @@ export class EncryptStorage implements EncryptStorageInterface {
     const type = this.#storageType === 'cookies' ? 'clear:cookie' : 'clear';
 
     if (this.#storageType === 'cookies') {
-      /* c8 ignore next 4 */
+      /* c8 ignore next 8 */
       const keys =
         cookieKeys?.length || this.#clientKeys?.length
-          ? (cookieKeys || this.#clientKeys).map(this.#getKey)
+          ? (cookieKeys || this.#clientKeys).map(key => this.#getKey(key))
           : undefined;
-      const options = cookieOptions || this.#clientKeysToRemoveOptions;
+      const options =
+        cookieOptions || this.#clientKeysToRemoveOptions
+          ? { ...(cookieOptions || this.#clientKeysToRemoveOptions) }
+          : undefined;
       clearCookies(keys, options);
     } else {
       this.storage?.clear();
