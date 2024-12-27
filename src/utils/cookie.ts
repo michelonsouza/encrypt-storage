@@ -83,11 +83,11 @@ export function clearCookies(
   clientKeys: string[] = [],
   clientKeysToRemoveOptions: Record<string, CookieOptions> | CookieOptions = {},
 ): void {
-  const cookies = document?.cookie?.split('; ') || [];
+  const cookies = getCookieKeys() || [];
 
-  for (const cookie of cookies) {
-    const [name] = cookie.split('=');
-
+  for (const name of cookies) {
+    // eslint-disable-next-line no-console
+    console.log({ name: decodeURIComponent(name), clientKeys });
     if (!clientKeys?.includes(decodeURIComponent(name))) {
       return;
     }
