@@ -87,15 +87,24 @@ export function clearCookies(
 
   for (const name of cookies) {
     if (clientKeys?.includes(decodeURIComponent(name))) {
+      let cookieString = `${name}=; expires=${new Date(Date.now() - 1000)}`;
+
       if (clientKeysToRemoveOptions || clientKeysToRemoveOptions[name]) {
-        const options =
+        const { path, domain, secure } =
           clientKeysToRemoveOptions || clientKeysToRemoveOptions[name];
 
-        setCookie(name, '', {
-          ...options,
-          expires: new Date(Date.now() - 1000),
-        });
+        cookieString += `; path=${path || '/'}`;
+
+        if (domain) {
+          cookieString += `; domain=${domain}`;
+        }
+
+        if (secure) {
+          cookieString += `; secure`;
+        }
       }
+
+      document.cookie = cookieString;
     } else {
       removeCookie(name);
     }
