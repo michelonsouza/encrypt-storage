@@ -88,28 +88,26 @@ export function clearCookies(
   for (const name of cookies) {
     // eslint-disable-next-line no-console
     console.log({ name: decodeURIComponent(name), clientKeys });
-    if (!clientKeys?.includes(decodeURIComponent(name))) {
-      return;
-    }
+    if (clientKeys?.includes(decodeURIComponent(name))) {
+      let cookieString = `${name}=; expires=${new Date(Date.now() - 1000)}`;
 
-    let cookieString = `${name}=; expires=${new Date(Date.now() - 1000)}`;
+      if (clientKeysToRemoveOptions || clientKeysToRemoveOptions[name]) {
+        const { path, domain, secure } =
+          clientKeysToRemoveOptions || clientKeysToRemoveOptions[name];
 
-    if (clientKeysToRemoveOptions || clientKeysToRemoveOptions[name]) {
-      const { path, domain, secure } =
-        clientKeysToRemoveOptions || clientKeysToRemoveOptions[name];
+        cookieString += `; path=${path || '/'}`;
 
-      cookieString += `; path=${path || '/'}`;
+        if (domain) {
+          cookieString += `; domain=${domain}`;
+        }
 
-      if (domain) {
-        cookieString += `; domain=${domain}`;
+        if (secure) {
+          cookieString += `; secure;`;
+        }
       }
 
-      if (secure) {
-        cookieString += `; secure;`;
-      }
+      document.cookie = cookieString;
     }
-
-    document.cookie = cookieString;
   }
 }
 
