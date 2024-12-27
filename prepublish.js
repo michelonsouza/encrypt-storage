@@ -10,5 +10,3 @@ fs.writeFileSync('./package.json', JSON.stringify(data), {
   flag: 'w',
   encoding: 'utf8',
 });
-
-fs.rmSync('./package.txt', { force: true });
