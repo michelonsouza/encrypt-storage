@@ -31,6 +31,10 @@ export class EncryptStorage implements EncryptStorageInterface {
 
   public readonly storage: Storage | null;
 
+  #clientKeys: string[] = [];
+
+  #clientKeysToRemoveOptions: Record<string, CookieOptions> = {};
+
   readonly #storageType: StorageType;
 
   readonly #prefix: string;
@@ -113,7 +117,7 @@ export class EncryptStorage implements EncryptStorageInterface {
     const type = this.#storageType === 'cookies' ? 'clear:cookie' : 'clear';
 
     if (this.#storageType === 'cookies') {
-      clearCookies();
+      clearCookies(this.#clientKeys, this.#clientKeysToRemoveOptions);
     } else {
       this.storage?.clear();
     }
@@ -162,6 +166,10 @@ export class EncryptStorage implements EncryptStorageInterface {
     const { doNotEncrypt } = cookieOptions;
     const encryptValues = this.#doNotEncryptValues || doNotEncrypt;
     const storageKey = this.#getKey(key);
+
+    this.#clientKeys = Array.from(new Set([...this.#clientKeys, storageKey]));
+    this.#clientKeysToRemoveOptions[storageKey] = cookieOptions;
+
     let valueToString =
       typeof value === 'object' ? JSON.stringify(value) : String(value);
 
@@ -437,6 +445,12 @@ export class EncryptStorage implements EncryptStorageInterface {
     } else {
       this.storage?.removeItem(storageKey);
     }
+
+    this.#clientKeys = this.#clientKeys.filter(
+      clientKey => clientKey !== storageKey,
+    );
+
+    delete this.#clientKeysToRemoveOptions[storageKey];
 
     if (this.#notifyHandler && !this.#multiple) {
       const type = this.#storageType === 'cookies' ? 'remove:cookie' : 'remove';

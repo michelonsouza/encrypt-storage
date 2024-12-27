@@ -79,13 +79,36 @@ export function getCookieLength() {
   return getCookieKeys().length;
 }
 
-export function clearCookies() {
+export function clearCookies(
+  clientKeys: string[] = [],
+  clientKeysToRemoveOptions: Record<string, CookieOptions> = {},
+): void {
   const cookies = document?.cookie?.split('; ') || [];
 
   for (const cookie of cookies) {
     const [name] = cookie.split('=');
 
-    document.cookie = `${name}=; expires=${new Date(Date.now() - 1000)}; path=/;`;
+    if (!clientKeys?.includes(name)) {
+      return;
+    }
+
+    let cookieString = `${name}=; expires=${new Date(Date.now() - 1000)}`;
+
+    if (clientKeysToRemoveOptions[name]) {
+      const { path, domain, secure } = clientKeysToRemoveOptions[name];
+
+      cookieString += `; path=${path || '/'}`;
+
+      if (domain) {
+        cookieString += `; domain=${domain}`;
+      }
+
+      if (secure) {
+        cookieString += `; secure;`;
+      }
+    }
+
+    document.cookie = cookieString;
   }
 }
 
