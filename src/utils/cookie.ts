@@ -88,7 +88,7 @@ export function clearCookies(
   for (const cookie of cookies) {
     const [name] = cookie.split('=');
 
-    if (!clientKeys?.includes(name)) {
+    if (!clientKeys?.includes(decodeURIComponent(name))) {
       return;
     }
 
