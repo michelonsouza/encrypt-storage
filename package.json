@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "3.0.0-beta.10",
+  "version": "3.0.0-beta.11",
   "description": "Wrapper for encrypted localStorage, sessionStorage and cookie in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,7 +8,7 @@
   "homepage": "https://github.com/michelonsouza/encrypt-storage#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/michelonsouza/encrypt-storage.git"
+    "url": "git+https://github.com/michelonsouza/encrypt-storage.git"
   },
   "funding": {
     "type": "individual",
