@@ -148,7 +148,7 @@ export interface EncryptStorageInterface extends Storage {
    * @example
    * encryptStorage.clear();
    */
-  clear(cookieOptions?: CookieOptions): void;
+  clear(cookieKeys?: string[], cookieOptions?: CookieOptions): void;
 
   /**
    * `key` - Return a `key` in selected storage index or `null`
