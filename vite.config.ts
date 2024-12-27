@@ -64,7 +64,8 @@ export default defineConfig(({ mode }) => {
       manifest: false,
       sourcemap: false,
       lib: {
-        formats: ['es'],
+        formats: ['es', 'umd'],
+        name: packageJson.name,
         entry: {
           index: resolve(__dirname, 'src/lib/index.ts'),
         },
@@ -87,7 +88,12 @@ export default defineConfig(({ mode }) => {
       globals: true,
       silent: false,
       environment: 'jsdom',
-      exclude: ['node_modules', 'src/@types/**/*.ts', '*.spec.ts'],
+      exclude: [
+        'node_modules',
+        'vite.config.ts',
+        'src/@types/**/*.ts',
+        '*.spec.ts',
+      ],
       threads: false,
       setupFiles: ['./__setups__/local-storage.js'],
       mockReset: false,
