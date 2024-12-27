@@ -1,19 +1,25 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "ESNext",
     "outDir": "./dist",
-    "lib": ["ES2020", "DOM"],
+    "lib": ["DOM", "ESNext"],
     "sourceMap": true,
     "declaration": true,
+    "declarationMap": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "types": ["vitest/globals"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/experiments/*"]
+  "include": ["src/**/*", "vite.config.ts"],
+  "exclude": ["node_modules"]
 }

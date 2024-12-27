@@ -1,6 +1,6 @@
 import { AES, Rabbit, RC4, RC4Drop, enc, SHA256, MD5 } from 'crypto-js';
 
-import { EncAlgorithm, Encryptation } from './types';
+import { EncAlgorithm, Encryptation } from '@/@types/types';
 
 const algorithms = {
   AES,

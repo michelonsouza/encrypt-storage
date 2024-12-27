@@ -1,12 +1,12 @@
-import { EncryptStorage } from './encrypt-storage';
-import { EncryptStorageOptions } from './types';
+import { AsyncStorageOptions } from '@/@types/types';
+import { EncryptStorage } from '../encrypt-storage';
 
 export class AsyncEncryptStorage {
   #encryptStorage: EncryptStorage;
 
   public storage: Storage | null;
 
-  constructor(secretKey: string, options?: EncryptStorageOptions) {
+  constructor(secretKey: string, options?: AsyncStorageOptions) {
     this.#encryptStorage = new EncryptStorage(secretKey, options);
 
     this.storage = this.#encryptStorage.storage;
@@ -19,17 +19,17 @@ export class AsyncEncryptStorage {
   public async setItem(
     key: string,
     value: any,
-    dotNotEncrypt?: boolean,
+    doNotEncrypt?: boolean,
   ): Promise<void> {
     return new Promise(resolve => {
-      resolve(this.#encryptStorage.setItem(key, value, dotNotEncrypt));
+      resolve(this.#encryptStorage.setItem(key, value, { doNotEncrypt }));
     });
   }
 
   public async getItem<T = any>(
     key: string,
     doNotDecrypt?: boolean,
-  ): Promise<T | undefined> {
+  ): Promise<T | null> {
     return new Promise(resolve => {
       const storageValue = this.#encryptStorage.getItem<T>(key, doNotDecrypt);
       resolve(storageValue);
@@ -44,7 +44,7 @@ export class AsyncEncryptStorage {
 
   public async getItemFromPattern(
     pattern: string,
-  ): Promise<Record<string, any> | undefined> {
+  ): Promise<Record<string, any> | null> {
     return new Promise(resolve => {
       const storageValues = this.#encryptStorage.getItemFromPattern(pattern);
       resolve(storageValues);
@@ -82,15 +82,4 @@ export class AsyncEncryptStorage {
       resolve(decryptedValue);
     });
   }
-}
-
-/* istanbul ignore next */
-if (window) {
-  /* istanbul ignore next */
-  (window as any).AsyncEncryptStorage = AsyncEncryptStorage;
-}
-/* istanbul ignore next */
-if (window && window?.globalThis) {
-  /* istanbul ignore next */
-  (window.globalThis as any).AsyncEncryptStorage = AsyncEncryptStorage;
 }

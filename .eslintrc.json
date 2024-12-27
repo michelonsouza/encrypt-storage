@@ -1,32 +1,33 @@
 {
-  "root": true,
   "env": {
     "browser": true,
+    "node": true,
     "es2021": true,
     "jest": true
   },
+  "globals": {
+    "vi": "readonly",
+    "vitest": "readonly"
+  },
   "extends": [
-    "airbnb-base",
-    "plugin:@typescript-eslint/recommended",
+    "airbnb",
+    "eslint:recommended",
     "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 12,
+    "ecmaVersion": "latest",
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
     "prettier/prettier": "error",
-    "no-unused-expressions": "off",
-    "no-useless-constructor": "off",
-    "class-methods-use-this": "off",
-    "@typescript-eslint/ban-ts-comment": "off",
     "import/prefer-default-export": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "class-methods-use-this": "off",
+    "no-restricted-syntax": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
@@ -40,9 +41,49 @@
       {
         "ts": "never"
       }
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "vite.config.ts",
+          "vitest.config.ts",
+          "./src/utils/test-utils.ts",
+          "setup.ts",
+          "**/*.test.js",
+          "**/*.spec.ts"
+        ],
+        "peerDependencies": [
+          "vite.config.ts",
+          "vitest.config.ts",
+          "./src/utils/test-utils.ts",
+          "setup.ts",
+          "**/*.test.js",
+          "**/*.spec.ts"
+        ],
+        "optionalDependencies": [
+          "vite.config.ts",
+          "vitest.config.ts",
+          "./src/utils/test-utils.ts",
+          "setup.ts",
+          "**/*.test.js",
+          "**/*.spec.ts"
+        ],
+        "bundledDependencies": [
+          "vite.config.ts",
+          "vitest.config.ts",
+          "./src/utils/test-utils.ts",
+          "setup.ts",
+          "**/*.test.js",
+          "**/*.spec.ts"
+        ]
+      }
     ]
   },
   "settings": {
+    "react": {
+      "version": "latest"
+    },
     "import/resolver": {
       "typescript": {}
     }
