@@ -91,8 +91,9 @@ export function clearCookies(
         const options =
           clientKeysToRemoveOptions || clientKeysToRemoveOptions[name];
 
-        removeCookie(name, {
+        setCookie(name, '', {
           ...options,
+          expires: new Date(Date.now() - 1000),
         });
       }
     } else {
