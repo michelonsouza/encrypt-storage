@@ -1,3 +1,9 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [3.0.0-beta.44](https://github.com/michelonsouza/encrypt-storage/compare/v3.0.0-beta.43...v3.0.0-beta.44) (2024-12-28)
+
 # [2.13.0-3.0.0-beta.1](https://github.com/michelonsouza/encrypt-storage/compare/v2.12.23...v2.13.0-3.0.0-beta.1) (2024-12-28)
 
 

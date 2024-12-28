@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "3.0.0-beta.43",
+  "version": "3.0.0-beta.44",
   "description": "Wrapper for encrypted localStorage, sessionStorage and cookie in browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,6 +15,8 @@
     "url": "https://github.com/sponsors/michelonsouza"
   },
   "scripts": {
+    "release": "standard-version --prerelease beta --infile ./docs/CHANGELOG.md",
+    "prerelease": "standard-version --prerelease beta --infile ./docs/CHANGELOG.md",
     "prepare": "husky",
     "precommit": "lint-staged",
     "prepush": "npm run test",
@@ -126,6 +128,7 @@
     "prettier": "^3.4.2",
     "semantic-release": "^24.2.0",
     "simple-git": "^3.27.0",
+    "standard-version": "^9.5.0",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
     "typescript": "^5.7.2",
