@@ -6,8 +6,7 @@
       },
       {
         "name": "3.0.0-beta",
-        "prerelease": true,
-        "channel": "beta"
+        "prerelease": true
       }
     ],
     "plugins": [
@@ -29,7 +28,8 @@
       [
         "@semantic-release/npm",
         {
-          "npmPublish": true
+          "npmPublish": true,
+          "pkgRoot": "."
         }
       ],
       [
