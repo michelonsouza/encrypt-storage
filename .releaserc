@@ -10,7 +10,8 @@
     },
     {
       "name": "3.0.0-beta",
-      "prerelease": true
+      "prerelease": true,
+      "chanel": "beta"
     }
   ],
   "plugins": [

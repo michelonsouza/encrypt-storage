@@ -1,16 +1,16 @@
-name: 'Release'
+name: 'Pre-release'
 
 on:
   push:
     branches:
-      - 'main'
+      - '3.0.0-beta'
 
 permissions:
   contents: read
 
 jobs:
-  release:
-    name: Release
+  pre-release:
+    name: 'Pre-release'
     runs-on: ubuntu-latest
     permissions:
       contents: write # to be able to publish a GitHub release
