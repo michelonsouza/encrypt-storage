@@ -1,14 +1,10 @@
 name: CI
 
 on:
-  workflow_run:
-    workflows: ['code ql']
-    types:
-      - completed
   push:
-    branches: [main, 3.0.0-beta, v2]
+    branches: [main, v2]
   pull_request:
-    branches: [main, 3.0.0-beta, v2]
+    branches: [main, v2]
 
 jobs:
   run-tests:
