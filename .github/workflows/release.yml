@@ -8,22 +8,36 @@ on:
   push:
     branches:
       - 'main'
-    tags:
-      - 'v*'
+      - '3.0.0-beta'
+
+permissions:
+  contents: read
 
 jobs:
-  pre-release:
-    name: 'Pre-release'
+  release:
+    name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
 
     steps:
       - name: 'Checkout code'
-        uses: actions/checkout@v2
-      - uses: CupOfTea696/gh-action-auto-release@v1.0.0
+        uses: actions/checkout@v4
         with:
-          title: 'Release: $version'
-          tag: 'v$semver'
-          draft: false
-          regex: '/^Release: #{semver}$/i'
+          fetch-depth: 0
+
+      - name: 'Setup node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+        run: npx semantic-release

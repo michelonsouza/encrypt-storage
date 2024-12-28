@@ -1,0 +1,21 @@
+{
+  "release": {
+    "branches": [
+      {
+        "name": "master"
+      },
+      {
+        "name": "3.0.0-beta",
+        "prerelease": true,
+        "channel": "beta"
+      }
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
+  }
+}

@@ -103,6 +103,7 @@ export default defineConfig(({ mode }) => {
         },
       },
       coverage: {
+        reporter: ['text', 'html', 'clover', 'json', 'lcov'],
         exclude: [
           'src/utils',
           'src/@types',

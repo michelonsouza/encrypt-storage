@@ -1,6 +1,10 @@
 name: 'NPM publish'
 
 on:
+  workflow_run:
+    workflows: [CI, Release]
+    types:
+      - completed
   release:
     types: [released]
 
@@ -16,7 +20,7 @@ jobs:
       - name: 'Setup node.js'
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '22.x'
           cache: 'yarn'
 
       - name: 'Install dependencies'
