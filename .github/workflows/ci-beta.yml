@@ -1,12 +1,12 @@
-name: 'NPM publish'
+name: 'CI NPM publish beta'
 
 on:
   release:
-    types: [released]
+    types: [prereleased]
 
 jobs:
   analyze:
-    name: Analyze
+    name: 'CodeQL code quality analysis'
     runs-on: ubuntu-latest
 
     strategy:
@@ -52,6 +52,7 @@ jobs:
 
   run-tests:
     needs: analyze
+    name: 'Run tests'
     runs-on: ubuntu-latest
 
     strategy:
@@ -79,9 +80,9 @@ jobs:
         with:
           github-token: ${{ github.token }}
 
-  pubish:
-    needs: [analyze, run-tests]
-    name: 'Publish to npm'
+  publish-beta:
+    needs: ['analyze', run-tests]
+    name: 'Puplish beta version to npm'
     runs-on: ubuntu-latest
 
     steps:
@@ -104,6 +105,6 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > ~/.npmrc
 
       - name: 'Publish to npm'
-        run: npm publish ./dist
+        run: npm publish ./dist --tag beta
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
