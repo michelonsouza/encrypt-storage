@@ -6,9 +6,9 @@ on:
     types:
       - completed
   push:
-    branches: [main, 3.0.0-beta]
+    branches: [main, 3.0.0-beta, v2]
   pull_request:
-    branches: [main, 3.0.0-beta]
+    branches: [main, 3.0.0-beta, v2]
 
 jobs:
   run-tests:

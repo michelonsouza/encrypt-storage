@@ -5,16 +5,19 @@
         "name": "main"
       },
       {
+        "name": "v2",
+        "prerelease": true,
+        "chanel": "beta"
+      },
+      {
         "name": "3.0.0-beta",
-        "prerelease": true
+        "prerelease": true,
+        "chanel": "beta"
       }
     ],
     "plugins": [
       [
         "@semantic-release/commit-analyzer"
-      ],
-      [
-        "@semantic-release/github"
       ],
       [
         "@semantic-release/release-notes-generator"
@@ -32,6 +35,7 @@
           "pkgRoot": "."
         }
       ],
+      "@semantic-release/github",
       [
         "@semantic-release/git",
         {

@@ -1,27 +1,40 @@
-name: Release
+name: 'Release'
 
 on:
   push:
     branches:
-      - main
-      - 3.0.0-beta
+      - 'main'
+      - '3.0.0-beta'
+
+permissions:
+  contents: read
 
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: 'Checkout code'
+        uses: actions/checkout@v4
         with:
-          node-version: '16'
+          fetch-depth: 0
 
-      - name: Release Please Action
-        uses: google-github-actions/release-please-action@v3
+      - name: 'Setup node.js'
+        uses: actions/setup-node@v4
         with:
-          release-type: node
-          package-name: encrypt-storage
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          node-version: '22.x'
+
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: 'Run semantic release'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+        run: npx semantic-release
