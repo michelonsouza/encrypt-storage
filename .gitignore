@@ -9,5 +9,6 @@ _bundles
 package.txt
 .DS_Store
 .DS_Store
+.semver-output
 
 *.log

@@ -22,7 +22,7 @@ module.exports = async (pluginConfig, context) => {
 
   if (lastTag.includes('beta')) {
     const [versionPrefix, betaVersion] = lastTag.split('-beta.')[1];
-    const newBetaVersion = parseInt(betaVersion, 10) + 1;
+    const newBetaVersion = parseInt(betaVersion, 10) + 5;
     newTag = `${versionPrefix}-beta.${newBetaVersion}`;
   } else {
     const [, version] = lastTag.split('v');
@@ -35,7 +35,5 @@ module.exports = async (pluginConfig, context) => {
     newTag = `v${newMajor}.${newMinor}.${newPatch}`;
   }
 
-  // return newTag;
-
-  return `${lastTag}${newTag}`;
+  return newTag;
 };

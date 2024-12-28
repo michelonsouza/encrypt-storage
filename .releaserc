@@ -16,7 +16,10 @@
   ],
   "plugins": [
     [
-      "@semantic-release/commit-analyzer"
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits"
+      }
     ],
     [
       "@semantic-release/release-notes-generator"
@@ -24,7 +27,7 @@
     [
       "@semantic-release/changelog",
       {
-        "changelogFile": "CHANGELOG.md"
+        "changelogFile": "docs/CHANGELOG.md"
       }
     ],
     [
@@ -40,14 +43,16 @@
       {
         "assets": [
           "package.json",
-          "CHANGELOG.md"
+          "docs/CHANGELOG.md"
         ],
         "message": "chore(release): ${nextRelease.gitTag}"
       }
     ],
     [
       {
-        "path": "./custom-tag-generator.cjs"
+        "path": "./custom-tag-generator.cjs",
+        "generateVersion": "./custom-tag-generator.cjs",
+        "version": "./custom-tag-generator.cjs"
       }
     ]
   ]
