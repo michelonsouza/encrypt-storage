@@ -1,6 +1,10 @@
 name: CI
 
 on:
+  workflow_run:
+    workflows: ['code ql']
+    types:
+      - completed
   push:
     branches: [main, 3.0.0-beta]
   pull_request:

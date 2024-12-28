@@ -32,7 +32,7 @@ jobs:
       - name: 'Setup node.js'
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: '22.x'
       - name: 'Install dependencies'
         run: yarn install
 
