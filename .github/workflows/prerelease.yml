@@ -1,4 +1,4 @@
-name: 'Release'
+name: 'Pre-release'
 
 on:
   workflow_run:
@@ -7,9 +7,9 @@ on:
       - completed
   push:
     branches:
-      - 'main'
+      - '3.0.0-beta'
     tags:
-      - 'v*'
+      - '*-beta.*'
 
 jobs:
   pre-release:

@@ -8,5 +8,6 @@ _bundles
 .yarnrc.yml
 package.txt
 .DS_Store
+.DS_Store
 
 *.log

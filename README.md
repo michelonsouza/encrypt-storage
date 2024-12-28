@@ -643,6 +643,15 @@ or in your `document.cookie`:
 
 `''`
 
+OBS: when `storageType` is `cookies` only `yours cookies` has deleted and needs pass another params.
+
+```typescript
+encryptStorage.clear(['vegetable:lettuce', 'token'], {
+  domain: 'example.com',
+  path: '/',
+});
+```
+
 #### _encryptString_
 
 Encrypts a `string` passed by `parameter`.

@@ -1,34 +1,38 @@
-name: 'npm publish beta'
+name: 'NPM publish beta'
 
 on:
+  workflow_run:
+    workflows: [CI, Pre-release]
+    types:
+      - completed
   release:
     types: [prereleased]
 
 jobs:
   publish-beta:
-    name: 'puplish beta version to npm'
+    name: 'Puplish beta version to npm'
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'checkout code'
+      - name: 'Checkout code'
         uses: actions/checkout@v3
 
-      - name: 'setup node.js'
+      - name: 'Setup node.js'
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
           cache: 'yarn'
 
-      - name: 'install dependencies'
+      - name: 'Install dependencies'
         run: yarn install
 
-      - name: build
+      - name: Build
         run: yarn build
 
-      - name: 'set npm auth token'
+      - name: 'Set npm auth token'
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > ~/.npmrc
 
-      - name: 'publish to npm'
+      - name: 'Publish to npm'
         run: npm publish ./dist --tag beta
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}

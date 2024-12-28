@@ -1,4 +1,4 @@
-<img width="400" style="margin-bottom: 30px; max-width: 100%;" src="./docs/resources/encrypt-storage-logo.png" />
+# Encrypt Storage `V2`
 
 [![stargazers count](https://img.shields.io/github/stars/michelonsouza/encrypt-storage?style=social)](https://github.com/michelonsouza/encrypt-storage) ![maintenance](https://img.shields.io/npms-io/maintenance-score/encrypt-storage) [![npm](https://img.shields.io/npm/dm/encrypt-storage)](https://www.npmjs.com/package/encrypt-storage) ![sponsors](https://img.shields.io/github/sponsors/michelonsouza?logo=github-sponsors) ![package size](https://img.shields.io/bundlephobia/min/encrypt-storage?color=%232ebd4f&label=package%20size&logo=npm) [![Code Size](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage)](https://github.com/michelonsouza/encrypt-storage) [![Version](https://img.shields.io/github/package-json/v/michelonsouza/encrypt-storage/main)](https://github.com/michelonsouza/encrypt-storage/blob/main/package.json#L3) [![Build Status](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/ci.yml)](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/michelonsouza/encrypt-storage/badge.svg)](https://coveralls.io/github/michelonsouza/encrypt-storage) [![License](https://img.shields.io/npm/l/encrypt-storage?color=%230e7fc0&label=license)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE) [![Node CI](https://github.com/michelonsouza/encrypt-storage/actions/workflows/ci.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml) [![CodeQL](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/codeql-analysis.yml) [![npm published](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml/badge.svg)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/release.yml) [![jsdelivery](https://img.shields.io/jsdelivr/npm/hm/encrypt-storage)](https://www.jsdelivr.com/package/npm/encrypt-storage)
 
@@ -12,7 +12,7 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
 
 > **⚠️ IMPORTANT**: Nothing on the front end is entirely secure. The library's proposal is to make it difficult for the user to see the data through the console, but as the secret key is on the front end, if the user searches hard enough, he will end up finding it. Just to make it clear that nothing is completely secure on the front end. Thank you for your attention.
 
-- [Encrypt Storage](#encrypt-storage)
+- [Encrypt Storage `V2`](#encrypt-storage-v2)
   - [Features](#features)
   - [Installing](#installing)
   - [Options](#options)
@@ -27,9 +27,9 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
       - [_storageType_](#storagetype)
       - [_stateManagementUse_](#statemanagementuse)
       - [_encAlgorithm_](#encalgorithm)
+      - [_doNotEncryptValues_](#donotencryptvalues)
+      - [_doNotParseValues_](#donotparsevalues)
       - [_notifyHandler_](#notifyhandler)
-      - [_doNotEncryptValues_](#doNotEncryptValues)
-      - [_doNotParseValues_](#doNotParseValues)
     - [Methods](#methods)
       - [_setItem_](#setitem)
       - [_setMultipleItems_](#setmultipleitems)
@@ -50,11 +50,11 @@ Using the [`crypto-js`](https://github.com/brix/crypto-js) library as an encrypt
       - [_md5Hash_](#md5hash)
     - [NextJS](#nextjs)
     - [AsyncEncryptStorage](#asyncencryptstorage)
-    - [AWS Amplify](#aws-amplify)
     - [Cookie](#cookie)
       - [_set_](#set)
       - [_get_](#get)
       - [_remove_](#remove)
+    - [AWS Amplify](#aws-amplify)
     - [State Management Persisters](#state-management-persisters)
       - [_vuex-persist_](#vuex-persist)
       - [_redux-persist_](#redux-persist)

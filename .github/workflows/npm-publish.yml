@@ -1,0 +1,34 @@
+name: 'NPM publish'
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  pubish:
+    name: 'Publish to npm'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v3
+
+      - name: 'Setup node.js'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'yarn'
+
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      - name: 'Set npm auth token'
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > ~/.npmrc
+
+      - name: 'Publish to npm'
+        run: npm publish ./dist
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}

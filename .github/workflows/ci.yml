@@ -1,10 +1,10 @@
-name: ci
+name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, 3.0.0-beta]
   pull_request:
-    branches: [main]
+    branches: [main, 3.0.0-beta]
 
 jobs:
   run-tests:
@@ -22,13 +22,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: test
+      - name: Test
         run: |
           yarn install
           yarn lint
           yarn test:ci
 
-      - name: coveralls
+      - name: Coveralls
         uses: coverallsapp/github-action@master
         env:
           NODE_COVERALLS_DEBUG: 1
