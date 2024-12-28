@@ -44,6 +44,11 @@
         ],
         "message": "chore(release): ${nextRelease.gitTag}"
       }
+    ],
+    [
+      {
+        "path": "./custom-tag-generator.cjs"
+      }
     ]
   ]
 }
