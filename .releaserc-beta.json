@@ -1,9 +1,0 @@
-{
-  "branches": [
-    {
-      "name": "3.0.0-beta",
-      "prerelease": true,
-      "chanel": "beta"
-    }
-  ]
-}
