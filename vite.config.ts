@@ -67,7 +67,7 @@ export default defineConfig(({ mode }) => {
         formats: ['es', 'umd'],
         name: packageJson.name,
         entry: {
-          index: resolve(__dirname, 'src/index.ts'),
+          index: resolve(__dirname, 'src/lib/index.ts'),
         },
       },
       rollupOptions: {
