@@ -5,7 +5,6 @@ import { resolve } from 'node:path';
 
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import nodeResolve from '@rollup/plugin-node-resolve';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsConfigPaths from 'vite-tsconfig-paths';
 import dts from 'vite-plugin-dts';
 
@@ -18,26 +17,11 @@ export default defineConfig(({ mode }) => {
     plugins: [
       nodePolyfills(),
       tsConfigPaths(),
-      process.env.NODE_ENV !== 'test'
-        ? viteStaticCopy({
-            targets: [
-              {
-                src: 'README.md',
-                dest: '.',
-              },
-              {
-                src: 'LICENSE',
-                dest: '.',
-                rename: 'LICENSE.txt',
-              },
-            ],
-          })
-        : undefined,
       dts({
         insertTypesEntry: true,
         exclude: [resolve(__dirname, 'src/lib/**/*.spec.ts')],
       }),
-    ].filter(Boolean),
+    ],
     deps: {
       optimizer: {
         web: {

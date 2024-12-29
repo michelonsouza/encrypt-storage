@@ -141,7 +141,6 @@
     "vite-bundle-visualizer": "^1.2.1",
     "vite-plugin-dts": "^4.4.0",
     "vite-plugin-node-polyfills": "^0.22.0",
-    "vite-plugin-static-copy": "^2.2.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.8",
     "vitest-canvas-mock": "^0.3.3",
