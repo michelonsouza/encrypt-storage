@@ -64,7 +64,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
 
       - name: 'Install dependencies'
         run: yarn install --frozen-lockfile
@@ -103,7 +102,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
 
       - name: 'Cache dependencies'
         id: cache-yarn
@@ -156,7 +154,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
 
       - name: 'Cache dependencies'
         id: cache-yarn
