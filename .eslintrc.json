@@ -51,7 +51,8 @@
           "./src/utils/test-utils.ts",
           "setup.ts",
           "**/*.test.js",
-          "**/*.spec.ts"
+          "**/*.spec.ts",
+          "standard-version-updater.cjs"
         ],
         "peerDependencies": [
           "vite.config.ts",
@@ -59,7 +60,8 @@
           "./src/utils/test-utils.ts",
           "setup.ts",
           "**/*.test.js",
-          "**/*.spec.ts"
+          "**/*.spec.ts",
+          "standard-version-updater.cjs"
         ],
         "optionalDependencies": [
           "vite.config.ts",
@@ -67,7 +69,8 @@
           "./src/utils/test-utils.ts",
           "setup.ts",
           "**/*.test.js",
-          "**/*.spec.ts"
+          "**/*.spec.ts",
+          "standard-version-updater.cjs"
         ],
         "bundledDependencies": [
           "vite.config.ts",
@@ -75,7 +78,8 @@
           "./src/utils/test-utils.ts",
           "setup.ts",
           "**/*.test.js",
-          "**/*.spec.ts"
+          "**/*.spec.ts",
+          "standard-version-updater.cjs"
         ]
       }
     ]

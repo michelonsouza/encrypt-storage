@@ -50,44 +50,8 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
-  cache:
-    needs: [analyze]
-    name: 'Cache dependencies'
-    runs-on: ubuntu-24.04
-
-    strategy:
-      matrix:
-        node-version: [22.x]
-
-    steps:
-      - name: 'Use Node.js ${{ matrix.node-version }}'
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: 'Install dependencies'
-        run: yarn install --frozen-lockfile
-
-      - name: 'Cache dependencies'
-        id: cache-yarn
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-yarn
-        with:
-          path: ~/.yarn/cache
-          key: ${{ runner.os }}-yarn-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-${{ env.cache-name }}-
-            ${{ runner.os }}-yarn-
-            ${{ runner.os }}-
-
-      - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
-        name: 'List the state of node modules'
-        continue-on-error: true
-        run: yarn list
-
   run-tests:
-    needs: [analyze, cache]
+    needs: [analyze]
     name: 'Run tests'
     runs-on: ubuntu-24.04
 
@@ -103,26 +67,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: 'Cache dependencies'
-        id: cache-yarn
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-yarn
-        with:
-          path: ~/.yarn/cache
-          key: ${{ runner.os }}-yarn-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-${{ env.cache-name }}-
-            ${{ runner.os }}-yarn-
-            ${{ runner.os }}-
-
-      - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
-        name: 'List the state of node modules'
-        continue-on-error: true
-        run: yarn list
-
       - name: 'Install dependencies'
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Lint
         run: yarn lint
@@ -138,7 +84,7 @@ jobs:
           github-token: ${{ github.token }}
 
   publish-beta:
-    needs: [analyze, run-tests, cache]
+    needs: [analyze, run-tests]
     name: 'Puplish beta version to npm'
     runs-on: ubuntu-24.04
 
@@ -155,26 +101,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: 'Cache dependencies'
-        id: cache-yarn
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-yarn
-        with:
-          path: ~/.yarn/cache
-          key: ${{ runner.os }}-yarn-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-${{ env.cache-name }}-
-            ${{ runner.os }}-yarn-
-            ${{ runner.os }}-
-
-      - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
-        name: 'List the state of node modules'
-        continue-on-error: true
-        run: yarn list
-
       - name: 'Install dependencies'
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Build
         run: yarn build

@@ -1,0 +1,8 @@
+{
+  "bumpFiles": [
+    {
+      "filename": "VERSION_TRACKER.json",
+      "updater": "standard-version-updater.cjs"
+    }
+  ]
+}
