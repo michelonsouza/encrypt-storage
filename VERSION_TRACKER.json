@@ -1,7 +1,8 @@
 {
   "tracker": {
     "package": {
-      "version": "3.0.0-beta.67"
+      "version": "3.0.0-beta.67",
+      "beta-version": "3.0.0-beta.67"
     }
   }
 }
