@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-beta.49](https://github.com/michelonsouza/encrypt-storage/compare/v3.0.0-beta.48...v3.0.0-beta.49) (2024-12-29)
+
 ## [3.0.0-beta.48](https://github.com/michelonsouza/encrypt-storage/compare/v3.0.0-beta.47...v3.0.0-beta.48) (2024-12-28)
 
 ## [3.0.0-beta.47](https://github.com/michelonsouza/encrypt-storage/compare/v3.0.0-beta.46...v3.0.0-beta.47) (2024-12-28)
