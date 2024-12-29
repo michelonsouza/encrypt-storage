@@ -105,6 +105,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      - name: Install dependencies
+        run: yarn install
+
       - name: Test
         run: |
           yarn lint
@@ -144,6 +147,9 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: yarn install
 
       - name: Build
         run: yarn build
