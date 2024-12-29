@@ -2,9 +2,9 @@ name: 'Code quality verify'
 
 on:
   push:
-    branches: [main, v2]
+    branches: [main, v2, 3.0.0-beta]
   pull_request:
-    branches: [main, v2]
+    branches: [main, v2, 3.0.0-beta]
 
 jobs:
   analyze:
@@ -33,6 +33,7 @@ jobs:
         uses: github/codeql-action/analyze@v2
 
   run-tests:
+    needs: analyze
     name: 'Run tests'
     runs-on: ubuntu-latest
 
