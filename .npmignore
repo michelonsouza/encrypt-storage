@@ -2,14 +2,14 @@ node_modules
 .yarn
 .*
 **/tsconfig.json
-**/webpack.config.js
+**/vite.config.ts
 **/.editorconfig
 **/.eslintignore
 **/.eslint.json
 **/.prettierignore
 **/.prettierrc
 **/.huskyrc.json
-**/.lintstaged.json
+**/.lintstagedrc.json
 **/.travis.yml
 **/jest.config.js
 package.txt
@@ -21,6 +21,7 @@ CONTRIBUTING.md
 CODE_OF_CONDUCT.md
 .github
 docs
+./src
 coverage
 __tests__
-src
+__setups__
