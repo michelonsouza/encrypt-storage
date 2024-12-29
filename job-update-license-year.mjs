@@ -29,7 +29,7 @@ try {
     console.log('LICENSE file updated successfully.');
 
     execSync('git add LICENSE', { stdio: 'inherit' });
-    execSync('git commit -m "chore(license): Update LICENSE file"', {
+    execSync('git commit -m "chore(license): update LICENSE file"', {
       stdio: 'inherit',
     });
 
