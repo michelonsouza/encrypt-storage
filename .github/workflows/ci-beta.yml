@@ -65,18 +65,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: 'Cache dependencies'
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.cache/yarn
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
+      - name: 'Install dependencies'
         run: yarn install
+
+      - name: 'Save node_modules as artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: node_modules
+          path: node_modules
 
   run-tests:
     needs: [analyze, cache]
@@ -95,18 +91,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: 'Cache dependencies'
-        uses: actions/cache@v3
+      - name: 'Download node_modules'
+        uses: actions/download-artifact@v3
         with:
-          path: |
-            node_modules
-            ~/.cache/yarn
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: yarn install
+          name: node_modules
+          path: node_modules
 
       - name: Test
         run: |
@@ -138,18 +127,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Cache dependencies
-        uses: actions/cache@v3
+      - name: 'Download node_modules'
+        uses: actions/download-artifact@v3
         with:
-          path: |
-            node_modules
-            ~/.cache/yarn
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: yarn install
+          name: node_modules
+          path: node_modules
 
       - name: Build
         run: yarn build
