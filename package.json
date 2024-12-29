@@ -21,11 +21,13 @@
     "LICENSE"
   ],
   "exports": {
-    ".": "./dist/index.js"
+    "import": "./dist/index.js",
+    "require": "./dist/index.cjs"
   },
   "scripts": {
-    "release": "standard-version --prerelease beta --infile ./docs/CHANGELOG.md",
-    "prerelease": "standard-version --prerelease beta --infile ./docs/CHANGELOG.md",
+    "update-licence-year": "node job-update-license-year.mjs",
+    "release": "yarn update-licence-year && standard-version --prerelease beta --infile ./docs/CHANGELOG.md",
+    "prerelease": "yarn update-licence-year && standard-version --prerelease beta --infile ./docs/CHANGELOG.md",
     "prepare": "husky",
     "precommit": "lint-staged",
     "prepush": "npm run test",

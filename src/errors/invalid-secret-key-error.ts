@@ -3,6 +3,6 @@ export class InvalidSecretKeyError extends Error {
     super(
       'The secretKey parameter must bne contains min 10 characters. Please provide a valid secretKey',
     );
-    this.name = 'InvalidSecretKey';
+    this.name = 'InvalidSecretKeyError';
   }
 }

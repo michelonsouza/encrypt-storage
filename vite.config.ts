@@ -64,7 +64,7 @@ export default defineConfig(({ mode }) => {
       manifest: false,
       sourcemap: false,
       lib: {
-        formats: ['es', 'umd'],
+        formats: ['es', 'cjs'],
         name: packageJson.name,
         entry: {
           index: resolve(__dirname, 'src/lib/index.ts'),
@@ -109,9 +109,8 @@ export default defineConfig(({ mode }) => {
           'src/@types',
           'src/lib/index.ts',
           'src/**/*.spec.ts',
-          'postpublish.js',
-          'prepublish.js',
           'vite.config.ts',
+          'job-update-license-year.mjs',
         ],
         watermarks: {
           statements: [80, 95],
