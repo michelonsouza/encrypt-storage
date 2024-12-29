@@ -68,12 +68,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: 'Save node_modules as artifact'
-        uses: actions/upload-artifact@v3
-        with:
-          name: node_modules
-          path: node_modules
-
       - name: 'Cache dependencies'
         uses: actions/cache@v3
         with:
@@ -82,17 +76,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install dependencies
+      - name: 'Install dependencies'
         run: yarn install --frozen-lockfile
 
-      - name: 'Save node_modules as artifact'
-        uses: actions/upload-artifact@v3
-        with:
-          name: node_modules
-          path: node_modules
-
   run-tests:
-    needs: [cache, analyze]
+    needs: [analyze, cache]
     name: 'Run tests'
     runs-on: ubuntu-latest
 
@@ -116,16 +104,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Download node_modules
-        uses: actions/download-artifact@v3
-        with:
-          name: node_modules
-          path: node_modules
+      - name: 'Install dependencies'
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
 
       - name: Test
-        run: |
-          yarn lint
-          yarn test:ci
+        run: yarn test:ci
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
@@ -135,7 +121,7 @@ jobs:
           github-token: ${{ github.token }}
 
   publish-beta:
-    needs: [cache, analyze, run-tests]
+    needs: [analyze, run-tests, cache]
     name: 'Puplish beta version to npm'
     runs-on: ubuntu-latest
 
@@ -160,11 +146,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Download node_modules
-        uses: actions/download-artifact@v3
-        with:
-          name: node_modules
-          path: node_modules
+      - name: 'Install dependencies'
+        run: yarn install --frozen-lockfile
 
       - name: Build
         run: yarn build
