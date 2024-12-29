@@ -65,16 +65,23 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: yarn install
-
       - name: 'Cache dependencies'
+        id: cache-yarn
         uses: actions/cache@v3
+        env:
+          cache-name: cache-yarn
         with:
           path: ~/.yarn/cache
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
+            ${{ runner.os }}-yarn-${{ env.cache-name }}-
             ${{ runner.os }}-yarn-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
+        name: 'List the state of node modules'
+        continue-on-error: true
+        run: yarn list
 
       - name: 'Install dependencies'
         run: yarn install --frozen-lockfile
@@ -97,12 +104,22 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: 'Cache dependencies'
+        id: cache-yarn
         uses: actions/cache@v3
+        env:
+          cache-name: cache-yarn
         with:
           path: ~/.yarn/cache
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
+            ${{ runner.os }}-yarn-${{ env.cache-name }}-
             ${{ runner.os }}-yarn-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
+        name: 'List the state of node modules'
+        continue-on-error: true
+        run: yarn list
 
       - name: 'Install dependencies'
         run: yarn install --frozen-lockfile
@@ -139,12 +156,22 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: 'Cache dependencies'
+        id: cache-yarn
         uses: actions/cache@v3
+        env:
+          cache-name: cache-yarn
         with:
           path: ~/.yarn/cache
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
+            ${{ runner.os }}-yarn-${{ env.cache-name }}-
             ${{ runner.os }}-yarn-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
+        name: 'List the state of node modules'
+        continue-on-error: true
+        run: yarn list
 
       - name: 'Install dependencies'
         run: yarn install --frozen-lockfile
@@ -156,6 +183,6 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > ~/.npmrc
 
       - name: 'Publish to npm'
-        run: npm publish --tag beta
+        run: npm publish ./dist --tag beta
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
