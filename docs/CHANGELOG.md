@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-beta.71](https://github.com/michelonsouza/encrypt-storage/compare/v3.0.0-beta.70...v3.0.0-beta.71) (2024-12-29)
+
+
+### Features
+
+* **license-versioning:** add auto versioning license file ([d5240a2](https://github.com/michelonsouza/encrypt-storage/commit/d5240a2b4001a74ab695f2e998eccd139d1a3184))
+
+
+### Bug Fixes
+
+* **misc:** adjust job-update-license-year file ([061bdc3](https://github.com/michelonsouza/encrypt-storage/commit/061bdc3fc58f89e97f8d32432e01dace55622421))
+
 ## [3.0.0-beta.70](https://github.com/michelonsouza/encrypt-storage/compare/v3.0.0-beta.69...v3.0.0-beta.70) (2024-12-29)
 
 ## [3.0.0-beta.69](https://github.com/michelonsouza/encrypt-storage/compare/v3.0.0-beta.67...v3.0.0-beta.69) (2024-12-29)
