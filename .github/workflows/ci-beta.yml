@@ -65,7 +65,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: 'Install dependencies'
+      - name: Install dependencies
         run: yarn install
 
       - name: 'Save node_modules as artifact'
@@ -74,8 +74,25 @@ jobs:
           name: node_modules
           path: node_modules
 
+      - name: 'Cache dependencies'
+        uses: actions/cache@v3
+        with:
+          path: ~/.yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: 'Save node_modules as artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: node_modules
+          path: node_modules
+
   run-tests:
-    needs: [analyze, cache]
+    needs: [cache, analyze]
     name: 'Run tests'
     runs-on: ubuntu-latest
 
@@ -91,7 +108,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: 'Download node_modules'
+      - name: 'Cache dependencies'
+        uses: actions/cache@v3
+        with:
+          path: ~/.yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Download node_modules
         uses: actions/download-artifact@v3
         with:
           name: node_modules
@@ -110,7 +135,7 @@ jobs:
           github-token: ${{ github.token }}
 
   publish-beta:
-    needs: ['analyze', cache, run-tests]
+    needs: [cache, analyze, run-tests]
     name: 'Puplish beta version to npm'
     runs-on: ubuntu-latest
 
@@ -127,7 +152,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: 'Download node_modules'
+      - name: 'Cache dependencies'
+        uses: actions/cache@v3
+        with:
+          path: ~/.yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Download node_modules
         uses: actions/download-artifact@v3
         with:
           name: node_modules
