@@ -93,7 +93,7 @@
     "eslint": "8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-import-resolver-typescript": "^4.2.4",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^5.0.1",
     "faker": "^5.5.3",
