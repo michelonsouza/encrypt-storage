@@ -256,7 +256,7 @@ export interface EncryptStorageInterface extends Storage {
    * @example
    * encryptStorage.decryptString('any_value'); // -> '{value: "decrypted value"}'
    */
-  decryptValue<DataType = any>(key: string): DataType;
+  decryptValue<DataType = any>(key: string): DataType | null;
 
   cookie: CookieInterface;
 }
