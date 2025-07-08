@@ -384,12 +384,16 @@ export class EncryptStorage implements EncryptStorageInterface {
     return encryptedValue;
   }
 
-  public decryptValue<DataType = any>(value: string): DataType {
+  public decryptValue<DataType = any>(value: string): DataType | null {
     const decryptedValue = this.#encryptation.decrypt(value);
 
-    return (
-      this.#doNotParseValues ? decryptedValue : JSON.parse(decryptedValue)
-    ) as DataType;
+    try {
+      return (
+        this.#doNotParseValues ? decryptedValue : JSON.parse(decryptedValue)
+      ) as DataType;
+    } catch {
+      return null;
+    }
   }
 
   public hash(value: string): string {
