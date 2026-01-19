@@ -78,7 +78,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@commitlint/cli": "^19.4.0",
+    "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^19.2.2",
     "@types/crypto-js": "^4.2.2",
     "@types/faker": "^5.5.9",
