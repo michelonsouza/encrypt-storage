@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
+    "rootDir": ".",
     "outDir": "./dist",
     "lib": [
       "ES2020",
@@ -16,7 +17,12 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
+    "types": [
+      "node",
+      "jest"
+    ]
   },
   "include": [
     "src/**/*"

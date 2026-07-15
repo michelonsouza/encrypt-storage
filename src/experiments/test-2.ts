@@ -1,5 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import faker from 'faker';
+import { fakerPT_BR as faker } from '@faker-js/faker';
 
 import { AsyncEncryptStorage } from '..';
 import { EncryptStorageOptions } from '../types';
@@ -20,7 +19,7 @@ const makeSut = (
     stateManagementUse,
     noOptions,
     encAlgorithm,
-    secretKey = faker.random.alphaNumeric(10),
+    secretKey = faker.string.alphanumeric(10),
   } = params;
   const options = noOptions
     ? undefined
@@ -45,25 +44,25 @@ export const test2 = () =>
 
     it('should enshure localStorage been called', async () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
-      await safeStorage.setItem(key, faker.random.word());
+      await safeStorage.setItem(key, faker.word.sample());
 
       expect(localStorage.setItem).toHaveBeenCalled();
     });
 
     it('should enshure sessionStorage been called', async () => {
       const safeStorage = makeSut({ storageType: 'sessionStorage' });
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
-      await safeStorage.setItem(key, faker.random.word());
+      await safeStorage.setItem(key, faker.word.sample());
 
       expect(sessionStorage.setItem).toHaveBeenCalled();
     });
 
     it('should calls localStorage.getItem with correct key', async () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
       await safeStorage.getItem(key);
 
@@ -72,8 +71,8 @@ export const test2 = () =>
 
     it('should localStorage.getItem returns correct decrypted value', async () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = { value: faker.random.word() };
+      const key = faker.word.sample();
+      const value = { value: faker.word.sample() };
 
       await safeStorage.setItem(key, value);
       const storagedDecrypetdValue = await safeStorage.getItem(key);
@@ -83,8 +82,8 @@ export const test2 = () =>
 
     it('should localStorage.getItem returns correct value with doNotDecryptValue', async () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = { value: faker.random.word() };
+      const key = faker.word.sample();
+      const value = { value: faker.word.sample() };
 
       await safeStorage.setItem(key, value, true);
       const storagedDecrypetdValue = await safeStorage.getItem(key, true);
@@ -94,8 +93,8 @@ export const test2 = () =>
 
     it('should localStorage.getItem returns correct decrypted value when is a string', async () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = faker.random.word();
+      const key = faker.word.sample();
+      const value = faker.word.sample();
 
       await safeStorage.setItem(key, value);
       const storagedDecrypetdValue = await safeStorage.getItem(key);
@@ -105,7 +104,7 @@ export const test2 = () =>
 
     it('should calls localStorage.removeItem with correct key', async () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
       await safeStorage.removeItem(key);
 
@@ -113,9 +112,9 @@ export const test2 = () =>
     });
 
     it('should calls localStorage.removeItem with correct prefix and key', async () => {
-      const prefix = faker.random.word();
+      const prefix = faker.word.sample();
       const safeStorage = makeSut({ prefix });
-      const key = faker.random.word();
+      const key = faker.word.sample();
       const composedKey = `${prefix}:${key}`;
 
       await safeStorage.removeItem(key);
@@ -125,13 +124,13 @@ export const test2 = () =>
 
     it('should calls localStorage.getItem for all items with this pattern', async () => {
       const safeStorage = makeSut();
-      const pattern = faker.random.alphaNumeric(8);
+      const pattern = faker.string.alphanumeric(8);
       const userKey = `${pattern}:user`;
       const itemKey = `${pattern}:item`;
 
       const mockedValue = {
-        [userKey]: { id: faker.datatype.number(1000) },
-        [itemKey]: { id: faker.datatype.number(1000) },
+        [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
+        [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       };
 
       await safeStorage.setItem(userKey, mockedValue[userKey]);
@@ -146,7 +145,7 @@ export const test2 = () =>
 
     it('should calls localStorage.getItem with getItemFromPattern returns undefined', async () => {
       const safeStorage = makeSut();
-      const pattern = faker.random.alphaNumeric(8);
+      const pattern = faker.string.alphanumeric(8);
 
       const storagedValue = await safeStorage.getItemFromPattern(pattern);
 
@@ -155,7 +154,7 @@ export const test2 = () =>
 
     it('should calls localStorage.removeItem for all items with this pattern', async () => {
       const safeStorage = makeSut();
-      const pattern = faker.random.alphaNumeric(8);
+      const pattern = faker.string.alphanumeric(8);
       const userKey = `${pattern}:user`;
       const itemKey = `${pattern}:item`;
 
@@ -170,9 +169,9 @@ export const test2 = () =>
 
     it('should calls localStorage.clear', async () => {
       const safeStorage = makeSut();
-      const key1 = faker.random.word();
-      const key2 = faker.random.word();
-      const anyValue = faker.random.word();
+      const key1 = faker.word.sample();
+      const key2 = faker.word.sample();
+      const anyValue = faker.word.sample();
 
       await safeStorage.setItem(key1, anyValue);
       await safeStorage.setItem(key2, anyValue);
@@ -191,8 +190,8 @@ export const test2 = () =>
 
     it('should get correct key insted of index', async () => {
       const safeStorage = makeSut();
-      const key1 = faker.random.word();
-      const key2 = faker.random.word();
+      const key1 = faker.word.sample();
+      const key2 = faker.word.sample();
 
       await safeStorage.setItem(key1, 'any_value');
       await safeStorage.setItem(key2, 'any_value');
@@ -208,10 +207,10 @@ export const test2 = () =>
 
     it('should return string if stateManagementUse is true', async () => {
       const safeStorage = makeSut({ stateManagementUse: true });
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
       await safeStorage.setItem(key, {
-        value: faker.random.word(),
+        value: faker.word.sample(),
         number: 100,
       });
       const value = await safeStorage.getItem(key);
@@ -228,11 +227,11 @@ export const test2 = () =>
 
     it('should use prefix with key', async () => {
       const prefix = '@test';
-      const key = faker.random.word();
+      const key = faker.word.sample();
       const safeStorage = makeSut({ prefix });
 
       await safeStorage.setItem(key, {
-        value: faker.random.word(),
+        value: faker.word.sample(),
         number: 100,
       });
       await safeStorage.getItem(key);
@@ -242,7 +241,7 @@ export const test2 = () =>
 
     it('should throws InvalidSecretKeyError if secret key is invalid', () => {
       try {
-        makeSut({ secretKey: faker.random.alphaNumeric(8) });
+        makeSut({ secretKey: faker.string.alphanumeric(8) });
       } catch (error) {
         expect(error).toBeInstanceOf(InvalidSecretKeyError);
       }
@@ -250,7 +249,7 @@ export const test2 = () =>
 
     it('should encrypt string and return encrypted value', async () => {
       const safeStorage = makeSut();
-      const value = faker.random.word();
+      const value = faker.word.sample();
       const result = await safeStorage.encryptString(value);
 
       expect(result).not.toEqual(value);
@@ -258,7 +257,7 @@ export const test2 = () =>
 
     it('should dencrypt string and return decrypted value', async () => {
       const safeStorage = makeSut();
-      const value = faker.random.word();
+      const value = faker.word.sample();
       const encryptedValue = await safeStorage.encryptString(value);
       const decryptedValue = await safeStorage.decryptString(encryptedValue);
 
@@ -267,7 +266,7 @@ export const test2 = () =>
 
     it('should test encryptStorage without options', async () => {
       const safeStorage = makeSut({ noOptions: true });
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
       await safeStorage.getItem(key);
 
@@ -276,8 +275,8 @@ export const test2 = () =>
 
     it('should test Rabbit algorithm', async () => {
       const safeStorage = makeSut({ encAlgorithm: 'Rabbit' });
-      const key = faker.random.word();
-      const value = faker.random.word();
+      const key = faker.word.sample();
+      const value = faker.word.sample();
 
       await safeStorage.setItem(key, value);
       await safeStorage.getItem(key);
@@ -288,8 +287,8 @@ export const test2 = () =>
 
     it('should test RC4 algorithm', async () => {
       const safeStorage = makeSut({ encAlgorithm: 'RC4' });
-      const key = faker.random.word();
-      const value = faker.random.word();
+      const key = faker.word.sample();
+      const value = faker.word.sample();
 
       await safeStorage.setItem(key, value);
       await safeStorage.getItem(key);
@@ -300,8 +299,8 @@ export const test2 = () =>
 
     it('should test RC4Drop algorithm', async () => {
       const safeStorage = makeSut({ encAlgorithm: 'RC4Drop' });
-      const key = faker.random.word();
-      const value = faker.random.word();
+      const key = faker.word.sample();
+      const value = faker.word.sample();
 
       await safeStorage.setItem(key, value);
       await safeStorage.getItem(key);

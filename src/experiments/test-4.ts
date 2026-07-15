@@ -2,8 +2,7 @@
  * @jest-environment node
  */
 
-/* eslint-disable import/no-extraneous-dependencies */
-import faker from 'faker';
+import { fakerPT_BR as faker } from '@faker-js/faker';
 
 import { EncryptStorage } from '..';
 import {
@@ -34,7 +33,7 @@ const makeSut = (
     encAlgorithm,
     doNotParseValues = false,
     notifyHandler = mockNotify.mockedFn,
-    secretKey = faker.random.alphaNumeric(10),
+    secretKey = faker.string.alphanumeric(10),
   } = params;
   const options = noOptions
     ? undefined
@@ -78,8 +77,8 @@ export const test4 = () =>
 
     it('should enshure cookie.set not been called', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = { value: faker.random.word() };
+      const key = faker.word.sample();
+      const value = { value: faker.word.sample() };
 
       (document.cookie as any) = undefined;
 
@@ -89,8 +88,8 @@ export const test4 = () =>
 
     it('should enshure cookie.get not been called', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = { value: faker.random.word() };
+      const key = faker.word.sample();
+      const value = { value: faker.word.sample() };
 
       safeStorage.cookie.set(key, value);
 
@@ -103,8 +102,8 @@ export const test4 = () =>
 
     it('should enshure cookie.remove not been called when document.cookie is undefined', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = { value: faker.random.word() };
+      const key = faker.word.sample();
+      const value = { value: faker.word.sample() };
 
       safeStorage.cookie.set(key, value);
 
@@ -117,8 +116,8 @@ export const test4 = () =>
 
     it('should enshure cookie.remove been called', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = { value: faker.random.word() };
+      const key = faker.word.sample();
+      const value = { value: faker.word.sample() };
       const spy = jest.spyOn(mockNotify, 'mockedFn');
 
       safeStorage.cookie.set(key, value);
@@ -135,13 +134,13 @@ export const test4 = () =>
 
     it('should enshure cookie.set been called with correct key and params', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = faker.random.word();
+      const key = faker.string.alphanumeric(10);
+      const value = faker.word.sample();
       const spy = jest.spyOn(mockNotify, 'mockedFn');
-      const date = faker.date.future(1);
+      const date = faker.date.future({ years: 1 });
       const domain = faker.internet.domainName();
       const path = '/';
-      const sameSite = faker.random.arrayElement<CookieOptions['sameSite']>([
+      const sameSite = faker.helpers.arrayElement<CookieOptions['sameSite']>([
         'strict',
         'lax',
         'none',
@@ -174,10 +173,10 @@ export const test4 = () =>
       const safeStorage = makeSut({
         doNotParseValues: true,
       });
-      const key = faker.random.word();
-      const value = faker.random.word();
+      const key = faker.string.alphanumeric(10);
+      const value = faker.word.sample();
       const spy = jest.spyOn(mockNotify, 'mockedFn');
-      const date = faker.datatype.number(50);
+      const date = faker.number.int(50);
       const domain = faker.internet.domainName();
 
       const params = {
@@ -198,8 +197,8 @@ export const test4 = () =>
 
     it('should calls cookie with correct key', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = faker.random.word();
+      const key = faker.word.sample();
+      const value = faker.word.sample();
       safeStorage.cookie.set(key, value);
 
       const spy = jest.spyOn(mockNotify, 'mockedFn');
@@ -216,8 +215,8 @@ export const test4 = () =>
 
     it('should cookie.get returns correct decrypted value', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = { value: faker.random.word() };
+      const key = faker.word.sample();
+      const value = { value: faker.word.sample() };
 
       safeStorage.cookie.set(key, value);
       const storagedDecrypetdValue = safeStorage.cookie.get(key);
@@ -227,7 +226,7 @@ export const test4 = () =>
 
     it('should cookie.get returns null', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
       const result = safeStorage.cookie.get(key);
 

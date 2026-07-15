@@ -1,5 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import faker from 'faker';
+import { fakerPT_BR as faker } from '@faker-js/faker';
 
 import { EncryptStorage } from '..';
 import { EncryptStorageOptions, NotifyHandlerParams } from '../types';
@@ -28,7 +27,7 @@ export const makeSut = (
     encAlgorithm,
     doNotParseValues = false,
     notifyHandler = mockNotify.mockedFn,
-    secretKey = faker.random.alphaNumeric(10),
+    secretKey = faker.string.alphanumeric(10),
   } = params;
   const options = noOptions
     ? undefined
@@ -55,25 +54,25 @@ export const test1 = () =>
 
     it('should enshure localStorage been called', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
-      safeStorage.setItem(key, faker.random.word());
+      safeStorage.setItem(key, faker.word.sample());
 
       expect(localStorage.setItem).toHaveBeenCalled();
     });
 
     it('should enshure sessionStorage been called', () => {
       const safeStorage = makeSut({ storageType: 'sessionStorage' });
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
-      safeStorage.setItem(key, faker.random.word());
+      safeStorage.setItem(key, faker.word.sample());
 
       expect(sessionStorage.setItem).toHaveBeenCalled();
     });
 
     it('should calls localStorage.getItem with correct key', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
+      const key = faker.word.sample();
       const spy = jest.spyOn(mockNotify, 'mockedFn');
 
       const result = safeStorage.getItem<string>(key);
@@ -88,8 +87,8 @@ export const test1 = () =>
 
     it('should localStorage.getItem returns correct decrypted value', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = { value: faker.random.word() };
+      const key = faker.word.sample();
+      const value = { value: faker.word.sample() };
 
       safeStorage.setItem(key, value);
       const storagedDecrypetdValue = safeStorage.getItem(key);
@@ -102,8 +101,8 @@ export const test1 = () =>
         doNotParseValues: true,
       });
       const values = ['[]', '{}', 'null', 'undefined', 'true', 'false', '123'];
-      const key = faker.random.word();
-      const value = faker.random.arrayElement(values);
+      const key = faker.word.sample();
+      const value = faker.helpers.arrayElement(values);
 
       safeStorage.setItem(key, value);
       const storagedDecrypetdValue = safeStorage.getItem(key);
@@ -113,8 +112,8 @@ export const test1 = () =>
 
     it('should localStorage.getItem returns correct value but not decrypt', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = { value: faker.random.word() };
+      const key = faker.word.sample();
+      const value = { value: faker.word.sample() };
 
       safeStorage.setItem(key, value, true);
       const storagedDecrypetdValue = safeStorage.getItem(key, true);
@@ -124,11 +123,11 @@ export const test1 = () =>
 
     it('should localStorage.setItem called when setMultipleItems is called', () => {
       const safeStorage = makeSut();
-      const key1 = faker.random.word();
-      const key2 = faker.random.word();
-      const value1 = faker.random.word();
+      const key1 = faker.word.sample();
+      const key2 = faker.word.sample();
+      const value1 = faker.word.sample();
       const value2 = {
-        [faker.random.word()]: faker.random.alphaNumeric(),
+        [faker.word.sample()]: faker.string.alphanumeric(),
       };
 
       safeStorage.setMultipleItems([
@@ -141,11 +140,14 @@ export const test1 = () =>
 
     it('should localStorage.getItem returns correct decrypted value when getMultipleItems is called', () => {
       const safeStorage = makeSut();
-      const key1 = faker.random.word();
-      const key2 = faker.random.word();
-      const key3 = faker.random.word();
-      const value1 = faker.random.word();
-      const value2 = faker.random.objectElement<Record<string, any>>();
+      const key1 = faker.word.sample();
+      const key2 = faker.word.sample();
+      const key3 = faker.word.sample();
+      const value1 = faker.word.sample();
+      const value2 = {
+        [faker.word.sample()]: faker.string.alphanumeric(),
+        [faker.word.sample()]: faker.string.alphanumeric(),
+      };
 
       safeStorage.setMultipleItems([
         [key1, value1],
@@ -168,8 +170,8 @@ export const test1 = () =>
 
     it('should localStorage.getItem returns correct decrypted value when is a string', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
-      const value = faker.random.word();
+      const key = faker.word.sample();
+      const value = faker.word.sample();
 
       safeStorage.setItem(key, value);
       const storagedDecrypetdValue = safeStorage.getItem(key);
@@ -179,7 +181,7 @@ export const test1 = () =>
 
     it('should calls localStorage.removeItem with correct key', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
       safeStorage.removeItem(key);
 
@@ -187,9 +189,9 @@ export const test1 = () =>
     });
 
     it('should calls localStorage.removeItem with correct prefix and key', () => {
-      const prefix = faker.random.word();
+      const prefix = faker.word.sample();
       const safeStorage = makeSut({ prefix });
-      const key = faker.random.word();
+      const key = faker.word.sample();
       const composedKey = `${prefix}:${key}`;
 
       safeStorage.removeItem(key);
@@ -199,13 +201,13 @@ export const test1 = () =>
 
     it('should calls localStorage.getItem for all items with this pattern', () => {
       const safeStorage = makeSut();
-      const pattern = faker.random.alphaNumeric(8);
+      const pattern = faker.string.alphanumeric(8);
       const userKey = `${pattern}:user`;
       const itemKey = `${pattern}:item`;
 
       const mockedValue = {
-        [userKey]: { id: faker.datatype.number(1000) },
-        [itemKey]: { id: faker.datatype.number(1000) },
+        [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
+        [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       };
 
       safeStorage.setItem(userKey, mockedValue[userKey]);
@@ -219,17 +221,17 @@ export const test1 = () =>
     });
 
     it('should calls localStorage.getItem for all items with this pattern and remove prefix key', () => {
-      const prefix = faker.random.word();
+      const prefix = faker.word.sample();
       const safeStorage = makeSut({
         prefix,
       });
-      const pattern = faker.random.alphaNumeric(8);
+      const pattern = faker.string.alphanumeric(8);
       const userKey = `${pattern}:user`;
       const itemKey = `${pattern}:item`;
 
       const mockedValue = {
-        [userKey]: { id: faker.datatype.number(1000) },
-        [itemKey]: { id: faker.datatype.number(1000) },
+        [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
+        [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       };
 
       safeStorage.setItem(userKey, mockedValue[userKey]);
@@ -248,8 +250,8 @@ export const test1 = () =>
       const itemKey = 'item';
 
       const mockedValue = {
-        [userKey]: { id: faker.datatype.number(1000) },
-        [itemKey]: { id: faker.datatype.number(1000) },
+        [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
+        [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       };
 
       safeStorage.setItem(userKey, mockedValue[userKey]);
@@ -260,13 +262,10 @@ export const test1 = () =>
         multiple: false,
       });
 
-      const notHaveValue = safeStorage.getItemFromPattern(
-        faker.datatype.uuid(),
-        {
-          exact: true,
-          multiple: false,
-        },
-      );
+      const notHaveValue = safeStorage.getItemFromPattern(faker.string.uuid(), {
+        exact: true,
+        multiple: false,
+      });
 
       expect(localStorage.getItem).toHaveBeenCalledWith(itemKey);
       expect(notHaveValue).toBe(undefined);
@@ -274,8 +273,8 @@ export const test1 = () =>
     });
 
     it('should calls localStorage.getItem for item with this pattern and prefix no multiple', () => {
-      const pattern = faker.random.word();
-      const prefix = faker.random.word();
+      const pattern = faker.word.sample();
+      const prefix = faker.word.sample();
       const safeStorage = makeSut({
         prefix,
       });
@@ -283,8 +282,8 @@ export const test1 = () =>
       const itemKey = `${pattern}:item`;
 
       const mockedValue = {
-        [userKey]: { id: faker.datatype.number(1000) },
-        [itemKey]: { id: faker.datatype.number(1000) },
+        [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
+        [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       };
 
       safeStorage.setItem(userKey, mockedValue[userKey]);
@@ -294,12 +293,9 @@ export const test1 = () =>
         multiple: false,
       });
 
-      const notHaveValue = safeStorage.getItemFromPattern(
-        faker.datatype.uuid(),
-        {
-          multiple: false,
-        },
-      );
+      const notHaveValue = safeStorage.getItemFromPattern(faker.string.uuid(), {
+        multiple: false,
+      });
 
       expect(localStorage.getItem).toHaveBeenCalledWith(`${prefix}:${itemKey}`);
       expect(notHaveValue).toBe(undefined);
@@ -308,7 +304,7 @@ export const test1 = () =>
 
     it('should calls localStorage.getItem with getItemFromPattern returns undefined', () => {
       const safeStorage = makeSut();
-      const pattern = faker.random.alphaNumeric(8);
+      const pattern = faker.string.alphanumeric(8);
 
       const storagedValue = safeStorage.getItemFromPattern(pattern);
 
@@ -317,7 +313,7 @@ export const test1 = () =>
 
     it('should calls localStorage.removeItem for all items with this pattern', () => {
       const safeStorage = makeSut();
-      const pattern = faker.random.alphaNumeric(8);
+      const pattern = faker.string.alphanumeric(8);
       const userKey = `${pattern}:user`;
       const itemKey = `${pattern}:item`;
 
@@ -331,11 +327,11 @@ export const test1 = () =>
     });
 
     it('should calls localStorage.removeItem for all items with this pattern and prefix', () => {
-      const prefix = faker.random.word();
+      const prefix = faker.word.sample();
       const safeStorage = makeSut({
         prefix,
       });
-      const pattern = faker.random.alphaNumeric(8);
+      const pattern = faker.string.alphanumeric(8);
       const userKey = `${pattern}:user`;
       const itemKey = `${pattern}:item`;
 
@@ -381,9 +377,9 @@ export const test1 = () =>
 
     it('should calls localStorage.clear', () => {
       const safeStorage = makeSut();
-      const key1 = faker.random.word();
-      const key2 = faker.random.word();
-      const anyValue = faker.random.word();
+      const key1 = faker.word.sample();
+      const key2 = faker.word.sample();
+      const anyValue = faker.word.sample();
 
       safeStorage.setItem(key1, anyValue);
       safeStorage.setItem(key2, anyValue);
@@ -399,8 +395,8 @@ export const test1 = () =>
 
     it('should get correct key insted of index', () => {
       const safeStorage = makeSut();
-      const key1 = faker.random.word();
-      const key2 = faker.random.word();
+      const key1 = faker.word.sample();
+      const key2 = faker.word.sample();
 
       safeStorage.setItem(key1, 'any_value');
       safeStorage.setItem(key2, 'any_value');
@@ -412,9 +408,9 @@ export const test1 = () =>
 
     it('should return string if stateManagementUse is true', () => {
       const safeStorage = makeSut({ stateManagementUse: true });
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
-      safeStorage.setItem(key, { value: faker.random.word(), number: 100 });
+      safeStorage.setItem(key, { value: faker.word.sample(), number: 100 });
       const value = safeStorage.getItem(key);
 
       expect(typeof value).toBe('string');
@@ -428,10 +424,10 @@ export const test1 = () =>
 
     it('should use prefix with key', () => {
       const prefix = '@test';
-      const key = faker.random.word();
+      const key = faker.word.sample();
       const safeStorage = makeSut({ prefix });
 
-      safeStorage.setItem(key, { value: faker.random.word(), number: 100 });
+      safeStorage.setItem(key, { value: faker.word.sample(), number: 100 });
       safeStorage.getItem(key);
 
       expect(localStorage.getItem).toHaveBeenCalledWith(`${prefix}:${key}`);
@@ -439,7 +435,7 @@ export const test1 = () =>
 
     it('should throws InvalidSecretKeyError if secret key is invalid', () => {
       try {
-        makeSut({ secretKey: faker.random.alphaNumeric(8) });
+        makeSut({ secretKey: faker.string.alphanumeric(8) });
       } catch (error) {
         expect(error).toBeInstanceOf(InvalidSecretKeyError);
       }
@@ -447,7 +443,7 @@ export const test1 = () =>
 
     it('should encrypt string and return encrypted value', () => {
       const safeStorage = makeSut();
-      const value = faker.random.word();
+      const value = faker.word.sample();
       const result = safeStorage.encryptString(value);
 
       expect(result).not.toEqual(value);
@@ -456,8 +452,8 @@ export const test1 = () =>
     it('should encrypt value and return encrypted value', () => {
       const safeStorage = makeSut();
       const value = {
-        name: faker.random.word(),
-        id: faker.datatype.uuid(),
+        name: faker.word.sample(),
+        id: faker.string.uuid(),
       };
       const result = safeStorage.encryptValue(value);
 
@@ -467,8 +463,8 @@ export const test1 = () =>
     it('should encrypt value and return encrypted value with doNotParseValues option', () => {
       const safeStorage = makeSut({ doNotParseValues: true });
       const value = {
-        name: faker.random.word(),
-        id: faker.datatype.uuid(),
+        name: faker.word.sample(),
+        id: faker.string.uuid(),
       };
       const stringfyValue = JSON.stringify(value);
       const result = safeStorage.encryptValue(stringfyValue);
@@ -478,7 +474,7 @@ export const test1 = () =>
 
     it('should decrypt string and return decrypted value', () => {
       const safeStorage = makeSut();
-      const value = faker.random.word();
+      const value = faker.word.sample();
       const encryptedValue = safeStorage.encryptString(value);
       const decryptedValue = safeStorage.decryptString(encryptedValue);
 
@@ -488,8 +484,8 @@ export const test1 = () =>
     it('should decrypt value and return decrypted value', () => {
       const safeStorage = makeSut();
       const value = {
-        name: faker.random.word(),
-        id: faker.datatype.uuid(),
+        name: faker.word.sample(),
+        id: faker.string.uuid(),
       };
       const encryptedValue = safeStorage.encryptValue(value);
       const decryptedValue =
@@ -501,8 +497,8 @@ export const test1 = () =>
     it('should decrypt value and return decrypted value with doNotParseValues option', () => {
       const safeStorage = makeSut({ doNotParseValues: true });
       const value = {
-        name: faker.random.word(),
-        id: faker.datatype.uuid(),
+        name: faker.word.sample(),
+        id: faker.string.uuid(),
       };
       const stringfyValue = JSON.stringify(value);
       const encryptedValue = safeStorage.encryptValue(stringfyValue);
@@ -514,7 +510,7 @@ export const test1 = () =>
 
     it('should test encryptStorage without options', () => {
       const safeStorage = makeSut({ noOptions: true });
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
       safeStorage.getItem(key);
 
@@ -523,8 +519,8 @@ export const test1 = () =>
 
     it('should test Rabbit algorithm', () => {
       const safeStorage = makeSut({ encAlgorithm: 'Rabbit' });
-      const key = faker.random.word();
-      const value = faker.random.word();
+      const key = faker.word.sample();
+      const value = faker.word.sample();
 
       safeStorage.setItem(key, value);
       safeStorage.getItem(key);
@@ -535,8 +531,8 @@ export const test1 = () =>
 
     it('should test RC4 algorithm', () => {
       const safeStorage = makeSut({ encAlgorithm: 'RC4' });
-      const key = faker.random.word();
-      const value = faker.random.word();
+      const key = faker.word.sample();
+      const value = faker.word.sample();
 
       safeStorage.setItem(key, value);
       safeStorage.getItem(key);
@@ -547,8 +543,8 @@ export const test1 = () =>
 
     it('should test RC4Drop algorithm', () => {
       const safeStorage = makeSut({ encAlgorithm: 'RC4Drop' });
-      const key = faker.random.word();
-      const value = faker.random.word();
+      const key = faker.word.sample();
+      const value = faker.word.sample();
 
       safeStorage.setItem(key, value);
       safeStorage.getItem(key);
@@ -559,7 +555,7 @@ export const test1 = () =>
 
     it('should throws InvalidSecretKeyError if secret key is invalid', () => {
       try {
-        makeSut({ secretKey: faker.random.alphaNumeric(8) });
+        makeSut({ secretKey: faker.string.alphanumeric(8) });
       } catch (error) {
         expect(error).toBeInstanceOf(InvalidSecretKeyError);
       }
@@ -567,7 +563,7 @@ export const test1 = () =>
 
     it('should be hash any string to SHA256 encrypted string', () => {
       const safeStorage = makeSut();
-      const value = faker.random.words(3);
+      const value = faker.word.sample(3);
 
       const result = safeStorage.hash(value);
 
@@ -576,7 +572,7 @@ export const test1 = () =>
 
     it('should be hash any string to MD5 encrypted string', () => {
       const safeStorage = makeSut();
-      const value = faker.random.words(3);
+      const value = faker.word.sample(3);
 
       const result = safeStorage.md5Hash(value);
 

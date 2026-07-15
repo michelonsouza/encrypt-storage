@@ -1,10 +1,8 @@
 /**
  * @jest-environment node
  */
-
-/* eslint-disable import/no-extraneous-dependencies */
 import 'jest-localstorage-mock';
-import faker from 'faker';
+import { fakerPT_BR as faker } from '@faker-js/faker';
 
 import { EncryptStorage } from '..';
 import { EncryptStorageOptions } from '../types';
@@ -23,7 +21,7 @@ const makeSut = (
     stateManagementUse,
     noOptions,
     encAlgorithm,
-    secretKey = faker.random.alphaNumeric(10),
+    secretKey = faker.string.alphanumeric(10),
   } = params;
   const options = noOptions
     ? undefined
@@ -58,25 +56,25 @@ export const test3 = () =>
 
     it('should enshure localStorage not been called', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
-      safeStorage.setItem(key, faker.random.word());
+      safeStorage.setItem(key, faker.word.sample());
 
       expect(safeWindow?.localStorage?.setItem).toBe(undefined);
     });
 
     it('should enshure sessionStorage not been called', () => {
       const safeStorage = makeSut({ storageType: 'sessionStorage' });
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
-      safeStorage.setItem(key, faker.random.word());
+      safeStorage.setItem(key, faker.word.sample());
 
       expect(safeWindow?.sessionStorage?.setItem).toBe(undefined);
     });
 
     it('should calls localStorage.getItem not been called', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
       safeStorage.getItem(key);
 
@@ -85,7 +83,7 @@ export const test3 = () =>
 
     it('should calls localStorage.removeItem not been called', () => {
       const safeStorage = makeSut();
-      const key = faker.random.word();
+      const key = faker.word.sample();
 
       safeStorage.removeItem(key);
 
@@ -94,13 +92,13 @@ export const test3 = () =>
 
     it('should calls localStorage.getItem not been called when safeStorage.getItemFromPattern is called', () => {
       const safeStorage = makeSut();
-      const pattern = faker.random.alphaNumeric(8);
+      const pattern = faker.string.alphanumeric(8);
       const userKey = `${pattern}:user`;
       const itemKey = `${pattern}:item`;
 
       const mockedValue = {
-        [userKey]: { id: faker.datatype.number(1000) },
-        [itemKey]: { id: faker.datatype.number(1000) },
+        [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
+        [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       };
 
       safeStorage.setItem(userKey, mockedValue[userKey]);
@@ -113,9 +111,9 @@ export const test3 = () =>
 
     it('should calls localStorage.length not been called', () => {
       const safeStorage = makeSut();
-      const key1 = faker.random.word();
-      const key2 = faker.random.word();
-      const anyValue = faker.random.word();
+      const key1 = faker.word.sample();
+      const key2 = faker.word.sample();
+      const anyValue = faker.word.sample();
 
       safeStorage.setItem(key1, anyValue);
       safeStorage.setItem(key2, anyValue);
@@ -131,7 +129,7 @@ export const test3 = () =>
 
     it('should calls localStorage.removeItem not been called when safeStorage.removeItemFromPattern is called', () => {
       const safeStorage = makeSut();
-      const pattern = faker.random.alphaNumeric(8);
+      const pattern = faker.string.alphanumeric(8);
       const userKey = `${pattern}:user`;
       const itemKey = `${pattern}:item`;
 
@@ -145,7 +143,7 @@ export const test3 = () =>
 
     it('should calls localStorage.removeItem is undefined whensafeStorage.removeItemFromPattern is called', () => {
       const safeStorage = makeSut();
-      const pattern = faker.random.alphaNumeric(8);
+      const pattern = faker.string.alphanumeric(8);
       const userKey = `${pattern}:user`;
       const itemKey = `${pattern}:item`;
 
@@ -159,8 +157,8 @@ export const test3 = () =>
 
     it('should localStorage.key is undefined', () => {
       const safeStorage = makeSut();
-      const key1 = faker.random.word();
-      const key2 = faker.random.word();
+      const key1 = faker.word.sample();
+      const key2 = faker.word.sample();
 
       safeStorage.setItem(key1, 'any_value');
       safeStorage.setItem(key2, 'any_value');

@@ -11,10 +11,17 @@ module.exports = {
   collectCoverage: true,
   coverageReporters: ['json'],
   preset: 'ts-jest',
+  transformIgnorePatterns: [
+    '/node_modules/(?!(?:@faker-js/faker)/)',
+  ],
   transform: {
-    '.+\\.ts$': ['ts-jest', {
+    '^.+\\.[tj]s$': ['ts-jest', {
       sourceMap: true,
       inlineSourceMap: true,
+      tsconfig: {
+        allowJs: true,
+        module: 'commonjs',
+      },
     }],
   },
 };
