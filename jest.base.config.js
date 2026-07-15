@@ -8,11 +8,13 @@ module.exports = {
     '!./prepublish.js',
     '!./postpublish.js',
   ],
-  setupFiles: ['jest-localstorage-mock'],
-  coverageDirectory: 'coverage',
-  testEnvironment: 'jsdom',
+  collectCoverage: true,
+  coverageReporters: ['json'],
   preset: 'ts-jest',
   transform: {
-    '.+\\.ts$': 'ts-jest',
+    '.+\\.ts$': ['ts-jest', {
+      sourceMap: true,
+      inlineSourceMap: true,
+    }],
   },
 };

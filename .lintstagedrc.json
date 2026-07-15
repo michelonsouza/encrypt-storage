@@ -1,6 +1,6 @@
 {
   "*.ts": [
-    "eslint -c .eslintrc.json \"src/**\" --cache --fix",
+    "eslint -c eslint.config.mjs \"src/**\" --cache --fix",
     "yarn test:staged"
   ]
 }

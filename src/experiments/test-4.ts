@@ -2,9 +2,7 @@
  * @jest-environment node
  */
 
-/* eslint-disable import/no-unresolved */
 /* eslint-disable import/no-extraneous-dependencies */
-import 'jest-localstorage-mock';
 import faker from 'faker';
 
 import { EncryptStorage } from '..';

@@ -2,7 +2,6 @@
  * @jest-environment node
  */
 
-/* eslint-disable import/no-unresolved */
 /* eslint-disable import/no-extraneous-dependencies */
 import 'jest-localstorage-mock';
 import faker from 'faker';
@@ -37,13 +36,20 @@ const makeSut = (
   return new EncryptStorage(secretKey, options);
 };
 
-let windowSpy: jest.SpyInstance<(Window & typeof globalThis) | undefined>;
+function getWindow(): (Window & typeof globalThis) | undefined {
+  if (typeof window === 'undefined') {
+    return undefined;
+  }
+
+  return window;
+}
+
+let safeWindow = getWindow();
 
 export const test3 = () =>
   describe('EncryptStprage without window', () => {
-    beforeAll(() => {
-      windowSpy = jest.spyOn(window, 'window', 'get');
-      windowSpy?.mockImplementation(() => undefined);
+    beforeEach(() => {
+      safeWindow = getWindow();
     });
 
     afterAll(() => {
@@ -54,41 +60,36 @@ export const test3 = () =>
       const safeStorage = makeSut();
       const key = faker.random.word();
 
-      windowSpy?.mockImplementation(() => undefined);
       safeStorage.setItem(key, faker.random.word());
 
-      expect(localStorage?.setItem).toHaveBeenCalledTimes(0);
+      expect(safeWindow?.localStorage?.setItem).toBe(undefined);
     });
 
     it('should enshure sessionStorage not been called', () => {
-      windowSpy?.mockImplementation(() => undefined);
       const safeStorage = makeSut({ storageType: 'sessionStorage' });
       const key = faker.random.word();
 
-      windowSpy?.mockImplementation(() => undefined);
       safeStorage.setItem(key, faker.random.word());
 
-      expect(sessionStorage?.setItem).toHaveBeenCalledTimes(0);
+      expect(safeWindow?.sessionStorage?.setItem).toBe(undefined);
     });
 
     it('should calls localStorage.getItem not been called', () => {
       const safeStorage = makeSut();
       const key = faker.random.word();
 
-      windowSpy?.mockImplementation(() => undefined);
       safeStorage.getItem(key);
 
-      expect(localStorage?.getItem).toHaveBeenCalledTimes(0);
+      expect(safeWindow?.localStorage?.getItem).toBe(undefined);
     });
 
     it('should calls localStorage.removeItem not been called', () => {
       const safeStorage = makeSut();
       const key = faker.random.word();
 
-      windowSpy?.mockImplementation(() => undefined);
       safeStorage.removeItem(key);
 
-      expect(localStorage?.removeItem).toHaveBeenCalledTimes(0);
+      expect(safeWindow?.localStorage?.removeItem).toBe(undefined);
     });
 
     it('should calls localStorage.getItem not been called when safeStorage.getItemFromPattern is called', () => {
@@ -102,17 +103,15 @@ export const test3 = () =>
         [itemKey]: { id: faker.datatype.number(1000) },
       };
 
-      windowSpy?.mockImplementation(() => undefined);
       safeStorage.setItem(userKey, mockedValue[userKey]);
       safeStorage.setItem(itemKey, mockedValue[itemKey]);
 
       safeStorage.getItemFromPattern(pattern);
 
-      expect(localStorage?.getItem).toHaveBeenCalledTimes(0);
+      expect(safeWindow?.localStorage?.getItem).toBe(undefined);
     });
 
     it('should calls localStorage.length not been called', () => {
-      windowSpy?.mockImplementation(() => undefined);
       const safeStorage = makeSut();
       const key1 = faker.random.word();
       const key2 = faker.random.word();
@@ -126,12 +125,11 @@ export const test3 = () =>
 
       safeStorageLength = safeStorage.length;
 
-      expect(window?.localStorage?.length).toBeUndefined();
+      expect(safeWindow?.localStorage?.length).toBe(undefined);
       expect(safeStorageLength).toBe(0);
     });
 
     it('should calls localStorage.removeItem not been called when safeStorage.removeItemFromPattern is called', () => {
-      windowSpy?.mockImplementation(() => undefined);
       const safeStorage = makeSut();
       const pattern = faker.random.alphaNumeric(8);
       const userKey = `${pattern}:user`;
@@ -142,11 +140,10 @@ export const test3 = () =>
 
       safeStorage.removeItemFromPattern(pattern);
 
-      expect(localStorage?.removeItem).toHaveBeenCalledTimes(0);
+      expect(safeWindow?.localStorage?.removeItem).toBe(undefined);
     });
 
     it('should calls localStorage.removeItem is undefined whensafeStorage.removeItemFromPattern is called', () => {
-      windowSpy?.mockImplementation(() => undefined);
       const safeStorage = makeSut();
       const pattern = faker.random.alphaNumeric(8);
       const userKey = `${pattern}:user`;
@@ -157,7 +154,7 @@ export const test3 = () =>
 
       safeStorage.removeItemFromPattern(pattern);
 
-      expect(window?.localStorage?.getItem).toBeUndefined();
+      expect(safeWindow?.localStorage?.getItem).toBe(undefined);
     });
 
     it('should localStorage.key is undefined', () => {

@@ -3,8 +3,12 @@
     "target": "es6",
     "module": "commonjs",
     "outDir": "./dist",
-    "lib": ["ES2020", "DOM"],
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
     "sourceMap": true,
+    "inlineSources": true,
     "declaration": true,
     "strict": true,
     "noUnusedLocals": true,
@@ -14,6 +18,12 @@
     "esModuleInterop": true,
     "moduleResolution": "node"
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/experiments/*"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "**/experiments/*"
+  ]
 }
