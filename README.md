@@ -1,15 +1,16 @@
 <img width="400" style="margin-bottom: 30px; max-width: 100%;" src="./docs/resources/encrypt-storage-logo.png" />
 
 [![stargazers count](https://img.shields.io/github/stars/michelonsouza/encrypt-storage?style=social)](https://github.com/michelonsouza/encrypt-storage) ![maintenance](https://img.shields.io/npms-io/maintenance-score/encrypt-storage) ![sponsors](https://img.shields.io/github/sponsors/michelonsouza?logo=github-sponsors) [![GitHub License](https://img.shields.io/github/license/michelonsouza/encrypt-storage?logo=mit)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE)
+
 [![NPM Version](https://img.shields.io/npm/v/encrypt-storage?logo=npm&label=version)](https://github.com/michelonsouza/encrypt-storage/blob/main/package.json#L3) [![NPM Downloads](https://img.shields.io/npm/dw/encrypt-storage?logo=npm)](https://www.npmjs.com/package/encrypt-storage) [![jsDelivr hits (npm)](https://img.shields.io/jsdelivr/npm/hw/encrypt-storage?logo=jsdelivr)](https://www.jsdelivr.com/package/npm/encrypt-storage)
+
 ![npm bundle size](https://img.shields.io/bundlephobia/min/encrypt-storage?logo=npm) ![NPM Unpacked Size](https://img.shields.io/npm/unpacked-size/encrypt-storage?logo=npm) [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/michelonsouza/encrypt-storage?logo=github)](https://github.com/michelonsouza/encrypt-storage)
+
 [![codecov](https://codecov.io/github/michelonsouza/encrypt-storage/graph/badge.svg?token=KWO0OOVKVE)](https://codecov.io/github/michelonsouza/encrypt-storage) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/code-quality-verify.yml?logo=github&label=code%20ql)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/code-quality-verify.yml) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/ci.yml?logo=github)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/ci.yml) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/ci.yml?logo=npm&label=published)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/ci.yml)
 
 > OBS: for old versions, use this documentations:
 > - [version 1.3.x](./docs/README_V1.md)
 > - [version 2.16.x](./docs/README_V2.md)
-
-> **SUPPORT THE PROJECT**: Encrypt Storage is maintained by Michelon Souza, a Brazilian developer with 10 years of experience who created this project while working in education. Maintaining an open-source project requires ongoing work on security, dependencies, compatibility, tests, documentation, and community support. If this package helps your project, consider [becoming a sponsor](https://github.com/sponsors/michelonsouza) to help keep it reliable and evolving. Thank you! 💙
 
 `encrypt-storage` is a browser `Storage` wrapper that encrypts values before writing them to `localStorage`, `sessionStorage`, or cookies. Version 3 uses an explicit factory and encryption engine selection.
 
