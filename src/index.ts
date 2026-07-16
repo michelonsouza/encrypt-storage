@@ -8,4 +8,4 @@ export type {
   AsyncEncryptStorageOptions,
 } from './@types';
 
-export { EncryptStorage } from './classes';
+export { EncryptStorage, AsyncEncryptStorage } from './classes';

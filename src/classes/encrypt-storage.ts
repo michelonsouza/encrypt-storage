@@ -8,7 +8,6 @@ import type {
 } from '@/@types';
 
 export class EncryptStorage {
-  static storage: EncryptStorageCryptoJs | EncryptStorageWebApi;
   static create(
     secretKey: string,
     options: SyncEncryptStorageOptions,
@@ -28,15 +27,8 @@ export class EncryptStorage {
     secretKey: string,
     options: EncryptStorageOptions,
   ): EncryptStorageCryptoJs | EncryptStorageWebApi {
-    let storage: EncryptStorageCryptoJs | EncryptStorageWebApi;
-    if (options.engine === 'crypto-js') {
-      storage = new EncryptStorageCryptoJs(secretKey, options);
-    } else {
-      storage = new EncryptStorageWebApi(secretKey, options);
-    }
-
-    this.storage = storage;
-
-    return storage;
+    return options.engine === 'crypto-js'
+      ? new EncryptStorageCryptoJs(secretKey, options)
+      : new EncryptStorageWebApi(secretKey, options);
   }
 }
