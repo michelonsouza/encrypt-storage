@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "2.16.01",
+  "version": "2.16.02",
   "packageManager": "pnpm@11.13.0",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
@@ -19,6 +19,7 @@
     "build": "tsc --declaration",
     "build:minified": "webpack",
     "lint": "eslint 'src/**'",
+    "lint:fix": "eslint 'src/**' --fix",
     "test:jsdom": "jest -c jest.jsdom.config.js --passWithNoTests --no-cache --runInBand",
     "test:node": "jest -c jest.node.config.js --passWithNoTests --no-cache --runInBand",
     "test": "pnpm run test:jsdom && pnpm run test:node",

@@ -56,7 +56,7 @@ export const test3 = () =>
 
     it('should enshure localStorage not been called', () => {
       const safeStorage = makeSut();
-      const key = faker.word.sample();
+      const key = faker.string.alphanumeric(5);
 
       safeStorage.setItem(key, faker.word.sample());
 
@@ -65,7 +65,7 @@ export const test3 = () =>
 
     it('should enshure sessionStorage not been called', () => {
       const safeStorage = makeSut({ storageType: 'sessionStorage' });
-      const key = faker.word.sample();
+      const key = faker.string.alphanumeric(5);
 
       safeStorage.setItem(key, faker.word.sample());
 
@@ -74,7 +74,7 @@ export const test3 = () =>
 
     it('should calls localStorage.getItem not been called', () => {
       const safeStorage = makeSut();
-      const key = faker.word.sample();
+      const key = faker.string.alphanumeric(5);
 
       safeStorage.getItem(key);
 
@@ -83,7 +83,7 @@ export const test3 = () =>
 
     it('should calls localStorage.removeItem not been called', () => {
       const safeStorage = makeSut();
-      const key = faker.word.sample();
+      const key = faker.string.alphanumeric(5);
 
       safeStorage.removeItem(key);
 

@@ -12,7 +12,8 @@ module.exports = {
   coverageReporters: ['json'],
   preset: 'ts-jest',
   transformIgnorePatterns: [
-    '/node_modules/(?!(?:@faker-js/faker)/)',
+    '<rootDir>/node_modules/.pnpm/(?!(?:@faker-js\\+faker)@)',
+    '/node_modules/(?!.pnpm|@faker-js/faker)',
   ],
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', {
