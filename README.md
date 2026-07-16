@@ -12,6 +12,8 @@
 > - [version 1.3.x](./docs/README_V1.md)
 > - [version 2.16.x](./docs/README_V2.md)
 
+> **SUPPORT THE PROJECT**: Encrypt Storage is maintained by Michelon Souza, a Brazilian developer with 10 years of experience who created this project while working in education. Maintaining open source requires continuous work on security, dependencies, compatibility, tests, documentation, and community support. If this package helps your project, consider [becoming a sponsor](https://github.com/sponsors/michelonsouza) to help keep it reliable and evolving. Thank you! 💙
+
 `encrypt-storage` is a browser `Storage` wrapper that encrypts values before writing them to `localStorage`, `sessionStorage`, or cookies. Version 3 uses an explicit factory and encryption engine selection.
 
 > **HELP THIS PROJECT**: A GitHub star helps this project. It costs nothing and is greatly appreciated.
