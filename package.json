@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "2.16.00",
+  "version": "2.16.01",
   "packageManager": "pnpm@11.13.0",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
@@ -21,15 +21,15 @@
     "lint": "eslint 'src/**'",
     "test:jsdom": "jest -c jest.jsdom.config.js --passWithNoTests --no-cache --runInBand",
     "test:node": "jest -c jest.node.config.js --passWithNoTests --no-cache --runInBand",
-    "test": "yarn run test:jsdom && yarn run test:node",
-    "test:watch": "yarn test -- --watch",
-    "test:staged": "yarn test -- --find-relatedTests",
-    "test:ci": "rm -rf coverage && yarn run test:jsdom && yarn run test:node",
+    "test": "pnpm run test:jsdom && pnpm run test:node",
+    "test:watch": "pnpm run test -- --watch",
+    "test:staged": "pnpm run test -- --find-relatedTests",
+    "test:ci": "rm -rf coverage && pnpm run test:jsdom && pnpm run test:node",
     "check": "npx npm-check -u -s",
     "pre-commit": "lint-staged",
     "prepare": "husky",
-    "prepublish": "node ./prepublish.js && yarn prettier -c -w ./package.json",
-    "postpublish": "node ./postpublish.js && yarn prettier -c -w ./package.json"
+    "prepublish": "node ./prepublish.js && pnpm prettier -c -w ./package.json",
+    "postpublish": "node ./postpublish.js && pnpm prettier -c -w ./package.json"
   },
   "keywords": [
     "localStorage",
