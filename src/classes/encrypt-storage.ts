@@ -32,3 +32,14 @@ export class EncryptStorage {
       : new EncryptStorageWebApi(secretKey, options);
   }
 }
+
+/* v8 ignore start -- @preserve */
+if (typeof window !== 'undefined') {
+  (window as any).EncryptStorage = EncryptStorage;
+}
+
+if (typeof window !== 'undefined' && window?.globalThis) {
+  // oxlint-disable-next-line no-unsafe-optional-chaining
+  (window?.globalThis as any).EncryptStorage = EncryptStorage;
+}
+/* v8 ignore end -- @preserve */

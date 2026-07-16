@@ -1,7 +1,7 @@
 import { InvalidSecretKeyError } from '@/errors';
 import {
-  getSyncEncryptation,
   hashSyncSHA256,
+  getSyncEncryptation,
   SECRET_KEY_MIN_LENGTH,
 } from '@/utils';
 
@@ -499,3 +499,14 @@ export class EncryptStorageCryptoJs implements EncryptStorageCryptoJsApiInterfac
     },
   };
 }
+
+/* v8 ignore start -- @preserve */
+if (typeof window !== 'undefined') {
+  (window as any).EncryptStorageCryptoJs = EncryptStorageCryptoJs;
+}
+
+if (typeof window !== 'undefined' && window?.globalThis) {
+  // oxlint-disable-next-line no-unsafe-optional-chaining
+  (window?.globalThis as any).EncryptStorageCryptoJs = EncryptStorageCryptoJs;
+}
+/* v8 ignore end -- @preserve */

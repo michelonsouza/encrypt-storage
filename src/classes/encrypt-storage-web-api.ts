@@ -1,7 +1,7 @@
 import { InvalidSecretKeyError } from '@/errors';
 import {
-  getAsyncEncryptation,
   hashAsyncSHA256,
+  getAsyncEncryptation,
   SECRET_KEY_MIN_LENGTH,
 } from '@/utils';
 
@@ -553,3 +553,14 @@ export class EncryptStorageWebApi implements EncryptStorageCryptoWebApiInterface
     },
   };
 }
+
+/* v8 ignore start -- @preserve */
+if (typeof window !== 'undefined') {
+  (window as any).EncryptStorageWebApi = EncryptStorageWebApi;
+}
+
+if (typeof window !== 'undefined' && window?.globalThis) {
+  // oxlint-disable-next-line no-unsafe-optional-chaining
+  (window?.globalThis as any).EncryptStorageWebApi = EncryptStorageWebApi;
+}
+/* v8 ignore end -- @preserve */

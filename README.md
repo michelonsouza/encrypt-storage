@@ -25,6 +25,7 @@
 - [Encrypt Storage](#encrypt-storage)
 - [Features](#features)
 - [Installation](#installation)
+  - [Using a CDN](#using-a-cdn)
 - [Migration to version 3](#migration-to-version-3)
 - [Choose an encryption engine](#choose-an-encryption-engine)
 - [Usage](#usage)
@@ -72,6 +73,42 @@ pnpm add encrypt-storage
 ```
 
 The package is intended for bundlers and supports ESM and CommonJS imports.
+
+### Using a CDN
+
+For browser-only projects, load the ESM build from a CDN. Version 3 uses the factory API, so create an instance with `EncryptStorage.create()`.
+
+#### unpkg
+
+```html
+<script type="module">
+  import { EncryptStorage } from 'https://unpkg.com/encrypt-storage@latest?module';
+
+  const encryptStorage = EncryptStorage.create('secret-key-value', {
+    engine: 'crypto-js',
+    prefix: '@app',
+  });
+
+  encryptStorage.setItem('user', { name: 'Ada Lovelace' });
+</script>
+```
+
+#### jsDelivr
+
+```html
+<script type="module">
+  import { EncryptStorage } from 'https://cdn.jsdelivr.net/npm/encrypt-storage@latest/+esm';
+
+  const encryptStorage = EncryptStorage.create('secret-key-value', {
+    engine: 'crypto-js',
+    prefix: '@app',
+  });
+
+  encryptStorage.setItem('user', { name: 'Ada Lovelace' });
+</script>
+```
+
+For production, pin the package to a specific version instead of using `@latest`.
 
 ## Migration to version 3
 

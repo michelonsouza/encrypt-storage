@@ -95,3 +95,14 @@ export class AsyncEncryptStorage {
     return await this.#encryptStorage.hash(value);
   }
 }
+
+/* v8 ignore start -- @preserve */
+if (typeof window !== 'undefined') {
+  (window as any).AsyncEncryptStorage = AsyncEncryptStorage;
+}
+
+if (typeof window !== 'undefined' && window?.globalThis) {
+  // oxlint-disable-next-line no-unsafe-optional-chaining
+  (window?.globalThis as any).AsyncEncryptStorage = AsyncEncryptStorage;
+}
+/* v8 ignore end -- @preserve */
