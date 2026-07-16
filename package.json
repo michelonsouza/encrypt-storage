@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "2.16.02",
+  "version": "2.16.03",
   "packageManager": "pnpm@11.13.0",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "main": "dist/index.js",
