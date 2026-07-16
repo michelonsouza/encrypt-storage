@@ -1,1 +1,1 @@
-export * from './invalid-secret-key-error';
+export { InvalidSecretKeyError } from './invalid-secret-key-error.ts';

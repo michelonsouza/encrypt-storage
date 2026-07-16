@@ -5,6 +5,7 @@ lib-esm
 _bundles
 .eslintcache
 .yarn
+.pnpm
 .yarnrc.yml
 package.txt
 .DS_Store

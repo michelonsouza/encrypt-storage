@@ -1,0 +1,90 @@
+import { defineConfig } from 'vite-plus';
+
+export default defineConfig({
+  staged: {
+    '*.ts': ['vp run test:staged', 'vp check --fix'],
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./setup-jsdom-test.ts'],
+    coverage: {
+      enabled: true,
+      provider: 'v8',
+      reporter: ['text', 'json', 'html', 'lcov'],
+      include: ['src/**/*.ts'],
+      exclude: ['**/*.spec.ts', 'src/@types/**/*.ts'],
+    },
+  },
+  pack: {
+    dts: {
+      tsgo: true,
+    },
+    exports: true,
+  },
+  lint: {
+    ignorePatterns: [
+      'node_modules/**/*',
+      'dist/**/*',
+      'build/**/*',
+      '.github/**/*',
+      'docs/**/*',
+      'CHANGELOG.md',
+      'CODE_OF_CONDUCT.md',
+      'CONTRIBUTING.md',
+      'README.md',
+      'SECURITY.md',
+    ],
+    options: {
+      typeAware: true,
+      typeCheck: true,
+    },
+    plugins: ['typescript', 'oxc'],
+    rules: {
+      'typescript/unbound-method': 'off',
+      'typescript/no-floating-promises': 'off',
+      'typescript/no-redundant-type-constituents': 'off',
+    },
+  },
+  fmt: {
+    ignorePatterns: [
+      'node_modules/**/*',
+      'dist/**/*',
+      'build/**/*',
+      '.github/**/*',
+      'docs/**/*',
+      'CHANGELOG.md',
+      'CODE_OF_CONDUCT.md',
+      'CONTRIBUTING.md',
+      'README.md',
+      'SECURITY.md',
+    ],
+    sortImports: {
+      newlinesBetween: true,
+      groups: [
+        ['value-builtin', 'value-external'],
+        'value-internal',
+        ['value-parent', 'value-sibling', 'value-index'],
+        'unknown',
+      ],
+    },
+    arrowParens: 'always',
+    bracketSpacing: true,
+    jsxBracketSameLine: false,
+    jsxSingleQuote: false,
+    printWidth: 80,
+    proseWrap: 'always',
+    quoteProps: 'as-needed',
+    requirePragma: false,
+    semi: true,
+    singleQuote: true,
+    tabWidth: 2,
+    trailingComma: 'all',
+  },
+  resolve: {
+    tsconfigPaths: true,
+    alias: {
+      '@/*': './src/*',
+    },
+  },
+});
