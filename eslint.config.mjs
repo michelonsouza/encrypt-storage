@@ -1,7 +1,6 @@
 import { defineConfig } from 'eslint/config';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import prettier from 'eslint-plugin-prettier';
-import globalsExternal from 'globals';
 import tsParser from '@typescript-eslint/parser';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -87,9 +86,20 @@ export default defineConfig([
     files: ['**/*.test.ts', '**/*.spec.ts', 'src/experiments/*.ts'],
     languageOptions: {
       globals: {
-        ...globalsExternal.browser,
-        ...globalsExternal.jest,
-      }
+        ...globals.browser,
+        ...globals.jest,
+      },
     },
-  }
+  },
+  {
+    files: [
+      'jest.base.config.js',
+      'jest.jsdom.config.js',
+      'jest.node.config.js',
+    ],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+      'import/extensions': 'off',
+    },
+  },
 ]);

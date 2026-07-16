@@ -20,8 +20,8 @@
     "moduleResolution": "node",
     "ignoreDeprecations": "6.0",
     "types": [
-      "node",
-      "jest"
+      "@types/node",
+      "@types/jest"
     ]
   },
   "include": [
