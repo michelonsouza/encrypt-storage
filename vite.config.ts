@@ -21,6 +21,12 @@ export default defineConfig({
       tsgo: true,
     },
     exports: true,
+    minify: true,
+    unbundle: true,
+    entry: 'src/index.ts',
+    name: 'encrypt-storage',
+    target: 'esnext',
+    format: ['esm', 'cjs'],
   },
   lint: {
     ignorePatterns: [
@@ -83,8 +89,5 @@ export default defineConfig({
   },
   resolve: {
     tsconfigPaths: true,
-    alias: {
-      '@/*': './src/*',
-    },
   },
 });

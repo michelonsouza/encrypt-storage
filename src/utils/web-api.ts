@@ -51,11 +51,11 @@ const algorithms = {
 const cryptoKeys = new Map<string, CryptoKey>();
 
 function encodeBase64(bytes: Uint8Array): string {
+  /* v8 ignore start -- @preserve */
   if (typeof Buffer !== 'undefined') {
     return Buffer.from(bytes).toString('base64');
   }
 
-  /* v8 ignore start -- @preserve */
   let binary = '';
 
   for (const byte of bytes) {
@@ -67,11 +67,11 @@ function encodeBase64(bytes: Uint8Array): string {
 }
 
 function decodeBase64(base64: string): Uint8Array {
+  /* v8 ignore start -- @preserve */
   if (typeof Buffer !== 'undefined') {
     return new Uint8Array(Buffer.from(base64, 'base64'));
   }
 
-  /* v8 ignore start -- @preserve */
   const binary = globalThis.atob(base64);
 
   return Uint8Array.from(binary, (char) => char.charCodeAt(0));

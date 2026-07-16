@@ -1,4 +1,4 @@
-name: npm published
+name: npm publish
 
 on:
   release:
@@ -8,15 +8,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "24.x"
           registry-url: "https://registry.npmjs.org"
 
       - run: npm install -g pnpm
       - run: pnpm install
-      - run: pnpm run build:minified
+      - run: pnpm run build
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}

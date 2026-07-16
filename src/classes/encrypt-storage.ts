@@ -29,7 +29,7 @@ export class EncryptStorage {
     options: EncryptStorageOptions,
   ): EncryptStorageCryptoJs | EncryptStorageWebApi {
     let storage: EncryptStorageCryptoJs | EncryptStorageWebApi;
-    if (options.api === 'crypto-js') {
+    if (options.engine === 'crypto-js') {
       storage = new EncryptStorageCryptoJs(secretKey, options);
     } else {
       storage = new EncryptStorageWebApi(secretKey, options);

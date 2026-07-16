@@ -9,7 +9,7 @@ import type {
 } from '@/@types';
 import type { Mock } from 'vite-plus/test';
 
-interface makeSutParams extends Omit<SyncEncryptStorageOptions, 'api'> {
+interface makeSutParams extends Omit<SyncEncryptStorageOptions, 'engine'> {
   secretKey?: string;
   noOptions?: boolean;
   noNotifyHandler?: boolean;
@@ -36,14 +36,14 @@ export const makeSut = (
     secretKey = faker.string.alphanumeric(10),
   } = params;
   const options: SyncEncryptStorageOptions = noOptions
-    ? { api: 'crypto-js' }
+    ? { engine: 'crypto-js' }
     : {
         prefix,
         storageType,
         encAlgorithm,
         notifyHandler,
         doNotParseValues,
-        api: 'crypto-js',
+        engine: 'crypto-js',
         stateManagementUse,
       };
   return new EncryptStorageCryptoJs(secretKey, options);

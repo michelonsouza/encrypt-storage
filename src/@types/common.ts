@@ -167,10 +167,10 @@ export interface BaseEcnryptStorageOptions {
 
 export interface SyncEncryptStorageOptions extends BaseEcnryptStorageOptions {
   /**
-   * @description Encrypt api
+   * @description Encrypt engine
    * @default 'crypto-js'
    */
-  api: 'crypto-js';
+  engine: 'crypto-js';
   /**
    * @description CryptoJS encrypt algorithm
    * @default 'AES'
@@ -180,10 +180,10 @@ export interface SyncEncryptStorageOptions extends BaseEcnryptStorageOptions {
 
 export interface AsyncEncryptStorageOptions extends BaseEcnryptStorageOptions {
   /**
-   * @description Encrypt api
+   * @description Encrypt engine
    * @default 'web-api'
    */
-  api: 'web-api';
+  engine: 'web-crypto';
   /**
    * @description WebApi encrypt algorithm
    * @default 'AES-GCM'
