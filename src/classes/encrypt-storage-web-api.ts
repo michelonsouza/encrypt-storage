@@ -17,11 +17,22 @@ import type {
   AsyncEncryptStorageOptions,
   EncryptStorageCryptoWebApiInterface,
   NotifyHandlerParams,
+  TTLStorageValue,
+  SetTTLItemParams,
+  AsyncEncryptStorageTTLInterface,
+  TTLMetadata,
+  RefreshTTLParams,
 } from '@/@types';
 
 const secret = new globalThis.WeakMap();
 
-export class EncryptStorageWebApi implements EncryptStorageCryptoWebApiInterface {
+export class EncryptStorageWebApi
+  implements
+    EncryptStorageCryptoWebApiInterface,
+    AsyncEncryptStorageTTLInterface
+{
+  readonly #keys: Set<string> = new Set();
+
   // @ts-expect-error
   #encryptation: AsyncEncryptation;
 
@@ -143,6 +154,8 @@ export class EncryptStorageWebApi implements EncryptStorageCryptoWebApiInterface
         value: valueToString,
       });
     }
+
+    this.#keys.add(key);
   }
 
   public async setMultipleItems(
@@ -269,6 +282,8 @@ export class EncryptStorageWebApi implements EncryptStorageCryptoWebApiInterface
         key,
       });
     }
+
+    this.#keys.delete(key);
   }
 
   public removeMultipleItems(keys: string[]): void {
@@ -542,6 +557,143 @@ export class EncryptStorageWebApi implements EncryptStorageCryptoWebApiInterface
       });
     },
   };
+
+  /**
+   * TTL API
+   */
+
+  /**
+   * Returns a valid TTL record.
+   *
+   * If the key does not exist, is invalid or has expired,
+   * `Promise<null>` is returned.
+   *
+   * Expired items are automatically removed from storage.
+   *
+   * @template T
+   * @param {string} key Storage key.
+   *
+   * @returns {Promise<TTLStorageValue<T> | null>}
+   *
+   * @private
+   */
+  async #getTTLRecord<T = unknown>(
+    key: string,
+    doNotDecrypt = false,
+  ): Promise<TTLStorageValue<T> | null> {
+    const item = await this.getItem<TTLStorageValue<T>>(key, doNotDecrypt);
+
+    if (!item) {
+      return null;
+    }
+
+    if (
+      item == null ||
+      typeof item !== 'object' ||
+      typeof item.expiresAt !== 'number'
+    ) {
+      return null;
+    }
+
+    if (Date.now() >= item.expiresAt) {
+      this.removeItem(key);
+
+      return null;
+    }
+
+    return item;
+  }
+
+  public async setTTL<T>({
+    key,
+    value,
+    ttl,
+    doNotEncrypt = false,
+  }: SetTTLItemParams<T>): Promise<void> {
+    const expiresAt =
+      ttl instanceof Date ? ttl.getTime() : Date.now() + ttl * 1000;
+
+    const item: TTLStorageValue<T> = {
+      value,
+      expiresAt,
+    };
+
+    await this.setItem(key, item, doNotEncrypt);
+  }
+
+  public async getTTL<T = unknown>(
+    key: string,
+    doNotDecrypt = false,
+  ): Promise<T | null> {
+    const item = await this.#getTTLRecord<T>(key, doNotDecrypt);
+    return item?.value ?? null;
+  }
+
+  public async hasTTL(key: string): Promise<boolean> {
+    const item = await this.#getTTLRecord(key);
+    return item !== null;
+  }
+
+  public async getTTLMetadata(key: string): Promise<TTLMetadata | null> {
+    const item = await this.#getTTLRecord(key);
+
+    if (!item) {
+      return null;
+    }
+
+    return {
+      expiresAt: new Date(item.expiresAt),
+      remaining: item.expiresAt - Date.now(),
+      expired: Date.now() >= item.expiresAt,
+    };
+  }
+
+  public async getRemainingTTL(key: string): Promise<number | null> {
+    const item = await this.#getTTLRecord(key);
+
+    if (!item) {
+      return null;
+    }
+
+    const remaining = (item.expiresAt - Date.now()) / 1000;
+
+    return remaining > 0 ? remaining : 0;
+  }
+
+  public async refreshTTL({ key, ttl }: RefreshTTLParams): Promise<boolean> {
+    const item = await this.#getTTLRecord(key);
+
+    if (!item) {
+      return false;
+    }
+
+    const expiresAt = ttl instanceof Date ? ttl.getTime() : Date.now() + ttl;
+
+    item.expiresAt = expiresAt;
+
+    await this.setItem(key, item);
+
+    return true;
+  }
+
+  public async removeTTL(key: string): Promise<boolean> {
+    const item = await this.#getTTLRecord(key);
+
+    if (!item) {
+      return false;
+    }
+
+    this.removeItem(key);
+    await this.setItem(key, item.value);
+
+    return true;
+  }
+
+  public async hasExpired(key: string): Promise<boolean> {
+    const item = await this.#getTTLRecord(key);
+
+    return item === null;
+  }
 }
 
 /* v8 ignore start -- @preserve */

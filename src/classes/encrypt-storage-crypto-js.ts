@@ -6,21 +6,30 @@ import {
 } from '@/utils';
 
 import type {
+  TTLMetadata,
   NotifyHandler,
   CookieOptions,
+  TTLStorageValue,
   SyncEncryptation,
+  SetTTLItemParams,
+  RefreshTTLParams,
   RemoveCookieOptions,
+  NotifyHandlerParams,
   SyncCookieInterface,
   GetFromPatternOptions,
   RemoveFromPatternOptions,
   SyncEncryptStorageOptions,
+  SyncEncryptStorageTTLInterface,
   EncryptStorageCryptoJsApiInterface,
-  NotifyHandlerParams,
 } from '@/@types';
 
 const secret = new globalThis.WeakMap();
 
-export class EncryptStorageCryptoJs implements EncryptStorageCryptoJsApiInterface {
+export class EncryptStorageCryptoJs
+  implements EncryptStorageCryptoJsApiInterface, SyncEncryptStorageTTLInterface
+{
+  readonly #keys: Set<string> = new Set();
+
   readonly #encryptation: SyncEncryptation;
 
   readonly #stateManagementUse: boolean;
@@ -120,6 +129,8 @@ export class EncryptStorageCryptoJs implements EncryptStorageCryptoJsApiInterfac
         value: valueToString,
       });
     }
+
+    this.#keys.add(key);
   }
 
   public setMultipleItems(
@@ -237,6 +248,8 @@ export class EncryptStorageCryptoJs implements EncryptStorageCryptoJsApiInterfac
         key,
       });
     }
+
+    this.#keys.delete(key);
   }
 
   public removeMultipleItems(keys: string[]): void {
@@ -482,6 +495,136 @@ export class EncryptStorageCryptoJs implements EncryptStorageCryptoJsApiInterfac
       });
     },
   };
+
+  /**
+   * TTL API
+   */
+
+  /**
+   * Returns a valid TTL record.
+   *
+   * If the key does not exist, is invalid or has expired,
+   * `undefined` is returned.
+   *
+   * Expired items are automatically removed from storage.
+   *
+   * @template T
+   * @param {string} key Storage key.
+   *
+   * @returns {TTLStorageValue<T> | undefined}
+   *
+   * @private
+   */
+  #getTTLRecord<T = unknown>(
+    key: string,
+    doNotDecrypt = false,
+  ): TTLStorageValue<T> | null {
+    const item = this.getItem<TTLStorageValue<T>>(key, doNotDecrypt);
+
+    if (!item) {
+      return null;
+    }
+
+    if (
+      item == null ||
+      typeof item !== 'object' ||
+      typeof item.expiresAt !== 'number'
+    ) {
+      return null;
+    }
+
+    if (Date.now() >= item.expiresAt) {
+      this.removeItem(key);
+
+      return null;
+    }
+
+    return item;
+  }
+
+  public setTTL<T>({
+    key,
+    value,
+    ttl,
+    doNotEncrypt = false,
+  }: SetTTLItemParams<T>): void {
+    const expiresAt =
+      ttl instanceof Date ? ttl.getTime() : Date.now() + ttl * 1000;
+
+    const item: TTLStorageValue<T> = {
+      value,
+      expiresAt,
+    };
+
+    this.setItem(key, item, doNotEncrypt);
+  }
+
+  public getTTL<T = unknown>(key: string, doNotDecrypt = false): T | null {
+    return this.#getTTLRecord<T>(key, doNotDecrypt)?.value ?? null;
+  }
+
+  public hasTTL(key: string): boolean {
+    return this.#getTTLRecord(key) !== null;
+  }
+
+  public getTTLMetadata(key: string): TTLMetadata | null {
+    const item = this.#getTTLRecord(key);
+
+    if (!item) {
+      return null;
+    }
+
+    return {
+      expiresAt: new Date(item.expiresAt),
+      remaining: item.expiresAt - Date.now(),
+      expired: Date.now() >= item.expiresAt,
+    };
+  }
+
+  public getRemainingTTL(key: string): number | null {
+    const item = this.#getTTLRecord(key);
+
+    if (!item) {
+      return null;
+    }
+
+    const remaining = (item.expiresAt - Date.now()) / 1000;
+
+    return remaining > 0 ? remaining : 0;
+  }
+
+  public refreshTTL({ key, ttl }: RefreshTTLParams): boolean {
+    const item = this.#getTTLRecord(key);
+
+    if (!item) {
+      return false;
+    }
+
+    const expiresAt = ttl instanceof Date ? ttl.getTime() : Date.now() + ttl;
+
+    item.expiresAt = expiresAt;
+
+    this.setItem(key, item);
+
+    return true;
+  }
+
+  public removeTTL(key: string): boolean {
+    const item = this.#getTTLRecord(key);
+
+    if (!item) {
+      return false;
+    }
+
+    this.removeItem(key);
+    this.setItem(key, item.value);
+
+    return true;
+  }
+
+  public hasExpired(key: string): boolean {
+    return this.#getTTLRecord(key) === null;
+  }
 }
 
 /* v8 ignore start -- @preserve */

@@ -1,6 +1,10 @@
 export type {
+  TTL,
+  TTLMetadata,
   NotifyHandler,
   CookieOptions,
+  SetTTLItemParams,
+  RefreshTTLParams,
   EncryptStorageOptions,
   WebApiEncryptAlgorithms,
   CryptoJSEncryptAlgorithms,

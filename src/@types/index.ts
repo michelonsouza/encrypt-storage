@@ -20,6 +20,16 @@ export type {
   AsyncEncryptStorageOptions,
 } from './common.ts';
 
+export type {
+  TTL,
+  TTLMetadata,
+  TTLStorageValue,
+  RefreshTTLParams,
+  SetTTLItemParams,
+  SyncEncryptStorageTTLInterface,
+  AsyncEncryptStorageTTLInterface,
+} from './ttl.ts';
+
 export type { EncryptStorageCryptoWebApiInterface } from './encrypt-storage-web-api.ts';
 
 export type { EncryptStorageCryptoJsApiInterface } from './encrypt-storage-crypto-js-api.ts';

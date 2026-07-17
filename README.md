@@ -8,10 +8,6 @@
 
 [![codecov](https://codecov.io/github/michelonsouza/encrypt-storage/graph/badge.svg?token=KWO0OOVKVE)](https://codecov.io/github/michelonsouza/encrypt-storage) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/code-quality-verify.yml?logo=github&label=code%20ql)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/code-quality-verify.yml) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/ci.yml?logo=github)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/ci.yml) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/ci.yml?logo=npm&label=published)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/ci.yml)
 
-> OBS: for old versions, use this documentations:
-> - [version 1.3.x](./docs/README_V1.md)
-> - [version 2.16.x](./docs/README_V2.md)
-
 > **SUPPORT THE PROJECT**: Encrypt Storage is maintained by Michelon Souza, a Brazilian developer with 10 years of experience who created this project while working in education. Maintaining open source requires continuous work on security, dependencies, compatibility, tests, documentation, and community support. If this package helps your project, consider [becoming a sponsor](https://github.com/sponsors/michelonsouza) to help keep it reliable and evolving. Thank you! 💙
 
 `encrypt-storage` is a browser `Storage` wrapper that encrypts values before writing them to `localStorage`, `sessionStorage`, or cookies. Version 3 uses an explicit factory and encryption engine selection.
@@ -47,6 +43,13 @@
   - [Storage utilities](#storage-utilities)
   - [Encrypt, decrypt, and hash](#encrypt-decrypt-and-hash)
 - [Cookies](#cookies)
+- [TTL (Time-To-Live)](#ttl-time-to-live)
+  - [Store a value with TTL](#store-a-value-with-ttl)
+  - [Read a TTL value](#read-a-ttl-value)
+  - [Check TTL state](#check-ttl-state)
+  - [TTL metadata and remaining time](#ttl-metadata-and-remaining-time)
+  - [Refresh and remove TTL](#refresh-and-remove-ttl)
+  - [TTL with Web Crypto (asynchronous)](#ttl-with-web-crypto-asynchronous)
 - [State management persisters](#state-management-persisters)
   - [Vuex Persist](#vuex-persist)
   - [Redux Persist](#redux-persist)
@@ -62,6 +65,7 @@
 - Encrypt values stored in `localStorage`, `sessionStorage`, and browser cookies.
 - Choose between synchronous `crypto-js` and asynchronous native `web-crypto` engines.
 - Keep a familiar Storage-like API, including bulk, pattern, and key operations.
+- Store values with a Time-To-Live (TTL) that are lazily removed on access after expiration.
 - Serialize and deserialize JavaScript values automatically by default.
 - Use a namespace prefix to isolate multiple storage instances.
 - Integrate with state-management persisters by using the synchronous `crypto-js` engine.
@@ -122,9 +126,9 @@ For production, pin the package to a specific version instead of using `@latest`
 
 | Encrypt Storage version | Status | Documentation |
 | --- | --- | --- |
-| `3.x` | Current API. Requires explicit engine selection with `EncryptStorage.create()`. | This README |
+| `3.x` | Current API. Requires explicit engine<br /> selection with `EncryptStorage.create()`. | This README |
 | `2.16.x` | Legacy API. | [Version 2 documentation](./docs/README_V2.md) |
-| `1.3.10` | Legacy API. | [Version 1 documentation](./docs/README_V1.md) |
+| `1.3.10` `(deprecated)` | Legacy API. | [Version 1 documentation](./docs/README_V1.md) |
 
 | Runtime or framework | Support |
 | --- | --- |
@@ -481,6 +485,190 @@ encryptStorage.cookie.remove('preferences', { path: '/' });
 | `cookie.remove(key, options?)` | Accepts `path` and `domain`; match the original cookie scope. |
 
 Cookies set from JavaScript cannot be `HttpOnly`; use server-set `HttpOnly` cookies for session tokens whenever possible.
+
+## TTL (Time-To-Live)
+
+![new](https://img.shields.io/badge/New-blue)
+
+Every storage instance exposes a TTL API that stores values with an expiration time. When a TTL item expires, it is **lazily removed**: the item is deleted from browser storage only when it is accessed after expiration. There is no background observer, timer, or polling mechanism watching for expiration. This means an expired item remains physically in storage until your code reads it with `getTTL`, `hasTTL`, `hasExpired`, `getTTLMetadata`, `getRemainingTTL`, or `refreshTTL`.
+
+> **Important**: expired items are cleaned up on access, not on a schedule. If your application never reads an expired key, it stays in browser storage indefinitely. Design your access patterns accordingly, or call `getTTL` for known keys at application startup.
+
+The TTL API is available on both `crypto-js` (synchronous) and `web-crypto` (asynchronous) engines. The examples below use the synchronous `crypto-js` engine; see [TTL with Web Crypto](#ttl-with-web-crypto-asynchronous) for the async equivalent.
+
+```ts
+const encryptStorage = EncryptStorage.create('secret-key-value', {
+  engine: 'crypto-js',
+  prefix: '@app',
+});
+```
+
+### Store a value with TTL
+
+Use `setTTL` to store a value that expires after a given duration or at a specific date.
+
+```ts
+// Expire in 3600 seconds (1 hour)
+encryptStorage.setTTL({
+  key: 'access_token',
+  value: 'eyJhbGciOiJIUzI1NiIs...',
+  ttl: 3600,
+});
+
+// Expire at a specific date
+encryptStorage.setTTL({
+  key: 'session',
+  value: { userId: '42', role: 'admin' },
+  ttl: new Date('2030-01-01T00:00:00Z'),
+});
+
+// Store without encryption
+encryptStorage.setTTL({
+  key: 'public_notice',
+  value: 'Maintenance at 3 AM',
+  ttl: 7200,
+  doNotEncrypt: true,
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `key` | `string` | Storage key. |
+| `value` | `T` | Value to store. Objects are serialized automatically. |
+| `ttl` | `number \| Date` | Expiration: seconds from now (`number`) or absolute date (`Date`). |
+| `doNotEncrypt` | `boolean` | Skip encryption for this item. Default `false`. |
+
+The stored value in browser storage is an encrypted JSON object containing the original value and the expiration timestamp. The prefix is applied to the key as with regular `setItem`.
+
+### Read a TTL value
+
+Use `getTTL` to retrieve a stored value. If the item has expired, it is removed from storage and `null` is returned.
+
+```ts
+const token = encryptStorage.getTTL<string>('access_token');
+
+if (token) {
+  // Token is still valid
+  api.setHeader('Authorization', `Bearer ${token}`);
+} else {
+  // Token expired or never existed — redirect to login
+  router.push('/login');
+}
+```
+
+```ts
+const session = encryptStorage.getTTL<{ userId: string; role: string }>('session');
+// session is typed as { userId: string; role: string } | null
+```
+
+| Scenario | Return value | Side effect |
+| --- | --- | --- |
+| Key exists and has not expired | `T` (the stored value) | None |
+| Key exists and has expired | `null` | Item is removed from storage |
+| Key does not exist | `null` | None |
+
+### Check TTL state
+
+```ts
+// Returns true when the key exists and has NOT expired
+const exists = encryptStorage.hasTTL('access_token');
+
+// Returns true when the key does not exist or HAS expired
+const expired = encryptStorage.hasExpired('access_token');
+```
+
+| Method | Returns `true` when | Removes expired item |
+| --- | --- | --- |
+| `hasTTL(key)` | Key exists and is still valid | Yes (if expired) |
+| `hasExpired(key)` | Key does not exist or has expired | Yes (if expired) |
+
+Both methods trigger lazy removal when the item is expired.
+
+### TTL metadata and remaining time
+
+```ts
+const metadata = encryptStorage.getTTLMetadata('access_token');
+
+if (metadata) {
+  console.log(metadata.expiresAt);  // Date object
+  console.log(metadata.remaining);  // Remaining time in milliseconds
+  console.log(metadata.expired);    // false (always false when metadata is returned)
+}
+
+const remaining = encryptStorage.getRemainingTTL('access_token');
+
+if (remaining !== null) {
+  console.log(`Token expires in ${remaining} seconds`);
+}
+```
+
+| Method | Return type | Description |
+| --- | --- | --- |
+| `getTTLMetadata(key)` | `TTLMetadata \| null` | Returns `expiresAt` (Date), `remaining` (ms), and `expired` (boolean). Returns `null` when the key does not exist or has expired. |
+| `getRemainingTTL(key)` | `number \| null` | Remaining lifetime in seconds. Returns `null` when the key does not exist or has expired. |
+
+### Refresh and remove TTL
+
+```ts
+// Extend the expiration by setting a new TTL (in seconds from now)
+const refreshed = encryptStorage.refreshTTL({
+  key: 'access_token',
+  ttl: 1800,
+});
+// refreshed === true if the key existed, false otherwise
+
+// Or set a new absolute expiration date
+encryptStorage.refreshTTL({
+  key: 'session',
+  ttl: new Date('2030-06-01T00:00:00Z'),
+});
+
+// Remove the TTL, making the value permanent
+const removed = encryptStorage.removeTTL('access_token');
+// removed === true if the key existed, false otherwise
+// The value is now stored permanently without TTL metadata
+```
+
+| Method | Return | Description |
+| --- | --- | --- |
+| `refreshTTL({ key, ttl })` | `boolean` | Updates the expiration time. The stored value remains unchanged. Returns `false` when the key does not exist or has expired. |
+| `removeTTL(key)` | `boolean` | Removes the TTL wrapper. The plain value is re-stored as a permanent item. Returns `false` when the key does not exist or has expired. |
+
+### TTL with Web Crypto (asynchronous)
+
+With the `web-crypto` engine, all TTL methods return promises. The API is identical otherwise.
+
+```ts
+const encryptStorage = EncryptStorage.create('secret-key-value', {
+  engine: 'web-crypto',
+  prefix: '@app',
+});
+
+await encryptStorage.setTTL({
+  key: 'access_token',
+  value: 'eyJhbGciOiJIUzI1NiIs...',
+  ttl: 3600,
+});
+
+const token = await encryptStorage.getTTL<string>('access_token');
+const exists = await encryptStorage.hasTTL('access_token');
+const expired = await encryptStorage.hasExpired('access_token');
+const metadata = await encryptStorage.getTTLMetadata('access_token');
+const remaining = await encryptStorage.getRemainingTTL('access_token');
+const refreshed = await encryptStorage.refreshTTL({ key: 'access_token', ttl: 1800 });
+const removed = await encryptStorage.removeTTL('access_token');
+```
+
+| Method | `crypto-js` | `web-crypto` |
+| --- | --- | --- |
+| `setTTL` | `void` | `Promise<void>` |
+| `getTTL` | `T \| null` | `Promise<T \| null>` |
+| `hasTTL` | `boolean` | `Promise<boolean>` |
+| `hasExpired` | `boolean` | `Promise<boolean>` |
+| `getTTLMetadata` | `TTLMetadata \| null` | `Promise<TTLMetadata \| null>` |
+| `getRemainingTTL` | `number \| null` | `Promise<number \| null>` |
+| `refreshTTL` | `boolean` | `Promise<boolean>` |
+| `removeTTL` | `boolean` | `Promise<boolean>` |
 
 ## State management persisters
 

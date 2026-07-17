@@ -34,4 +34,5 @@ jobs:
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v5
         with:
+          override_branch: main
           token: ${{ secrets.CODECOV_TOKEN }}
