@@ -14,13 +14,13 @@
 >
 > [![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-EA4AAA?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/michelonsouza)&nbsp;&nbsp;&nbsp;[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buymeacoffee&logoColor=000000)](https://www.buymeacoffee.com/michelon)&nbsp;&nbsp;&nbsp;[![Patreon](https://img.shields.io/badge/Patreon-F96854?logo=patreon&logoColor=white)](https://www.patreon.com/MichelonSouza)
 
-`encrypt-storage` is a browser `Storage` wrapper that encrypts values before writing them to `localStorage`, `sessionStorage`, or cookies. Version 3 uses an explicit factory and encryption engine selection.
-
 > **HELP THIS PROJECT**: A GitHub star helps this project. It costs nothing and is greatly appreciated.
 
 > **⚠️ IMPORTANT**: No browser-side secret is fully secure. An application secret shipped to the client can be discovered by a sufficiently motivated user. This package obscures stored values and provides encryption at rest in browser storage; it must not be treated as a replacement for server-side authorization or secret management.
 
 ## Encrypt Storage
+`encrypt-storage` is a browser `Storage` wrapper that encrypts values before writing them to `localStorage`, `sessionStorage`, or cookies. Version 3 uses an explicit factory and encryption engine selection.
+
 
 - [Encrypt Storage](#encrypt-storage)
 - [Features](#features)
