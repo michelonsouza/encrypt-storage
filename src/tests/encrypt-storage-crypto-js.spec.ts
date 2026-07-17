@@ -1,7 +1,11 @@
 import { fakerPT_BR as faker } from '@faker-js/faker';
 
 import { EncryptStorageCryptoJs, EncryptStorage } from '@/classes';
-import { InvalidSecretKeyError } from '@/errors';
+import {
+  InvalidSecretKeyError,
+  NullValueError,
+  UndefinedValueError,
+} from '@/errors';
 
 import type { NotifyHandlerParams, SyncEncryptStorageOptions } from '@/@types';
 
@@ -26,6 +30,7 @@ export const makeSut = (
     stateManagementUse,
     noOptions,
     encAlgorithm,
+    validation,
     noNotifyHandler = false,
     doNotParseValues = false,
     notifyHandler = noNotifyHandler ? undefined : mockNotify.mockedFn,
@@ -41,6 +46,7 @@ export const makeSut = (
         doNotParseValues,
         engine: 'crypto-js',
         stateManagementUse,
+        validation,
       };
   return EncryptStorage.create(secretKey, options);
 };
@@ -746,5 +752,69 @@ describe('EncryptStorageCryptoJs 📦', () => {
     const result = sut.hash(value);
 
     expect(result).not.toEqual(value);
+  });
+
+  describe('Validation 🚨', () => {
+    it('should throws UndefinedValueError when storing undefined with default options', () => {
+      const sut = makeSut();
+      const key = faker.string.alphanumeric(5);
+
+      expect(() => sut.setItem(key, undefined)).toThrow(UndefinedValueError);
+    });
+
+    it('should not throw when storing null with default options', () => {
+      const sut = makeSut();
+      const key = faker.string.alphanumeric(5);
+
+      expect(() => sut.setItem(key, null)).not.toThrow();
+    });
+
+    it('should throws NullValueError when allowNull is false', () => {
+      const sut = makeSut({ validation: { allowNull: false } });
+      const key = faker.string.alphanumeric(5);
+
+      expect(() => sut.setItem(key, null)).toThrow(NullValueError);
+    });
+
+    it('should not throw when storing undefined with allowUndefined true', () => {
+      const sut = makeSut({ validation: { allowUndefined: true } });
+      const key = faker.string.alphanumeric(5);
+
+      expect(() => sut.setItem(key, undefined)).not.toThrow();
+    });
+
+    it('should throws NullValueError when strict is true', () => {
+      const sut = makeSut({ validation: { strict: true } });
+      const key = faker.string.alphanumeric(5);
+
+      expect(() => sut.setItem(key, null)).toThrow(NullValueError);
+    });
+
+    it('should throws UndefinedValueError when strict is true', () => {
+      const sut = makeSut({ validation: { strict: true } });
+      const key = faker.string.alphanumeric(5);
+
+      expect(() => sut.setItem(key, undefined)).toThrow(UndefinedValueError);
+    });
+
+    it('should strict override allowNull and allowUndefined', () => {
+      const sut = makeSut({
+        validation: { strict: true, allowNull: true, allowUndefined: true },
+      });
+      const key = faker.string.alphanumeric(5);
+
+      expect(() => sut.setItem(key, null)).toThrow(NullValueError);
+      expect(() => sut.setItem(key, undefined)).toThrow(UndefinedValueError);
+    });
+
+    it('should not throw when storing valid values with strict validation', () => {
+      const sut = makeSut({ validation: { strict: true } });
+      const key = faker.string.alphanumeric(5);
+
+      expect(() => sut.setItem(key, 'valid-string')).not.toThrow();
+      expect(() => sut.setItem(key, { id: 1 })).not.toThrow();
+      expect(() => sut.setItem(key, 42)).not.toThrow();
+      expect(() => sut.setItem(key, true)).not.toThrow();
+    });
   });
 });

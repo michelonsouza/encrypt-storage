@@ -2,6 +2,7 @@ import type { AsyncEncryptation, WebApiEncryptAlgorithms } from '@/@types';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
+const cryptoKeys = new Map<string, CryptoKey>();
 
 const algorithms = {
   'AES-GCM': {
@@ -48,8 +49,6 @@ const algorithms = {
   }
 >;
 
-const cryptoKeys = new Map<string, CryptoKey>();
-
 function encodeBase64(bytes: Uint8Array): string {
   /* v8 ignore start -- @preserve */
   if (typeof Buffer !== 'undefined') {
@@ -85,6 +84,7 @@ async function deriveSecretKey(
   const cacheKey = `${algorithm}:${secret}`;
 
   const cached = cryptoKeys.get(cacheKey);
+
   /* v8 ignore start -- @preserve */
   if (cached) {
     return cached;

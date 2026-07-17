@@ -132,6 +132,32 @@ export interface AsyncEncryptation {
   decrypt(value: string): Promise<string>;
 }
 
+/**
+ * @description Validation options for encrypt storage setValue validate
+ */
+export interface ValidationInterface {
+  /**
+   * @description Whether `null` values are allowed.
+   * When disabled, attempting to store `null` throws `NullValueError`.
+   * Null don't cause invalid JSON serialization, but can cause unexpected behavior.
+   * @default true
+   */
+  allowNull?: boolean;
+  /**
+   * @description Whether `undefined` values are allowed.
+   * When disabled, attempting to store `undefined` throws `UndefinedValueError`.
+   * This prevents invalid JSON serialization.
+   * @default false
+   */
+  allowUndefined?: boolean;
+  /**
+   * @description Whether strict mode is enabled.
+   * When enabled, the `allowNull` and `allowUndefined` options are ignored and `null` and `undefined` values are not allowed.
+   * @default false
+   */
+  strict?: boolean;
+}
+
 export interface BaseEcnryptStorageOptions {
   /**
    * @description Prefix to be added to all keys
@@ -163,6 +189,11 @@ export interface BaseEcnryptStorageOptions {
    * @default undefined
    */
   notifyHandler?: NotifyHandler;
+  /**
+   * @description Validation options
+   * @default undefined
+   */
+  validation?: ValidationInterface;
 }
 
 export interface SyncEncryptStorageOptions extends BaseEcnryptStorageOptions {

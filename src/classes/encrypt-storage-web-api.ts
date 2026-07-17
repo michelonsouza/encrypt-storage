@@ -3,6 +3,8 @@ import {
   hashAsyncSHA256,
   getAsyncEncryptation,
   SECRET_KEY_MIN_LENGTH,
+  nullValueErrorHandler,
+  undefinedValueErrorHandler,
 } from '@/utils';
 
 import type {
@@ -48,6 +50,10 @@ export class EncryptStorageWebApi
 
   readonly #prefix: string;
 
+  readonly #allowNull: boolean;
+
+  readonly #allowUndefined: boolean;
+
   #multiple = false;
 
   public readonly storage: globalThis.Storage;
@@ -77,6 +83,11 @@ export class EncryptStorageWebApi
       doNotEncryptValues = false,
       notifyHandler,
       doNotParseValues = false,
+      validation = {
+        strict: false,
+        allowNull: true,
+        allowUndefined: false,
+      },
     } = options;
 
     secret.set(this, secretKey);
@@ -87,6 +98,12 @@ export class EncryptStorageWebApi
     this.#doNotEncryptValues = doNotEncryptValues;
     this.#doNotParseValues = doNotParseValues;
     this.#encAlgorithm = encAlgorithm;
+    this.#allowNull = validation?.strict
+      ? false
+      : (validation?.allowNull ?? true);
+    this.#allowUndefined = validation?.strict
+      ? false
+      : (validation?.allowUndefined ?? false);
     this.#init(encAlgorithm);
     this.storage = window[storageType];
   }
@@ -115,6 +132,20 @@ export class EncryptStorageWebApi
     }
   }
 
+  #valueValidate<T = unknown>(value: T): T {
+    let validatedValue = value;
+
+    if (!this.#allowNull) {
+      validatedValue = nullValueErrorHandler<T>(value);
+    }
+
+    if (!this.#allowUndefined) {
+      validatedValue = undefinedValueErrorHandler<T>(value);
+    }
+
+    return validatedValue;
+  }
+
   public get length() {
     const value = this.storage.length || 0;
 
@@ -131,11 +162,14 @@ export class EncryptStorageWebApi
     value: any,
     doNotEncrypt = false,
   ): Promise<void> {
+    const validatedValue = this.#valueValidate(value);
     await this.#verifyEncryptation();
     const encryptValues = this.#doNotEncryptValues || doNotEncrypt;
     const storageKey = this.#getKey(key);
     let valueToString =
-      typeof value === 'object' ? JSON.stringify(value) : String(value);
+      typeof value === 'object'
+        ? JSON.stringify(validatedValue)
+        : String(validatedValue);
 
     if (this.#doNotParseValues) {
       valueToString = value;

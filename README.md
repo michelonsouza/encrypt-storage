@@ -2,7 +2,7 @@
   <img width="450" height="auto" style="margin-bottom: 30px; max-width: 100%;" src="./docs/resources/encrypt-storage-logo.png" />
 </a>
 
-[![stargazers count](https://img.shields.io/github/stars/michelonsouza/encrypt-storage?style=social)](https://github.com/michelonsouza/encrypt-storage) ![maintenance](https://img.shields.io/npms-io/maintenance-score/encrypt-storage) ![sponsors](https://img.shields.io/github/sponsors/michelonsouza?logo=github-sponsors) [![GitHub License](https://img.shields.io/github/license/michelonsouza/encrypt-storage?logo=mit)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE)
+[![stargazers count](https://img.shields.io/github/stars/michelonsouza/encrypt-storage?style=social)](https://github.com/michelonsouza/encrypt-storage) ![maintenance](https://img.shields.io/npms-io/maintenance-score/encrypt-storage) [![sponsors](https://img.shields.io/github/sponsors/michelonsouza?logo=github-sponsors)](https://github.com/sponsors/michelonsouza) [![GitHub License](https://img.shields.io/github/license/michelonsouza/encrypt-storage?logo=mit)](https://github.com/michelonsouza/encrypt-storage/blob/main/LICENSE)
 
 [![NPM Version](https://img.shields.io/npm/v/encrypt-storage?logo=npm&label=version)](https://github.com/michelonsouza/encrypt-storage/blob/main/package.json#L3) [![NPM Downloads](https://img.shields.io/npm/dw/encrypt-storage?logo=npm)](https://www.npmjs.com/package/encrypt-storage) [![jsDelivr hits (npm)](https://img.shields.io/jsdelivr/npm/hw/encrypt-storage?logo=jsdelivr)](https://www.jsdelivr.com/package/npm/encrypt-storage)
 
@@ -24,6 +24,7 @@
 
 - [Encrypt Storage](#encrypt-storage)
 - [Features](#features)
+- [Built with](#built-with)
 - [Installation](#installation)
   - [Using a CDN](#using-a-cdn)
     - [unpkg](#unpkg)
@@ -40,6 +41,7 @@
     - [Next.js Client Components](#nextjs-client-components)
     - [getStorage alternative](#getstorage-alternative)
 - [Options](#options)
+  - [Validation](#validation)
 - [Storage methods](#storage-methods)
   - [Write and read values](#write-and-read-values)
   - [Bulk operations](#bulk-operations)
@@ -62,6 +64,8 @@
 - [Error handling](#error-handling)
   - [InvalidSecretKeyError](#invalidsecretkeyerror)
   - [IsNotBrowserEnvironmentError](#isnotbrowserenvironmenterror)
+  - [NullValueError](#nullvalueerror)
+  - [UndefinedValueError](#undefinedvalueerror)
 - [License](#license)
 
 ## Features
@@ -73,6 +77,22 @@
 - Serialize and deserialize JavaScript values automatically by default.
 - Use a namespace prefix to isolate multiple storage instances.
 - Integrate with state-management persisters by using the synchronous `crypto-js` engine.
+
+## Built with
+
+| Category | Technology |
+| --- | --- |
+| Language | [TypeScript](https://www.typescriptlang.org/) |
+| Encryption (sync) | [crypto-js](https://github.com/brix/crypto-js) — AES, AES-CBC, AES-CFB, AES-CTR, AES-OFB, AES-ECB |
+| Encryption (async) | [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API) — AES-GCM, AES-CBC, AES-CTR |
+| Bundler | [Vite+](https://viteplus.dev/) (Vite + Rolldown + tsdown) |
+| Test runner | [Vitest](https://vitest.dev/) |
+| Coverage | [v8](https://v8.dev/blog/javascript-code-coverage) via `@vitest/coverage-v8` |
+| Linter | [Oxlint](https://oxc.rs/) |
+| Formatter | [Oxfmt](https://oxc.rs/) |
+| Package manager | [pnpm](https://pnpm.io/) |
+| Git hooks | [Vite+ staged hooks](https://viteplus.dev/) + [commitlint](https://commitlint.js.org/) |
+| CI | [GitHub Actions](https://github.com/features/actions) |
 
 ## Installation
 
@@ -347,11 +367,56 @@ Pass an options object as the second argument to `EncryptStorage.create()`.
 | `doNotEncryptValues` | `false` | all | Stores values without encryption. Prefixes and storage helpers still apply. |
 | `doNotParseValues` | `false` | all | Disables automatic `JSON.stringify`/`JSON.parse` conversion. |
 | `notifyHandler` | `undefined` | all | Callback invoked after supported storage operations. |
+| `validation` | `undefined` | all | Value validation rules applied on `setItem`. See [Validation](#validation). |
 | `encAlgorithm` | `'AES'` / `'AES-GCM'` | engine-specific | Encryption algorithm for the selected engine. |
 
 CryptoJS algorithms: `AES`, `AES-CBC`, `AES-CFB`, `AES-CTR`, `AES-OFB`, and `AES-ECB`.
 
 `doNotParseValues` expects string-compatible values. With its default `false`, objects are serialized on write and parsed on read; scalar values are recovered when valid JSON.
+
+### Validation
+
+Pass a `validation` object to enforce value constraints on every `setItem` call. When a validation rule is violated, an error is thrown synchronously, preventing the value from being written to storage.
+
+```ts
+const encryptStorage = EncryptStorage.create('secret-key-value', {
+  engine: 'crypto-js',
+  prefix: '@app',
+  validation: {
+    allowNull: false,
+    allowUndefined: false,
+  },
+});
+
+// Throws NullValueError
+encryptStorage.setItem('key', null);
+
+// Throws UndefinedValueError
+encryptStorage.setItem('key', undefined);
+```
+
+| Property | Default | Description |
+| --- | --- | --- |
+| `allowNull` | `true` | When `false`, storing `null` throws `NullValueError`. |
+| `allowUndefined` | `false` | When `false`, storing `undefined` throws `UndefinedValueError`. |
+| `strict` | `false` | When `true`, overrides both `allowNull` and `allowUndefined` to `false`. Neither `null` nor `undefined` can be stored. |
+
+The `strict` option is a shorthand. It takes precedence over individual settings:
+
+```ts
+const encryptStorage = EncryptStorage.create('secret-key-value', {
+  engine: 'crypto-js',
+  validation: { strict: true },
+});
+
+// Both throw — strict disallows null and undefined regardless of other settings
+encryptStorage.setItem('key', null);      // NullValueError
+encryptStorage.setItem('key', undefined); // UndefinedValueError
+```
+
+By default (no `validation` option), `null` is allowed and `undefined` is not. This matches standard JSON serialization behavior where `null` is a valid JSON value but `undefined` is not.
+
+Validation applies to `setItem` and, by extension, to any method that calls it internally (`setMultipleItems`, `setTTL`).
 
 ## Storage methods
 
@@ -808,6 +873,63 @@ try {
 | Condition | `typeof window === 'undefined' \|\| typeof window !== 'object'` |
 
 Both errors extend the native `Error` class and can be caught with standard `try/catch` blocks. Use the [Server-side rendering](#server-side-rendering) patterns to avoid `IsNotBrowserEnvironmentError` in SSR contexts.
+
+### NullValueError
+
+Thrown when `setItem` receives `null` and the `validation.allowNull` option is `false` (or `validation.strict` is `true`).
+
+```ts
+import { EncryptStorage } from 'encrypt-storage';
+
+const encryptStorage = EncryptStorage.create('secret-key-value', {
+  engine: 'crypto-js',
+  validation: { allowNull: false },
+});
+
+try {
+  encryptStorage.setItem('key', null);
+} catch (error) {
+  // error.name === 'NullValueError'
+  // error.message === 'The value parameter cannot be null. Please provide a valid value.'
+  console.error(error);
+}
+```
+
+| Property | Value |
+| --- | --- |
+| `name` | `NullValueError` |
+| `message` | `The value parameter cannot be null. Please provide a valid value.` |
+| Thrown by | `setItem`, `setMultipleItems`, `setTTL` |
+| Condition | `value === null` when `allowNull` is `false` |
+
+### UndefinedValueError
+
+Thrown when `setItem` receives `undefined` and the `validation.allowUndefined` option is `false` (or `validation.strict` is `true`). This is the default behavior — `undefined` is not allowed unless explicitly enabled.
+
+```ts
+import { EncryptStorage } from 'encrypt-storage';
+
+const encryptStorage = EncryptStorage.create('secret-key-value', {
+  engine: 'crypto-js',
+});
+
+try {
+  encryptStorage.setItem('key', undefined);
+} catch (error) {
+  // error.name === 'UndefinedValueError'
+  // error.message === 'The value parameter cannot be undefined. Please provide a valid value.'
+  console.error(error);
+}
+```
+
+| Property | Value |
+| --- | --- |
+| `name` | `UndefinedValueError` |
+| `message` | `The value parameter cannot be undefined. Please provide a valid value.` |
+| Thrown by | `setItem`, `setMultipleItems`, `setTTL` |
+| Condition | `value === undefined` when `allowUndefined` is `false` |
+
+All errors extend the native `Error` class and can be caught with standard `try/catch` blocks.
 
 ## License
 
