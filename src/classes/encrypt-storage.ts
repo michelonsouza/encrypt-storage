@@ -8,10 +8,23 @@ import type {
 } from '@/@types';
 
 export class EncryptStorage {
+  /**
+   * @description Create EncryptStorageCryptoJs instance
+   * @param {string} secretKey
+   * @param {SyncEncryptStorageOptions} options
+   * @returns {EncryptStorageCryptoJs} `EncryptStorageCryptoJs`
+   */
   static create(
     secretKey: string,
     options: SyncEncryptStorageOptions,
   ): EncryptStorageCryptoJs;
+
+  /**
+   * @description Create EncryptStorageWebApi instance
+   * @param {string} secretKey
+   * @param {AsyncEncryptStorageOptions} options
+   * @returns {EncryptStorageWebApi} `EncryptStorageWebApi`
+   */
   static create(
     secretKey: string,
     options: AsyncEncryptStorageOptions,

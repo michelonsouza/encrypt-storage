@@ -106,6 +106,18 @@ Run tests in watch mode during development:
 pnpm run test:watch
 ```
 
+Run the interactive Vitest UI without coverage:
+
+```bash
+pnpm run test:ui
+```
+
+Run the interactive Vitest UI with coverage enabled:
+
+```bash
+pnpm run test:ui:coverage
+```
+
 Generate coverage locally:
 
 ```bash
@@ -123,6 +135,18 @@ Run tests related to staged files:
 ```bash
 pnpm run test:staged
 ```
+
+## Bundle Analysis
+
+Generate an interactive bundle-size report with the configured bundle analyzer:
+
+```bash
+pnpm run bundle:analyze
+```
+
+The command enables the analyzer only for that build through `VP_ANALYZER=true`.
+Use it when a change may affect package size, such as adding dependencies,
+changing imports, or modifying build configuration.
 
 ## Pull Request Process
 

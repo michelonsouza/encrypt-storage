@@ -26,6 +26,7 @@
 - [Features](#features)
 - [Installation](#installation)
   - [Using a CDN](#using-a-cdn)
+- [Version and runtime support](#version-and-runtime-support)
 - [Migration to version 3](#migration-to-version-3)
 - [Choose an encryption engine](#choose-an-encryption-engine)
 - [Usage](#usage)
@@ -34,6 +35,8 @@
   - [AsyncEncryptStorage (fully promise-based)](#asyncencryptstorage-fully-promise-based)
   - [Multiple instances](#multiple-instances)
   - [Server-side rendering](#server-side-rendering)
+    - [Next.js Client Components](#nextjs-client-components)
+    - [getStorage alternative](#getstorage-alternative)
 - [Options](#options)
 - [Storage methods](#storage-methods)
   - [Write and read values](#write-and-read-values)
@@ -109,6 +112,23 @@ For browser-only projects, load the ESM build from a CDN. Version 3 uses the fac
 ```
 
 For production, pin the package to a specific version instead of using `@latest`.
+
+## Version and runtime support
+
+| Encrypt Storage version | Status | Documentation |
+| --- | --- | --- |
+| `3.x` | Current API. Requires explicit engine selection with `EncryptStorage.create()`. | This README |
+| `2.16.x` | Legacy API. | [Version 2 documentation](./docs/README_V2.md) |
+| `1.3.x` | Legacy API. | [Version 1 documentation](./docs/README_V1.md) |
+
+| Runtime or framework | Support |
+| --- | --- |
+| Modern browsers | Supported when `localStorage` or `sessionStorage` is available. |
+| `crypto-js` engine | Works with the synchronous browser Storage API. |
+| `web-crypto` engine | Requires `globalThis.crypto.subtle`, available in modern browser secure contexts. |
+| Node.js | Version 3 development tooling requires Node.js `20` or later. |
+| Next.js App Router | Supported in Client Components with `'use client'` (Next.js `13+`). |
+| Next.js Pages Router and SSR | Supported when the storage instance is created or used only in the browser. |
 
 ## Migration to version 3
 
@@ -253,6 +273,38 @@ settingsStorage.setItem('theme', 'dark');
 ### Server-side rendering
 
 Browser storage is unavailable during server-side rendering. Create or use the instance only on the client.
+
+#### Next.js Client Components
+
+For Next.js App Router, put `'use client'` at the top of the component that uses browser storage. This marks the component as client-side, allowing access to `localStorage`, `sessionStorage`, and `EncryptStorage` methods.
+
+```tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+import { EncryptStorage } from 'encrypt-storage';
+
+const encryptStorage = EncryptStorage.create('secret-key-value', {
+  engine: 'crypto-js',
+  prefix: '@app',
+});
+
+export function UserName() {
+  const [name, setName] = useState<string | undefined>();
+
+  useEffect(() => {
+    setName(encryptStorage.getItem<string>('user-name'));
+  }, []);
+
+  return <p>{name ?? 'Anonymous'}</p>;
+}
+```
+
+Do not import this Client Component into a Server Component when the storage instance is created at module scope. Keep the browser-storage code inside a file marked with `'use client'`.
+
+#### getStorage alternative
+
+For shared modules, the Pages Router, or situations where a client-only component is not appropriate, keep the `getStorage()` guard. It returns `null` during SSR and an instance in the browser.
 
 ```ts
 import { EncryptStorage } from 'encrypt-storage';
