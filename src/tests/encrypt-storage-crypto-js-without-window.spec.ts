@@ -4,18 +4,18 @@
 import 'vitest-localstorage-mock';
 import { fakerPT_BR as faker } from '@faker-js/faker';
 
-import { EncryptStorageWebApi } from '@/classes';
+import { EncryptStorageCryptoJs } from '@/classes';
 import { IsNotBrowserEnvironmentError } from '@/errors';
 
-describe('EncryptStorageWebApi without window 🖥️', () => {
+describe('EncryptStorageCryptoJs without window 🖥️', () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
 
   it('should throws IsNotBrowserEnvironmentError if the current environment is not a browser environment', () => {
     try {
-      new EncryptStorageWebApi(faker.string.alphanumeric(10), {
-        engine: 'web-crypto',
+      new EncryptStorageCryptoJs(faker.string.alphanumeric(10), {
+        engine: 'crypto-js',
       });
     } catch (error) {
       expect(error).toBeInstanceOf(IsNotBrowserEnvironmentError);

@@ -26,6 +26,8 @@
 - [Features](#features)
 - [Installation](#installation)
   - [Using a CDN](#using-a-cdn)
+    - [unpkg](#unpkg)
+    - [jsDelivr](#jsdelivr)
 - [Version and runtime support](#version-and-runtime-support)
 - [Migration to version 3](#migration-to-version-3)
 - [Choose an encryption engine](#choose-an-encryption-engine)
@@ -50,6 +52,9 @@
   - [Redux Persist](#redux-persist)
   - [Pinia persist plugins](#pinia-persist-plugins)
 - [Notifications](#notifications)
+- [Error handling](#error-handling)
+  - [InvalidSecretKeyError](#invalidsecretkeyerror)
+  - [IsNotBrowserEnvironmentError](#isnotbrowserenvironmenterror)
 - [License](#license)
 
 ## Features
@@ -119,7 +124,7 @@ For production, pin the package to a specific version instead of using `@latest`
 | --- | --- | --- |
 | `3.x` | Current API. Requires explicit engine selection with `EncryptStorage.create()`. | This README |
 | `2.16.x` | Legacy API. | [Version 2 documentation](./docs/README_V2.md) |
-| `1.3.x` | Legacy API. | [Version 1 documentation](./docs/README_V1.md) |
+| `1.3.10` | Legacy API. | [Version 1 documentation](./docs/README_V1.md) |
 
 | Runtime or framework | Support |
 | --- | --- |
@@ -552,6 +557,65 @@ const encryptStorage = EncryptStorage.create('secret-key-value', {
 ```
 
 Event types include `set`, `get`, `setMultiple`, `getMultiple`, `remove`, `removeMultiple`, `clear`, `length`, `key`, `set:cookie`, `get:cookie`, and `remove:cookie`.
+
+## Error handling
+
+`encrypt-storage` throws specific errors during instance creation when preconditions are not met. These errors are thrown synchronously by both `EncryptStorage.create()` and `new AsyncEncryptStorage()`.
+
+### InvalidSecretKeyError
+
+Thrown when the provided `secretKey` has fewer than 10 characters.
+
+```ts
+import { EncryptStorage } from 'encrypt-storage';
+
+try {
+  const encryptStorage = EncryptStorage.create('short', {
+    engine: 'crypto-js',
+  });
+} catch (error) {
+  // error.name === 'InvalidSecretKey'
+  // error.message === 'The secretKey parameter must bne contains min 10 characters. Please provide a valid secretKey'
+  console.error(error);
+}
+```
+
+| Property | Value |
+| --- | --- |
+| `name` | `InvalidSecretKey` |
+| `message` | `The secretKey parameter must bne contains min 10 characters. Please provide a valid secretKey` |
+| Thrown by | `EncryptStorage.create()`, `new AsyncEncryptStorage()` |
+| Condition | `secretKey.length < 10` |
+
+### IsNotBrowserEnvironmentError
+
+Thrown when the instance is created in a non-browser environment where `window` is `undefined` or not an object. This typically occurs during server-side rendering (SSR) or in Node.js scripts without a browser-like global.
+
+```ts
+/**
+ * In a Node.js / SSR environment:
+ */
+import { EncryptStorage } from 'encrypt-storage';
+
+try {
+  const encryptStorage = EncryptStorage.create('secret-key-value', {
+    engine: 'crypto-js',
+  });
+} catch (error) {
+  // error.name === 'IsNotBrowserEnvironmentError'
+  // error.message === 'The current environment is not a browser environment. Please use the EncryptStorageWebApi engine.'
+  console.error(error);
+}
+```
+
+| Property | Value |
+| --- | --- |
+| `name` | `IsNotBrowserEnvironmentError` |
+| `message` | `The current environment is not a browser environment. Please use the EncryptStorageWebApi engine.` |
+| Thrown by | `EncryptStorage.create()`, `new AsyncEncryptStorage()` |
+| Condition | `typeof window === 'undefined' \|\| typeof window !== 'object'` |
+
+Both errors extend the native `Error` class and can be caught with standard `try/catch` blocks. Use the [Server-side rendering](#server-side-rendering) patterns to avoid `IsNotBrowserEnvironmentError` in SSR contexts.
 
 ## License
 

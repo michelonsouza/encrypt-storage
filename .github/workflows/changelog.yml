@@ -13,7 +13,8 @@ jobs:
       - uses: BobAnkh/auto-generate-changelog@v1.3.1
         with:
           REPO_NAME: "michelonsouza/encrypt-storage"
-          ACCESS_TOKEN: ${{secrets.MY_GITHUB_TOKEN}}
+          COMMITTER: "Michelon Souza <michelon.souza@hotmail.com>"
+          ACCESS_TOKEN: ${{secrets.CHANGELOG_TOKEN}}
           PATH: "CHANGELOG.md"
           COMMIT_MESSAGE: "docs(CHANGELOG): update release notes"
           TYPE: "feat:Feature,fix:Bug Fixes,chore:Chore,docs:Documentation,refactor:Refactor,perf:Performance Improvements"
