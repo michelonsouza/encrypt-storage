@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [3.0.1-beta.7](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.1-beta.7) - 2026-07-17 11:33:25+00:00
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.1-beta.6...3.0.1-beta.7
+
+### Feature
+
+- general:
+  - add validation option, include validation tests and adjust readme documentation ([074abb1](https://github.com/michelonsouza/encrypt-storage/commit/074abb1099b017a69c70da44e8079eef17abd470)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
+
 ## [3.0.1-beta.6](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.1-beta.6) - 2026-07-17 07:48:18+00:00
 
 **Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.1-beta.5...3.0.1-beta.6
