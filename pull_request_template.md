@@ -38,7 +38,8 @@ Additional test notes:
 ## Breaking Changes
 
 - [ ] This pull request introduces no breaking changes
-- [ ] This pull request introduces breaking changes and includes migration notes below
+- [ ] This pull request introduces breaking changes and includes migration notes
+      below
 
 <!-- Describe the migration path, affected APIs, and compatibility impact. -->
 
@@ -48,4 +49,5 @@ Additional test notes:
 - [ ] My commits follow the Conventional Commits format.
 - [ ] I did not commit generated artifacts, credentials, or unrelated files.
 - [ ] I updated public types, exports, and documentation when applicable.
-- [ ] I considered both `crypto-js` and `web-crypto` behavior when changing storage APIs.
+- [ ] I considered both `crypto-js` and `web-crypto` behavior when changing
+      storage APIs.
