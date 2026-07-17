@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## [3.0.1-beta.6](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.1-beta.6) - 2026-07-17 07:48:18+00:00
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.1-beta.5...3.0.1-beta.6
+
+### Feature
+
+- general:
+  - add TTL methods in project ([81a0b17](https://github.com/michelonsouza/encrypt-storage/commit/81a0b1745df9e993d8937745ba9b1f56386c726d)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
+
+### Chore
+
+- general:
+  - update package version ([b1fd2a8](https://github.com/michelonsouza/encrypt-storage/commit/b1fd2a83cf0f765003290836a77f2c1fa9999779))
+  - update readme sponsors ([125ec05](https://github.com/michelonsouza/encrypt-storage/commit/125ec05bb09583bcea0b2af799bcfa5608fb9c1e)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
+  - update readme image and add link ([2a5a751](https://github.com/michelonsouza/encrypt-storage/commit/2a5a75112525e97708efb73458955f37ea569a90)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
+  - update beta version ([2d9a4d8](https://github.com/michelonsouza/encrypt-storage/commit/2d9a4d8c1aa5c9fc9104b35240b5accfcce71b0b)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
+
 ## [3.0.1-beta.5](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.1-beta.5) - 2026-07-17 03:02:17+00:00
 
 **Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.1-beta.4...3.0.1-beta.5
