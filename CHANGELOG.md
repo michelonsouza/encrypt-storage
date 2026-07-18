@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [3.0.2-beta.4](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2-beta.4) - 2026-07-18 09:49:25+00:00
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.2-beta.3...3.0.2-beta.4
+
+### Chore
+
+- general:
+  - change ci action pnpm version, update readme and adjust vite config ([33057dc](https://github.com/michelonsouza/encrypt-storage/commit/33057dcc4695c90c0f79789492f8d9b9e4c5e739))
+
 ## [3.0.2-beta.3](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2-beta.3) - 2026-07-18 08:19:52+00:00
 
 **Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.2-beta.2...3.0.2-beta.3
