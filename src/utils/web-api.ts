@@ -1,8 +1,13 @@
-import type { AsyncEncryptation, WebApiEncryptAlgorithms } from '@/@types';
+import {
+  split,
+  concat,
+  bufferToHex,
+  arrayBufferToBase64,
+  base64ToArrayBuffer,
+} from './base64-buffer';
+import { deriveAsyncKey, encoder, decoder } from './pbkdf2';
 
-const encoder = new TextEncoder();
-const decoder = new TextDecoder();
-const cryptoKeys = new Map<string, CryptoKey>();
+import type { AsyncEncryptation, EncryptAlgorithms } from '@/@types';
 
 const algorithms = {
   'AES-GCM': {
@@ -42,129 +47,18 @@ const algorithms = {
     },
   },
 } satisfies Record<
-  WebApiEncryptAlgorithms,
+  EncryptAlgorithms,
   {
     ivLength: number;
     createAlgorithm(iv: Uint8Array): AesGcmParams | AesCbcParams | AesCtrParams;
   }
 >;
 
-function encodeBase64(bytes: Uint8Array): string {
-  /* v8 ignore start -- @preserve */
-  if (typeof Buffer !== 'undefined') {
-    return Buffer.from(bytes).toString('base64');
-  }
-
-  let binary = '';
-
-  for (const byte of bytes) {
-    binary += String.fromCharCode(byte);
-  }
-
-  return globalThis.btoa(binary);
-  /* v8 ignore stop -- @preserve */
-}
-
-function decodeBase64(base64: string): Uint8Array {
-  /* v8 ignore start -- @preserve */
-  if (typeof Buffer !== 'undefined') {
-    return new Uint8Array(Buffer.from(base64, 'base64'));
-  }
-
-  const binary = globalThis.atob(base64);
-
-  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
-  /* v8 ignore stop -- @preserve */
-}
-
-async function deriveSecretKey(
-  secret: string,
-  algorithm: WebApiEncryptAlgorithms,
-): Promise<CryptoKey> {
-  const cacheKey = `${algorithm}:${secret}`;
-
-  const cached = cryptoKeys.get(cacheKey);
-
-  /* v8 ignore start -- @preserve */
-  if (cached) {
-    return cached;
-  }
-  /* v8 ignore stop -- @preserve */
-
-  const keyMaterial = await crypto.subtle.importKey(
-    'raw',
-    encoder.encode(secret),
-    'PBKDF2',
-    false,
-    ['deriveKey'],
-  );
-
-  const cryptoKey = await crypto.subtle.deriveKey(
-    {
-      name: 'PBKDF2',
-      hash: 'SHA-256',
-      salt: encoder.encode('encrypt-storage'),
-      iterations: 100000,
-    },
-    keyMaterial,
-    {
-      name: algorithm,
-      length: 256,
-    },
-    false,
-    ['encrypt', 'decrypt'],
-  );
-
-  cryptoKeys.set(cacheKey, cryptoKey);
-
-  return cryptoKey;
-}
-
-function arrayBufferToBase64(buffer: ArrayBuffer): string {
-  return encodeBase64(new Uint8Array(buffer));
-}
-
-function base64ToArrayBuffer(base64: string): ArrayBuffer {
-  return decodeBase64(base64).buffer as ArrayBuffer;
-}
-
-function concat(iv: Uint8Array, encrypted: ArrayBuffer): ArrayBuffer {
-  const cipher = new Uint8Array(encrypted);
-
-  const result = new Uint8Array(iv.length + cipher.length);
-
-  result.set(iv);
-  result.set(cipher, iv.length);
-
-  return result.buffer;
-}
-
-function split(buffer: ArrayBuffer, ivLength: number) {
-  const bytes = new Uint8Array(buffer);
-
-  return {
-    iv: bytes.slice(0, ivLength),
-    cipher: bytes.slice(ivLength),
-  };
-}
-
-function bufferToHex(buffer: ArrayBuffer): string {
-  const bytes = new Uint8Array(buffer);
-
-  let hex = '';
-
-  for (const byte of bytes) {
-    hex += byte.toString(16).padStart(2, '0');
-  }
-
-  return hex;
-}
-
 export async function getAsyncEncryptation(
-  encryptationAlgorithm: WebApiEncryptAlgorithms,
+  encryptationAlgorithm: EncryptAlgorithms,
   secretKey: string,
 ): Promise<AsyncEncryptation> {
-  const key = await deriveSecretKey(secretKey, encryptationAlgorithm);
+  const key = await deriveAsyncKey(secretKey, encryptationAlgorithm);
 
   const algorithm = algorithms[encryptationAlgorithm];
 

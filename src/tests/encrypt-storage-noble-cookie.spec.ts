@@ -1,19 +1,13 @@
 import { fakerPT_BR as faker } from '@faker-js/faker';
 
-import { EncryptStorageCryptoJs } from '@/classes';
+import { EncryptStorageNoble } from '@/classes';
 
-import type {
-  NotifyHandlerParams,
-  SyncEncryptStorageOptions,
-  CookieOptions,
-} from '@/@types';
+import { makeSutFactory } from './test-utils';
+
+import type { CookieOptions, NotifyHandlerParams } from '@/@types';
 import type { Mock } from 'vite-plus/test';
 
-interface makeSutParams extends Omit<SyncEncryptStorageOptions, 'engine'> {
-  secretKey?: string;
-  noOptions?: boolean;
-  noNotifyHandler?: boolean;
-}
+let defaultMockedSut: EncryptStorageNoble | null = null;
 
 const mockNotify = {
   mockedFn: vi.fn().mockImplementation((params: NotifyHandlerParams) => {
@@ -21,39 +15,19 @@ const mockNotify = {
   }),
 };
 
-export const makeSut = (
-  params: makeSutParams = {} as makeSutParams,
-): EncryptStorageCryptoJs => {
-  const {
-    prefix,
-    storageType,
-    stateManagementUse,
-    noOptions,
-    encAlgorithm,
-    noNotifyHandler = false,
-    doNotParseValues = false,
-    notifyHandler = noNotifyHandler ? undefined : mockNotify.mockedFn,
-    secretKey = faker.string.alphanumeric(10),
-  } = params;
-  const options: SyncEncryptStorageOptions = noOptions
-    ? { engine: 'crypto-js' }
-    : {
-        prefix,
-        storageType,
-        encAlgorithm,
-        notifyHandler,
-        doNotParseValues,
-        engine: 'crypto-js',
-        stateManagementUse,
-      };
-  return new EncryptStorageCryptoJs(secretKey, options);
-};
+let makeSut = makeSutFactory<EncryptStorageNoble | null, EncryptStorageNoble>(
+  'noble',
+  defaultMockedSut,
+  mockNotify.mockedFn,
+);
 
 let cookieSetSpy: Mock<(arg: string) => void>;
 let cookieGetSpy: Mock<() => string | undefined>;
 
-describe('EncryptStorageCryptoJs cookie 🍪', () => {
+describe('EncryptStorageNoble cookie 🍪', () => {
   beforeAll(() => {
+    defaultMockedSut = makeSut();
+    makeSut = makeSutFactory('noble', defaultMockedSut, mockNotify.mockedFn);
     cookieSetSpy = vi.spyOn(document, 'cookie', 'set');
     cookieSetSpy?.mockImplementation(() => undefined);
     cookieGetSpy = vi.spyOn(document, 'cookie', 'get');

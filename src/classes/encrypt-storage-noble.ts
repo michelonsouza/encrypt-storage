@@ -1,9 +1,9 @@
 import { InvalidSecretKeyError, IsNotBrowserEnvironmentError } from '@/errors';
 import {
-  hashSyncSHA256,
-  getSyncEncryptation,
+  hashSyncNobleSHA256,
   SECRET_KEY_MIN_LENGTH,
   nullValueErrorHandler,
+  getSyncEncryptation,
   undefinedValueErrorHandler,
 } from '@/utils';
 
@@ -22,13 +22,13 @@ import type {
   RemoveFromPatternOptions,
   SyncEncryptStorageOptions,
   SyncEncryptStorageTTLInterface,
-  EncryptStorageCryptoJsApiInterface,
+  EncryptStorageNobleApiInterface,
 } from '@/@types';
 
 const secret = new globalThis.WeakMap();
 
-export class EncryptStorageCryptoJs
-  implements EncryptStorageCryptoJsApiInterface, SyncEncryptStorageTTLInterface
+export class EncryptStorageNoble
+  implements EncryptStorageNobleApiInterface, SyncEncryptStorageTTLInterface
 {
   readonly #keys: Set<string> = new Set();
 
@@ -52,7 +52,7 @@ export class EncryptStorageCryptoJs
 
   public readonly storage: globalThis.Storage;
 
-  public readonly api = 'crypto-js' as const;
+  public readonly api = 'noble' as const;
 
   /**
    * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
@@ -73,7 +73,7 @@ export class EncryptStorageCryptoJs
       storageType = 'localStorage',
       prefix = '',
       stateManagementUse = false,
-      encAlgorithm = 'AES',
+      encAlgorithm = 'AES-GCM',
       doNotEncryptValues = false,
       notifyHandler,
       doNotParseValues = false,
@@ -428,7 +428,7 @@ export class EncryptStorageCryptoJs
   }
 
   public hash(value: string): string {
-    return hashSyncSHA256(value, secret.get(this));
+    return hashSyncNobleSHA256(value, secret.get(this));
   }
 
   public cookie: SyncCookieInterface = {
@@ -663,11 +663,11 @@ export class EncryptStorageCryptoJs
 
 /* v8 ignore start -- @preserve */
 if (typeof window !== 'undefined') {
-  (window as any).EncryptStorageCryptoJs = EncryptStorageCryptoJs;
+  (window as any).EncryptStorageNoble = EncryptStorageNoble;
 }
 
 if (typeof window !== 'undefined' && window?.globalThis) {
   // oxlint-disable-next-line no-unsafe-optional-chaining
-  (window?.globalThis as any).EncryptStorageCryptoJs = EncryptStorageCryptoJs;
+  (window?.globalThis as any).EncryptStorageNoble = EncryptStorageNoble;
 }
 /* v8 ignore end -- @preserve */

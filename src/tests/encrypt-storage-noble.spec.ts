@@ -1,19 +1,17 @@
 import { fakerPT_BR as faker } from '@faker-js/faker';
 
-import { EncryptStorageCryptoJs, EncryptStorage } from '@/classes';
+import { EncryptStorageNoble } from '@/classes';
 import {
   InvalidSecretKeyError,
   NullValueError,
   UndefinedValueError,
 } from '@/errors';
 
-import type { NotifyHandlerParams, SyncEncryptStorageOptions } from '@/@types';
+import { makeSutFactory } from './test-utils';
 
-interface makeSutParams extends Omit<SyncEncryptStorageOptions, 'engine'> {
-  secretKey?: string;
-  noOptions?: boolean;
-  noNotifyHandler?: boolean;
-}
+import type { NotifyHandlerParams } from '@/@types';
+
+let defaultMockedSut: EncryptStorageNoble | null = null;
 
 const mockNotify = {
   mockedFn: vi.fn().mockImplementation((params: NotifyHandlerParams) => {
@@ -21,41 +19,27 @@ const mockNotify = {
   }),
 };
 
-export const makeSut = (
-  params: makeSutParams = {} as makeSutParams,
-): EncryptStorageCryptoJs => {
-  const {
-    prefix,
-    storageType,
-    stateManagementUse,
-    noOptions,
-    encAlgorithm,
-    validation,
-    noNotifyHandler = false,
-    doNotParseValues = false,
-    notifyHandler = noNotifyHandler ? undefined : mockNotify.mockedFn,
-    secretKey = faker.string.alphanumeric(10),
-  } = params;
-  const options: SyncEncryptStorageOptions = noOptions
-    ? { engine: 'crypto-js' }
-    : {
-        prefix,
-        storageType,
-        encAlgorithm,
-        notifyHandler,
-        doNotParseValues,
-        engine: 'crypto-js',
-        stateManagementUse,
-        validation,
-      };
-  return EncryptStorage.create(secretKey, options);
-};
+let makeSut = makeSutFactory<EncryptStorageNoble | null, EncryptStorageNoble>(
+  'noble',
+  defaultMockedSut,
+  mockNotify.mockedFn,
+);
 
-describe('EncryptStorageCryptoJs 📦', () => {
+describe('EncryptStorageNoble 📦', () => {
+  beforeAll(() => {
+    defaultMockedSut = makeSut();
+    makeSut = makeSutFactory('noble', defaultMockedSut, mockNotify.mockedFn);
+  });
+
   beforeEach(() => {
     localStorage.clear();
     sessionStorage.clear();
   });
+
+  afterAll(() => {
+    defaultMockedSut = null;
+  });
+
   afterEach(() => {
     vi.clearAllMocks();
   });
@@ -697,8 +681,8 @@ describe('EncryptStorageCryptoJs 📦', () => {
     expect(localStorage.getItem).toHaveBeenCalledWith(key);
   });
 
-  it('should test AES-CFB algorithm', () => {
-    const sut = makeSut({ encAlgorithm: 'AES-CFB' });
+  it('should test AES-GCM algorithm', () => {
+    const sut = makeSut({ encAlgorithm: 'AES-GCM' });
     const key = faker.string.alphanumeric(5);
     const value = faker.word.sample();
 
@@ -721,20 +705,8 @@ describe('EncryptStorageCryptoJs 📦', () => {
     expect(localStorage.getItem).toHaveBeenCalledWith(key);
   });
 
-  it('should test AES-ECB algorithm', () => {
-    const sut = makeSut({ encAlgorithm: 'AES-ECB' });
-    const key = faker.string.alphanumeric(5);
-    const value = faker.word.sample();
-
-    sut.setItem(key, value);
-    sut.getItem(key);
-
-    expect(localStorage.setItem).toHaveBeenCalled();
-    expect(localStorage.getItem).toHaveBeenCalledWith(key);
-  });
-
-  it('should test AES-OFB algorithm', () => {
-    const sut = makeSut({ encAlgorithm: 'AES-OFB' });
+  it('should test AES-CBC algorithm', () => {
+    const sut = makeSut({ encAlgorithm: 'AES-CBC' });
     const key = faker.string.alphanumeric(5);
     const value = faker.word.sample();
 

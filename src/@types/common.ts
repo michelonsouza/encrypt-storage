@@ -1,12 +1,4 @@
-export type WebApiEncryptAlgorithms = 'AES-GCM' | 'AES-CBC' | 'AES-CTR';
-
-export type CryptoJSEncryptAlgorithms =
-  | 'AES'
-  | 'AES-CBC'
-  | 'AES-CFB'
-  | 'AES-CTR'
-  | 'AES-OFB'
-  | 'AES-ECB';
+export type EncryptAlgorithms = 'AES-GCM' | 'AES-CBC' | 'AES-CTR';
 
 export type StorageType = 'localStorage' | 'sessionStorage';
 
@@ -199,14 +191,27 @@ export interface BaseEcnryptStorageOptions {
 export interface SyncEncryptStorageOptions extends BaseEcnryptStorageOptions {
   /**
    * @description Encrypt engine
-   * @default 'crypto-js'
+   * @default 'noble'
    */
-  engine: 'crypto-js';
+  engine: 'noble';
   /**
    * @description CryptoJS encrypt algorithm
    * @default 'AES'
    */
-  encAlgorithm?: CryptoJSEncryptAlgorithms;
+  encAlgorithm?: EncryptAlgorithms;
+}
+
+export interface NobleEncryptStorageOptions extends BaseEcnryptStorageOptions {
+  /**
+   * @description Encrypt engine
+   * @default 'noble'
+   */
+  engine: 'noble';
+  /**
+   * @description Noble encrypt algorithm
+   * @default 'AES-GCM'
+   */
+  encAlgorithm?: EncryptAlgorithms;
 }
 
 export interface AsyncEncryptStorageOptions extends BaseEcnryptStorageOptions {
@@ -219,7 +224,7 @@ export interface AsyncEncryptStorageOptions extends BaseEcnryptStorageOptions {
    * @description WebApi encrypt algorithm
    * @default 'AES-GCM'
    */
-  encAlgorithm?: WebApiEncryptAlgorithms;
+  encAlgorithm?: EncryptAlgorithms;
 }
 
 export type EncryptStorageOptions =

@@ -1,11 +1,11 @@
 import type {
   SyncCookieInterface,
+  SetItemWithTTLParams,
   GetFromPatternOptions,
   RemoveFromPatternOptions,
-  SetItemWithTTLParams,
 } from './common.ts';
 
-export interface EncryptStorageCryptoJsApiInterface extends Storage {
+export interface EncryptStorageNobleApiInterface extends Storage {
   /**
    * `setItem` - Is the function to be set `safeItem` in `selected storage`
    * @param {string} key - Is the key of `data` in `selected storage`.

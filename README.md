@@ -18,7 +18,7 @@
 
 > **⚠️ IMPORTANT**: No browser-side secret is fully secure. An application secret shipped to the client can be discovered by a sufficiently motivated user. This package obscures stored values and provides encryption at rest in browser storage; it must not be treated as a replacement for server-side authorization or secret management.
 
-> **🔮 Version 4 notice**: In version 4, encrypt-storage will drop the `crypto-js` dependency entirely. The [crypto-js project has been discontinued](https://github.com/brix/crypto-js) — its maintainers stated that further development would only result in a wrapper around native Crypto, so development and maintenance have ceased. The native [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API) is mature, secure, well-supported across modern browsers, and does not require a third-party dependency. As a consequence, the synchronous API will also be removed. The Web Crypto API is asynchronous by design — key derivation, encryption, and decryption all return promises — so version 4 will expose only the async API. If you are starting a new project, prefer `engine: 'web-crypto'` today for an easier migration path.
+> **� Encryption engine change**: Starting with this version, encrypt-storage replaces `crypto-js` with [`@noble/ciphers`](https://github.com/paulmillr/noble-ciphers) and [`@noble/hashes`](https://github.com/paulmillr/noble-hashes). The [crypto-js project has been discontinued](https://github.com/brix/crypto-js) — its maintainers stated that native Crypto makes the library redundant, so development and maintenance have ceased. The noble libraries are audited, tree-shakeable, ESM-native, zero-dependency, and actively maintained. This change is **fully transparent** to consumers of encrypt-storage: the public API, options, and behavior remain identical. No migration is needed — encrypted values produced by this version use the same AES algorithms and key derivation, just powered by a modern, secure foundation.
 
 ## Encrypt Storage
 `encrypt-storage` is a browser `Storage` wrapper that encrypts values before writing them to `localStorage`, `sessionStorage`, or cookies. Version 3 uses an explicit factory and encryption engine selection.
@@ -35,7 +35,7 @@
 - [Migration to version 3](#migration-to-version-3)
 - [Choose an encryption engine](#choose-an-encryption-engine)
 - [Usage](#usage)
-  - [CryptoJS (synchronous)](#cryptojs-synchronous)
+  - [Noble (synchronous)](#noble-synchronous)
   - [Web Crypto API (asynchronous)](#web-crypto-api-asynchronous)
   - [AsyncEncryptStorage (fully promise-based)](#asyncencryptstorage-fully-promise-based)
   - [Multiple instances](#multiple-instances)
@@ -73,19 +73,20 @@
 ## Features
 
 - Encrypt values stored in `localStorage`, `sessionStorage`, and browser cookies.
-- Choose between synchronous `crypto-js` and asynchronous native `web-crypto` engines.
+- Choose between synchronous (`@noble/ciphers`) and asynchronous (native Web Crypto API) encryption engines.
 - Keep a familiar Storage-like API, including bulk, pattern, and key operations.
 - Store values with a Time-To-Live (TTL) that are lazily removed on access after expiration.
 - Serialize and deserialize JavaScript values automatically by default.
 - Use a namespace prefix to isolate multiple storage instances.
-- Integrate with state-management persisters by using the synchronous `crypto-js` engine.
+- Integrate with state-management persisters by using the synchronous engine.
 
 ## Built with
 
 | Category | Technology |
 | --- | --- |
 | Language | [TypeScript](https://www.typescriptlang.org/) |
-| Encryption (sync) | [crypto-js](https://github.com/brix/crypto-js) — AES, AES-CBC, AES-CFB, AES-CTR, AES-OFB, AES-ECB |
+| Encryption (sync) | [@noble/ciphers](https://github.com/paulmillr/noble-ciphers) — AES-GCM, AES-CBC, AES-CTR |
+| Hashing | [@noble/hashes](https://github.com/paulmillr/noble-hashes) — SHA-256, PBKDF2 |
 | Encryption (async) | [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API) — AES-GCM, AES-CBC, AES-CTR |
 | Bundler | [Vite+](https://viteplus.dev/) (Vite + Rolldown + tsdown) |
 | Test runner | [Vitest](https://vitest.dev/) |
@@ -123,7 +124,7 @@ For browser-only projects, load the ESM build from a CDN. Version 3 uses the fac
   import { EncryptStorage } from 'https://unpkg.com/encrypt-storage@latest?module';
 
   const encryptStorage = EncryptStorage.create('secret-key-value', {
-    engine: 'crypto-js',
+    engine: 'noble',
     prefix: '@app',
   });
 
@@ -138,7 +139,7 @@ For browser-only projects, load the ESM build from a CDN. Version 3 uses the fac
   import { EncryptStorage } from 'https://cdn.jsdelivr.net/npm/encrypt-storage@latest/+esm';
 
   const encryptStorage = EncryptStorage.create('secret-key-value', {
-    engine: 'crypto-js',
+    engine: 'noble',
     prefix: '@app',
   });
 
@@ -159,7 +160,7 @@ For production, pin the package to a specific version instead of using `@latest`
 | Runtime or framework | Support |
 | --- | --- |
 | Modern browsers | Supported when `localStorage` or `sessionStorage` is available. |
-| `crypto-js` engine | Works with the synchronous browser Storage API. |
+| `noble` engine | Synchronous encryption via `@noble/ciphers`. Works with the browser Storage API. |
 | `web-crypto` engine | Requires `globalThis.crypto.subtle`, available in modern browser secure contexts. |
 | Node.js | Version 3 development tooling requires Node.js `20` or later. |
 | Next.js App Router | Supported in Client Components with `'use client'` (Next.js `13+`). |
@@ -171,9 +172,9 @@ Version 3 has a breaking change: instances are now created with `EncryptStorage.
 
 | Before version 3 | Version 3 |
 | --- | --- |
-| `new EncryptStorage(secretKey, options)` | `EncryptStorage.create(secretKey, { engine: 'crypto-js', ...options })` |
-| One implicit CryptoJS implementation | Explicit `crypto-js` or `web-crypto` engine |
-| Synchronous API | `crypto-js` is synchronous; `web-crypto` encrypt/decrypt operations return promises, while removal and storage utility methods remain synchronous. |
+| `new EncryptStorage(secretKey, options)` | `EncryptStorage.create(secretKey, { engine: 'noble', ...options })` |
+| One implicit encryption implementation | Explicit `noble` or `web-crypto` engine |
+| Synchronous API | `noble` is synchronous; `web-crypto` encrypt/decrypt operations return promises, while removal and storage utility methods remain synchronous. |
 
 The same secret key and compatible algorithm are required to decrypt existing values. Encrypted payloads produced by different engines are not interchangeable; plan a migration if switching engines.
 
@@ -181,25 +182,27 @@ The same secret key and compatible algorithm are required to decrypt existing va
 
 | Engine | Default algorithm | API style | Use it when |
 | --- | --- | --- | --- |
-| `crypto-js` | `AES` | Synchronous | You need a native `Storage`-compatible shape, especially for persisters. |
+| `noble` | `AES-GCM` | Synchronous | You need a native `Storage`-compatible shape, especially for persisters. |
 | `web-crypto` | `AES-GCM` | Mixed | You want the browser's native Web Crypto API and can `await` encrypted operations. |
 | `AsyncEncryptStorage` | Selected engine | Fully promise-based | Your application requires promises for every exposed method, such as an asynchronous integration layer. |
 
 All instances require a `secretKey` with at least 10 characters. Keep it stable: changing it makes existing encrypted values unreadable.
 
+Supported algorithms for both engines: `AES-GCM`, `AES-CBC`, and `AES-CTR`. `AES-GCM` is the default.
+
 ## Usage
 
 Create and export one instance per storage namespace. A singleton module keeps the configuration consistent across an application.
 
-### CryptoJS (synchronous)
+### Noble (synchronous)
 
-Use `crypto-js` for regular synchronous browser storage operations.
+Use `noble` for regular synchronous browser storage operations.
 
 ```ts
 import { EncryptStorage } from 'encrypt-storage';
 
 export const encryptStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   prefix: '@app',
   storageType: 'localStorage',
 });
@@ -287,12 +290,12 @@ Pass a unique `prefix` to every instance that shares the same browser storage. T
 
 ```ts
 const authStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   prefix: '@auth',
 });
 
 const settingsStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   prefix: '@settings',
 });
 
@@ -320,7 +323,7 @@ import { useEffect, useState } from 'react';
 import { EncryptStorage } from 'encrypt-storage';
 
 const encryptStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   prefix: '@app',
 });
 
@@ -348,7 +351,7 @@ export const getStorage = () => {
   if (typeof window === 'undefined') return null;
 
   return EncryptStorage.create('secret-key-value', {
-    engine: 'crypto-js',
+    engine: 'noble',
     prefix: '@app',
   });
 };
@@ -362,17 +365,17 @@ Pass an options object as the second argument to `EncryptStorage.create()`.
 
 | Property | Default | Applies to | Description |
 | --- | --- | --- | --- |
-| `engine` | — | all | **Required.** `'crypto-js'` or `'web-crypto'`. |
+| `engine` | — | all | **Required.** `'noble'` or `'web-crypto'`. |
 | `prefix` | `''` | all | Prefix added to every storage key as `prefix:key`. |
 | `storageType` | `'localStorage'` | all | Browser storage target: `'localStorage'` or `'sessionStorage'`. |
-| `stateManagementUse` | `false` | all | Returns raw strings without automatic parsing; required by persisters. Use only with `crypto-js` for persisters. |
+| `stateManagementUse` | `false` | all | Returns raw strings without automatic parsing; required by persisters. Use only with `noble` for persisters. |
 | `doNotEncryptValues` | `false` | all | Stores values without encryption. Prefixes and storage helpers still apply. |
 | `doNotParseValues` | `false` | all | Disables automatic `JSON.stringify`/`JSON.parse` conversion. |
 | `notifyHandler` | `undefined` | all | Callback invoked after supported storage operations. |
 | `validation` | `undefined` | all | Value validation rules applied on `setItem`. See [Validation](#validation). |
-| `encAlgorithm` | `'AES'` / `'AES-GCM'` | engine-specific | Encryption algorithm for the selected engine. |
+| `encAlgorithm` | `'AES-GCM'` | engine-specific | Encryption algorithm for the selected engine. |
 
-CryptoJS algorithms: `AES`, `AES-CBC`, `AES-CFB`, `AES-CTR`, `AES-OFB`, and `AES-ECB`.
+Supported algorithms: `AES-GCM`, `AES-CBC`, and `AES-CTR`.
 
 `doNotParseValues` expects string-compatible values. With its default `false`, objects are serialized on write and parsed on read; scalar values are recovered when valid JSON.
 
@@ -382,7 +385,7 @@ Pass a `validation` object to enforce value constraints on every `setItem` call.
 
 ```ts
 const encryptStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   prefix: '@app',
   validation: {
     allowNull: false,
@@ -407,7 +410,7 @@ The `strict` option is a shorthand. It takes precedence over individual settings
 
 ```ts
 const encryptStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   validation: { strict: true },
 });
 
@@ -422,11 +425,11 @@ Validation applies to `setItem` and, by extension, to any method that calls it i
 
 ## Storage methods
 
-The examples below use a synchronous CryptoJS instance. Prefixes are added to physical browser-storage keys but are omitted from method parameters and returned pattern keys.
+The examples below use a synchronous noble instance. Prefixes are added to physical browser-storage keys but are omitted from method parameters and returned pattern keys.
 
 ```ts
 const encryptStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   prefix: '@example',
 });
 ```
@@ -530,7 +533,7 @@ Every storage instance exposes `cookie.set`, `cookie.get`, and `cookie.remove`. 
 
 ```ts
 const encryptStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   prefix: '@app',
 });
 
@@ -565,11 +568,11 @@ Every storage instance exposes a TTL API that stores values with an expiration t
 
 > **Important**: expired items are cleaned up on access, not on a schedule. If your application never reads an expired key, it stays in browser storage indefinitely. Design your access patterns accordingly, or call `getTTL` for known keys at application startup.
 
-The TTL API is available on both `crypto-js` (synchronous) and `web-crypto` (asynchronous) engines. The examples below use the synchronous `crypto-js` engine; see [TTL with Web Crypto](#ttl-with-web-crypto-asynchronous) for the async equivalent.
+The TTL API is available on both `noble` (synchronous) and `web-crypto` (asynchronous) engines. The examples below use the synchronous `noble` engine; see [TTL with Web Crypto](#ttl-with-web-crypto-asynchronous) for the async equivalent.
 
 ```ts
 const encryptStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   prefix: '@app',
 });
 ```
@@ -730,7 +733,7 @@ const refreshed = await encryptStorage.refreshTTL({ key: 'access_token', ttl: 18
 const removed = await encryptStorage.removeTTL('access_token');
 ```
 
-| Method | `crypto-js` | `web-crypto` |
+| Method | `noble` | `web-crypto` |
 | --- | --- | --- |
 | `setTTL` | `void` | `Promise<void>` |
 | `getTTL` | `T \| null` | `Promise<T \| null>` |
@@ -743,13 +746,13 @@ const removed = await encryptStorage.removeTTL('access_token');
 
 ## State management persisters
 
-State-management persisters must use the **`crypto-js` engine**. They expect a synchronous, native `Storage`-like interface; the asynchronous `web-crypto` engine does not satisfy that contract. Set `stateManagementUse: true` so values are returned as raw strings, which is required for persisters to serialize and deserialize state correctly.
+State-management persisters must use the **`noble` engine**. They expect a synchronous, native `Storage`-like interface; the asynchronous `web-crypto` engine does not satisfy that contract. Set `stateManagementUse: true` so values are returned as raw strings, which is required for persisters to serialize and deserialize state correctly.
 
 ```ts
 import { EncryptStorage } from 'encrypt-storage';
 
 export const persisterStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   stateManagementUse: true,
   prefix: '@app',
 });
@@ -768,7 +771,7 @@ const vuexLocal = new VuexPersistence<RootState>({
 
 ### Redux Persist
 
-Use the same synchronous `crypto-js` instance. Do not use `web-crypto` or a custom asynchronous wrapper with this integration.
+Use the same synchronous `noble` instance. Do not use `web-crypto` or a custom asynchronous wrapper with this integration.
 
 ```ts
 import { persistReducer } from 'redux-persist';
@@ -808,7 +811,7 @@ Use `notifyHandler` to observe storage activity. It receives an object with `typ
 
 ```ts
 const encryptStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   notifyHandler: ({ type, key, value }) => {
     console.info('encrypt-storage event', { type, key, value });
   },
@@ -830,7 +833,7 @@ import { EncryptStorage } from 'encrypt-storage';
 
 try {
   const encryptStorage = EncryptStorage.create('short', {
-    engine: 'crypto-js',
+    engine: 'noble',
   });
 } catch (error) {
   // error.name === 'InvalidSecretKey'
@@ -858,7 +861,7 @@ import { EncryptStorage } from 'encrypt-storage';
 
 try {
   const encryptStorage = EncryptStorage.create('secret-key-value', {
-    engine: 'crypto-js',
+    engine: 'noble',
   });
 } catch (error) {
   // error.name === 'IsNotBrowserEnvironmentError'
@@ -884,7 +887,7 @@ Thrown when `setItem` receives `null` and the `validation.allowNull` option is `
 import { EncryptStorage } from 'encrypt-storage';
 
 const encryptStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
   validation: { allowNull: false },
 });
 
@@ -912,7 +915,7 @@ Thrown when `setItem` receives `undefined` and the `validation.allowUndefined` o
 import { EncryptStorage } from 'encrypt-storage';
 
 const encryptStorage = EncryptStorage.create('secret-key-value', {
-  engine: 'crypto-js',
+  engine: 'noble',
 });
 
 try {
@@ -935,4 +938,4 @@ All errors extend the native `Error` class and can be caught with standard `try/
 
 ## License
 
-[MIT License](./LICENSE)
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)

@@ -1,19 +1,17 @@
 import { fakerPT_BR as faker } from '@faker-js/faker';
 
-import { EncryptStorageWebApi, EncryptStorage } from '@/classes';
+import { EncryptStorageWebApi } from '@/classes';
 import {
   InvalidSecretKeyError,
   NullValueError,
   UndefinedValueError,
 } from '@/errors';
 
-import type { NotifyHandlerParams, AsyncEncryptStorageOptions } from '@/@types';
+import { makeSutFactory } from './test-utils';
 
-interface makeSutParams extends Omit<AsyncEncryptStorageOptions, 'engine'> {
-  secretKey?: string;
-  noOptions?: boolean;
-  noNotifyHandler?: boolean;
-}
+import type { NotifyHandlerParams } from '@/@types';
+
+let defaultMockedSut: EncryptStorageWebApi | null = null;
 
 const mockNotify = {
   mockedFn: vi.fn().mockImplementation((params: NotifyHandlerParams) => {
@@ -21,41 +19,31 @@ const mockNotify = {
   }),
 };
 
-export const makeSut = (
-  params: makeSutParams = {} as makeSutParams,
-): EncryptStorageWebApi => {
-  const {
-    prefix,
-    storageType,
-    stateManagementUse,
-    noOptions,
-    encAlgorithm,
-    validation,
-    noNotifyHandler = false,
-    doNotParseValues = false,
-    notifyHandler = noNotifyHandler ? undefined : mockNotify.mockedFn,
-    secretKey = faker.string.alphanumeric(10),
-  } = params;
-  const options: AsyncEncryptStorageOptions = noOptions
-    ? { engine: 'web-crypto' }
-    : {
-        prefix,
-        storageType,
-        encAlgorithm,
-        notifyHandler,
-        doNotParseValues,
-        engine: 'web-crypto',
-        stateManagementUse,
-        validation,
-      };
-  return EncryptStorage.create(secretKey, options);
-};
+let makeSut = makeSutFactory<EncryptStorageWebApi | null, EncryptStorageWebApi>(
+  'web-crypto',
+  defaultMockedSut,
+  mockNotify.mockedFn,
+);
 
 describe('EncryptStorageWebApi 📦', () => {
+  beforeAll(() => {
+    defaultMockedSut = makeSut();
+    makeSut = makeSutFactory(
+      'web-crypto',
+      defaultMockedSut,
+      mockNotify.mockedFn,
+    );
+  });
+
   beforeEach(() => {
     localStorage.clear();
     sessionStorage.clear();
   });
+
+  afterAll(() => {
+    defaultMockedSut = null;
+  });
+
   afterEach(() => {
     vi.clearAllMocks();
   });

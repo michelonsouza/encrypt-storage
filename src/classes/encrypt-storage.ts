@@ -1,4 +1,4 @@
-import { EncryptStorageCryptoJs } from './encrypt-storage-crypto-js';
+import { EncryptStorageNoble } from './encrypt-storage-noble';
 import { EncryptStorageWebApi } from './encrypt-storage-web-api';
 
 import type {
@@ -17,7 +17,7 @@ export class EncryptStorage {
   static create(
     secretKey: string,
     options: SyncEncryptStorageOptions,
-  ): EncryptStorageCryptoJs;
+  ): EncryptStorageNoble;
 
   /**
    * @description Create EncryptStorageWebApi instance
@@ -34,14 +34,14 @@ export class EncryptStorage {
    * @description Create encrypt storage instance based on options
    * @param {string} secretKey
    * @param {EncryptStorageOptions} options
-   * @returns {EncryptStorageCryptoJs | EncryptStorageWebApi} `EncryptStorageCryptoJs | EncryptStorageWebApi`
+   * @returns {EncryptStorageWebApi | EncryptStorageNoble} `EncryptStorageWebApi | EncryptStorageNoble`
    */
   static create(
     secretKey: string,
     options: EncryptStorageOptions,
-  ): EncryptStorageCryptoJs | EncryptStorageWebApi {
-    return options.engine === 'crypto-js'
-      ? new EncryptStorageCryptoJs(secretKey, options)
+  ): EncryptStorageWebApi | EncryptStorageNoble {
+    return options.engine === 'noble'
+      ? new EncryptStorageNoble(secretKey, options)
       : new EncryptStorageWebApi(secretKey, options);
   }
 }

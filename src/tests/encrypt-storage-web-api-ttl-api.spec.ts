@@ -1,42 +1,30 @@
 import { fakerPT_BR as faker } from '@faker-js/faker';
 
-import { EncryptStorageWebApi, EncryptStorage } from '@/classes';
+import { EncryptStorageWebApi } from '@/classes';
 
-import type { AsyncEncryptStorageOptions } from '@/@types';
+import { makeSutFactory } from './test-utils';
 
-interface makeSutParams extends Omit<AsyncEncryptStorageOptions, 'engine'> {
-  secretKey?: string;
-}
+let defaultMockedSut: EncryptStorageWebApi | null = null;
 
-const makeSut = (
-  params: makeSutParams = {} as makeSutParams,
-): EncryptStorageWebApi => {
-  const {
-    prefix,
-    storageType,
-    stateManagementUse,
-    encAlgorithm,
-    doNotParseValues = false,
-    secretKey = faker.string.alphanumeric(10),
-  } = params;
-
-  const options: AsyncEncryptStorageOptions = {
-    prefix,
-    storageType,
-    encAlgorithm,
-    doNotParseValues,
-    engine: 'web-crypto',
-    stateManagementUse,
-  };
-
-  return EncryptStorage.create(secretKey, options);
-};
+let makeSut = makeSutFactory<EncryptStorageWebApi | null, EncryptStorageWebApi>(
+  'web-crypto',
+  defaultMockedSut,
+);
 
 describe('EncryptStorageWebApi TTL API 🕐', () => {
+  beforeAll(() => {
+    defaultMockedSut = makeSut();
+    makeSut = makeSutFactory('web-crypto', defaultMockedSut);
+  });
+
   beforeEach(() => {
     localStorage.clear();
     sessionStorage.clear();
     vi.useFakeTimers();
+  });
+
+  afterAll(() => {
+    defaultMockedSut = null;
   });
 
   afterEach(() => {

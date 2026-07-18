@@ -1,42 +1,30 @@
 import { fakerPT_BR as faker } from '@faker-js/faker';
 
-import { EncryptStorageCryptoJs, EncryptStorage } from '@/classes';
+import { EncryptStorageNoble } from '@/classes';
 
-import type { SyncEncryptStorageOptions } from '@/@types';
+import { makeSutFactory } from './test-utils';
 
-interface makeSutParams extends Omit<SyncEncryptStorageOptions, 'engine'> {
-  secretKey?: string;
-}
+let defaultMockedSut: EncryptStorageNoble | null = null;
 
-const makeSut = (
-  params: makeSutParams = {} as makeSutParams,
-): EncryptStorageCryptoJs => {
-  const {
-    prefix,
-    storageType,
-    stateManagementUse,
-    encAlgorithm,
-    doNotParseValues = false,
-    secretKey = faker.string.alphanumeric(10),
-  } = params;
+let makeSut = makeSutFactory<EncryptStorageNoble | null, EncryptStorageNoble>(
+  'noble',
+  defaultMockedSut,
+);
 
-  const options: SyncEncryptStorageOptions = {
-    prefix,
-    storageType,
-    encAlgorithm,
-    doNotParseValues,
-    engine: 'crypto-js',
-    stateManagementUse,
-  };
+describe('EncryptStorageNoble TTL API 🕐', () => {
+  beforeAll(() => {
+    defaultMockedSut = makeSut();
+    makeSut = makeSutFactory('noble', defaultMockedSut);
+  });
 
-  return EncryptStorage.create(secretKey, options);
-};
-
-describe('EncryptStorageCryptoJs TTL API 🕐', () => {
   beforeEach(() => {
     localStorage.clear();
     sessionStorage.clear();
     vi.useFakeTimers();
+  });
+
+  afterAll(() => {
+    defaultMockedSut = null;
   });
 
   afterEach(() => {

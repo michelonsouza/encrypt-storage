@@ -5,9 +5,8 @@ export type {
   CookieOptions,
   SetTTLItemParams,
   RefreshTTLParams,
+  EncryptAlgorithms,
   EncryptStorageOptions,
-  WebApiEncryptAlgorithms,
-  CryptoJSEncryptAlgorithms,
   SyncEncryptStorageOptions,
   AsyncEncryptStorageOptions,
 } from './@types';

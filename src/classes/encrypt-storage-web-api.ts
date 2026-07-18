@@ -14,7 +14,7 @@ import type {
   RemoveCookieOptions,
   AsyncCookieInterface,
   GetFromPatternOptions,
-  WebApiEncryptAlgorithms,
+  EncryptAlgorithms,
   RemoveFromPatternOptions,
   AsyncEncryptStorageOptions,
   EncryptStorageCryptoWebApiInterface,
@@ -38,7 +38,7 @@ export class EncryptStorageWebApi
   // @ts-expect-error
   #encryptation: AsyncEncryptation;
 
-  readonly #encAlgorithm: WebApiEncryptAlgorithms;
+  readonly #encAlgorithm: EncryptAlgorithms;
 
   readonly #stateManagementUse: boolean;
 
@@ -108,7 +108,7 @@ export class EncryptStorageWebApi
     this.storage = window[storageType];
   }
 
-  async #init(encAlgorithm: WebApiEncryptAlgorithms) {
+  async #init(encAlgorithm: EncryptAlgorithms) {
     this.#encryptation = await getAsyncEncryptation(
       encAlgorithm,
       secret.get(this),

@@ -4,6 +4,7 @@ export type {
   CookieOptions,
   SyncEncryptation,
   ChangeNotifyType,
+  EncryptAlgorithms,
   AsyncEncryptation,
   RemoveCookieOptions,
   SyncCookieInterface,
@@ -12,12 +13,11 @@ export type {
   SetItemWithTTLParams,
   GetFromPatternOptions,
   EncryptStorageOptions,
-  WebApiEncryptAlgorithms,
   RemoveFromPatternOptions,
   BaseEcnryptStorageOptions,
-  CryptoJSEncryptAlgorithms,
   SyncEncryptStorageOptions,
   AsyncEncryptStorageOptions,
+  NobleEncryptStorageOptions,
 } from './common.ts';
 
 export type {
@@ -30,6 +30,6 @@ export type {
   AsyncEncryptStorageTTLInterface,
 } from './ttl.ts';
 
-export type { EncryptStorageCryptoWebApiInterface } from './encrypt-storage-web-api.ts';
+export type { EncryptStorageCryptoWebApiInterface } from './encrypt-storage-web-api';
 
-export type { EncryptStorageCryptoJsApiInterface } from './encrypt-storage-crypto-js-api.ts';
+export type { EncryptStorageNobleApiInterface } from './encrypt-storage-crypto-noble';
