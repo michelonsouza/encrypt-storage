@@ -1,6 +1,6 @@
 {
   "name": "encrypt-storage",
-  "version": "3.0.2-beta.5",
+  "version": "3.0.2-beta.6",
   "description": "Wrapper for encrypted localStorage and sessionStorage in browser",
   "keywords": [
     "GDPR",
