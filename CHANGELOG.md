@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [3.0.2-beta.3](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2-beta.3) - 2026-07-18 08:19:52+00:00
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.2-beta.2...3.0.2-beta.3
+
+### Chore
+
+- general:
+  - add incompatible encrypt/decrypt between models async/sync in readme ([36f55ee](https://github.com/michelonsouza/encrypt-storage/commit/36f55eea37d6d0070a36c00fc4948eabe2740a51))
+
 ## [3.0.2-beta.2](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2-beta.2) - 2026-07-18 07:15:23+00:00
 
 **Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.2-beta.1...3.0.2-beta.2
