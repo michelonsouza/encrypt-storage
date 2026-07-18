@@ -1,5 +1,36 @@
 # CHANGELOG
 
+## [3.0.2-beta.6](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2-beta.6) - 2026-07-18 21:37:54+00:00
+
+## What's Changed
+* fix(build): include TypeScript declaration files in published package by @abraaoz in https://github.com/michelonsouza/encrypt-storage/pull/774
+
+## New Contributors
+* @abraaoz made their first contribution in https://github.com/michelonsouza/encrypt-storage/pull/774
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.2-beta.4...3.0.2-beta.6
+
+### Feature
+
+- general:
+  - edit funding.yml, adjust tests, separate cookie in 2 classes ([00874d3](https://github.com/michelonsouza/encrypt-storage/commit/00874d3380996bdf1e40aebc6a7c6d4a39a6cb64))
+
+### Bug Fixes
+
+- general:
+  - change pnpm version in ci.yaml ([1efe938](https://github.com/michelonsouza/encrypt-storage/commit/1efe93807a97feee03ad8d5a252c130271ad656f))
+
+- build:
+  - include TypeScript declaration files in published package (#774) ([f3ea4f9](https://github.com/michelonsouza/encrypt-storage/commit/f3ea4f9c74c59f0f4d0ac108154cb86b3916fbf4)) ([#774](https://github.com/michelonsouza/encrypt-storage/pull/774))
+
+### Chore
+
+- general:
+  - change codeql dispatch method ([e24ba70](https://github.com/michelonsouza/encrypt-storage/commit/e24ba70d3706b22a0725708a149a032bd9911b5f))
+  - change documentation for better legibility ([83a1884](https://github.com/michelonsouza/encrypt-storage/commit/83a188419c4449da9bcd4d9f4244ecb2cf73f816))
+  - change pnpm version in release workflow ([c70b3ef](https://github.com/michelonsouza/encrypt-storage/commit/c70b3ef65e3bb7f14c1e76db2d00baab93437250))
+  - update package version ([bf8bd55](https://github.com/michelonsouza/encrypt-storage/commit/bf8bd55abe162fa42589bd927c18e6f949b720d0))
+
 ## [3.0.2-beta.4](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2-beta.4) - 2026-07-18 09:49:25+00:00
 
 **Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.2-beta.3...3.0.2-beta.4
@@ -42,6 +73,47 @@
   - change logo image ([e6bb6ac](https://github.com/michelonsouza/encrypt-storage/commit/e6bb6ac3b48943f4f50815f38ef6e9976b57fb9c)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
   - change logo image and remove uncescerary image ([bab6330](https://github.com/michelonsouza/encrypt-storage/commit/bab6330a36bae99d27f6cb5a5a061faeda548fe4)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
   - add notice for version 4 drops crypto-js ([1305619](https://github.com/michelonsouza/encrypt-storage/commit/1305619c3066099f6e33a589d328cb5b56ab4809)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
+
+## [2.16.06](https://github.com/michelonsouza/encrypt-storage/releases/tag/2.16.06) - 2026-07-18 21:24:05+00:00
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/2.16.05...2.16.06
+
+### Chore
+
+- general:
+  - update package version ([bf8bd55](https://github.com/michelonsouza/encrypt-storage/commit/bf8bd55abe162fa42589bd927c18e6f949b720d0))
+
+## [2.16.05](https://github.com/michelonsouza/encrypt-storage/releases/tag/2.16.05) - 2026-07-18 21:22:18+00:00
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/2.16.04...2.16.05
+
+### Chore
+
+- general:
+  - change pnpm version in release workflow ([c70b3ef](https://github.com/michelonsouza/encrypt-storage/commit/c70b3ef65e3bb7f14c1e76db2d00baab93437250))
+
+## [2.16.04](https://github.com/michelonsouza/encrypt-storage/releases/tag/2.16.04) - 2026-07-18 21:18:54+00:00
+
+## What's Changed
+* fix(build): include TypeScript declaration files in published package by @abraaoz in https://github.com/michelonsouza/encrypt-storage/pull/774
+
+## New Contributors
+* @abraaoz made their first contribution in https://github.com/michelonsouza/encrypt-storage/pull/774
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/2.16.03...2.16.04
+
+### Bug Fixes
+
+- general:
+  - change pnpm version in ci.yaml ([1efe938](https://github.com/michelonsouza/encrypt-storage/commit/1efe93807a97feee03ad8d5a252c130271ad656f))
+
+- build:
+  - include TypeScript declaration files in published package (#774) ([f3ea4f9](https://github.com/michelonsouza/encrypt-storage/commit/f3ea4f9c74c59f0f4d0ac108154cb86b3916fbf4)) ([#774](https://github.com/michelonsouza/encrypt-storage/pull/774))
+
+### Chore
+
+- general:
+  - change codeql dispatch method ([e24ba70](https://github.com/michelonsouza/encrypt-storage/commit/e24ba70d3706b22a0725708a149a032bd9911b5f))
 
 ## [3.0.1-beta.7](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.1-beta.7) - 2026-07-17 11:33:25+00:00
 
