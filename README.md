@@ -10,75 +10,98 @@
 
 [![codecov](https://codecov.io/github/michelonsouza/encrypt-storage/graph/badge.svg?token=KWO0OOVKVE)](https://codecov.io/github/michelonsouza/encrypt-storage) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/code-quality-verify.yml?logo=github&label=code%20ql)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/code-quality-verify.yml) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/ci.yml?logo=github)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/ci.yml) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/michelonsouza/encrypt-storage/ci.yml?logo=npm&label=published)](https://github.com/michelonsouza/encrypt-storage/actions/workflows/ci.yml)
 
-> **SUPPORT THE PROJECT**: Encrypt Storage is maintained by Michelon Souza, a solo Brazilian developer keeping this project secure, tested, and up-to-date for thousands of developers. If this package helps your project, consider supporting through any of these channels — every contribution helps keep it free and evolving. Thank you! 💙
+# Encrypt Storage
+
+`encrypt-storage` wraps the browser Storage API with transparent encryption. Store objects, strings, or any serializable value in `localStorage`, `sessionStorage`, or browser cookies while keeping the same familiar Storage-like API.
+
+Choose between a **fully synchronous** implementation powered by **@noble/ciphers** or the native **Web Crypto API**, select an AES algorithm, and keep your application compatible with modern browsers and frameworks.
+
+> [!NOTE]
+> ## 🎉 Welcome to Encrypt Storage v3
 >
-> [![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-EA4AAA?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/michelonsouza)&nbsp;&nbsp;&nbsp;[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buymeacoffee&logoColor=000000)](https://www.buymeacoffee.com/michelon)&nbsp;&nbsp;&nbsp;[![Patreon](https://img.shields.io/badge/Patreon-F96854?logo=patreon&logoColor=white)](https://www.patreon.com/MichelonSouza)
+> Version 3 is the most significant release in the project's history.
+>
+> This release is a complete modernization of the library, focused on modernization, performance, security, and compatibility with today's JavaScript ecosystem.
+>
+> ### What's new?
+>
+> - ⚡ Replaced **CryptoJS** with modern cryptography powered by **Web Crypto API** and **Noble Ciphers/Hashes**
+> - 🌐 Full support for modern runtimes including **Browsers, Node.js, Bun, Deno, Next.js, Astro, Vite, Nuxt**, and more
+> - ⏳ **New built-in TTL (Time-To-Live) API** featuring dedicated methods such as `setTTL`, `getTTL`, `hasTTL`, `refreshTTL`, `removeTTL`, and more for managing expiring data
+> - 🔒 Stronger key derivation using **PBKDF2**
+> - 🚀 Smaller bundle size and improved tree-shaking
+> - 🧠 Lazy initialization for better SSR compatibility
+> - 📦 Modern ESM-first distribution with full TypeScript support
+> - 🧪 Rewritten test suite and improved code quality
+> - 🛠️ Modernized build pipeline, tooling, and CI
+>
+> While this is a major release internally, the public API remains familiar, making migration from v2 straightforward for most projects.
+>
+> Thank you to everyone who has supported Encrypt Storage over the years. ❤️
 
-> **HELP THIS PROJECT**: A GitHub star helps this project. It costs nothing and is greatly appreciated.
-
-> **⚠️ IMPORTANT**: No browser-side secret is fully secure. An application secret shipped to the client can be discovered by a sufficiently motivated user. This package obscures stored values and provides encryption at rest in browser storage; it must not be treated as a replacement for server-side authorization or secret management.
-
-> **🔄 Encryption engine change**: Starting with this version, encrypt-storage replaces `crypto-js` with [`@noble/ciphers`](https://github.com/paulmillr/noble-ciphers) and [`@noble/hashes`](https://github.com/paulmillr/noble-hashes). The [crypto-js project has been discontinued](https://github.com/brix/crypto-js) — its maintainers stated that native Crypto makes the library redundant, so development and maintenance have ceased. The noble libraries are audited, tree-shakeable, ESM-native, zero-dependency, and actively maintained. This change is **fully transparent** to consumers of encrypt-storage: the public API, options, and behavior remain identical. No migration is needed — encrypted values produced by this version use the same AES algorithms and key derivation, just powered by a modern, secure foundation.
-
-## Encrypt Storage
-`encrypt-storage` wraps the browser Storage API with transparent encryption. Write objects, strings, or any serializable value to `localStorage`, `sessionStorage`, or cookies — they are encrypted at rest and decrypted on read. Choose between a synchronous engine (`noble`) or the native Web Crypto API (`web-crypto`), select an AES algorithm, and keep the same familiar `getItem`/`setItem` interface you already know.
-
-
-- [Encrypt Storage](#encrypt-storage)
-- [Features](#features)
-- [Built with](#built-with)
-- [Installation](#installation)
-  - [Using a CDN](#using-a-cdn)
-    - [unpkg](#unpkg)
-    - [jsDelivr](#jsdelivr)
-- [Version and runtime support](#version-and-runtime-support)
-- [Migration to version 3](#migration-to-version-3)
-- [Choose an encryption engine](#choose-an-encryption-engine)
-- [Usage](#usage)
-  - [Noble (synchronous)](#noble-synchronous)
-  - [Web Crypto API (asynchronous)](#web-crypto-api-asynchronous)
-  - [AsyncEncryptStorage (fully promise-based)](#asyncencryptstorage-fully-promise-based)
-  - [Multiple instances](#multiple-instances)
-  - [Server-side rendering](#server-side-rendering)
-    - [Next.js Client Components](#nextjs-client-components)
-    - [getStorage alternative](#getstorage-alternative)
-- [Options](#options)
-  - [Validation](#validation)
-- [Storage methods](#storage-methods)
-  - [Write and read values](#write-and-read-values)
-  - [Bulk operations](#bulk-operations)
-  - [Pattern operations](#pattern-operations)
-  - [Storage utilities](#storage-utilities)
-  - [Encrypt, decrypt, and hash](#encrypt-decrypt-and-hash)
-- [Cookies](#cookies)
-- [TTL (Time-To-Live)](#ttl-time-to-live)
-  - [Store a value with TTL](#store-a-value-with-ttl)
-  - [Read a TTL value](#read-a-ttl-value)
-  - [Check TTL state](#check-ttl-state)
-  - [TTL metadata and remaining time](#ttl-metadata-and-remaining-time)
-  - [Refresh and remove TTL](#refresh-and-remove-ttl)
-  - [TTL with Web Crypto (asynchronous)](#ttl-with-web-crypto-asynchronous)
-- [State management persisters](#state-management-persisters)
-  - [Vuex Persist](#vuex-persist)
-  - [Redux Persist](#redux-persist)
-  - [Pinia persist plugins](#pinia-persist-plugins)
-- [Notifications](#notifications)
-- [Error handling](#error-handling)
-  - [InvalidSecretKeyError](#invalidsecretkeyerror)
-  - [IsNotBrowserEnvironmentError](#isnotbrowserenvironmenterror)
-  - [NullValueError](#nullvalueerror)
-  - [UndefinedValueError](#undefinedvalueerror)
-- [License](#license)
+> [!IMPORTANT]
+> **Browser-side encryption is not a substitute for server-side security.**
+>
+> Secrets shipped to the client can always be extracted by a sufficiently motivated attacker. Encrypt Storage protects data **at rest** inside browser storage and helps prevent casual inspection, but it must not be considered a replacement for authentication, authorization, or server-side secret management.
 
 ## Features
 
-- Encrypt values stored in `localStorage`, `sessionStorage`, and browser cookies.
-- Choose between synchronous (`@noble/ciphers`) and asynchronous (native Web Crypto API) encryption engines.
-- Keep a familiar Storage-like API, including bulk, pattern, and key operations.
-- Store values with a Time-To-Live (TTL) that are lazily removed on access after expiration.
-- Serialize and deserialize JavaScript values automatically by default.
-- Use a namespace prefix to isolate multiple storage instances.
-- Integrate with state-management persisters by using the synchronous engine.
+- 🔒 Encrypt values stored in `localStorage`, `sessionStorage`, and browser cookies.
+- ⚡ Choose between synchronous (`@noble/ciphers`) and asynchronous (native Web Crypto API) encryption engines.
+- ⏳ Built-in TTL (Time-To-Live) support.
+- 🧩 Familiar Storage-like API with bulk operations, pattern matching, and utility methods.
+- 📦 Automatic serialization/deserialization.
+- 🏷️ Prefix namespaces.
+- 🗂️ Compatible with Redux Persist, Vuex Persist, Pinia Persist and other Storage-based integrations.
+
+## Table of contents
+
+- [Encrypt Storage](#encrypt-storage)
+  - [Features](#features)
+  - [Table of contents](#table-of-contents)
+  - [Built with](#built-with)
+  - [Installation](#installation)
+    - [Using a CDN](#using-a-cdn)
+      - [unpkg](#unpkg)
+      - [jsDelivr](#jsdelivr)
+  - [Version and runtime support](#version-and-runtime-support)
+  - [Migration to version 3](#migration-to-version-3)
+  - [Choose an encryption engine](#choose-an-encryption-engine)
+  - [Usage](#usage)
+    - [Noble (synchronous)](#noble-synchronous)
+    - [Web Crypto API (asynchronous)](#web-crypto-api-asynchronous)
+    - [AsyncEncryptStorage (fully promise-based)](#asyncencryptstorage-fully-promise-based)
+    - [Multiple instances](#multiple-instances)
+    - [Server-side rendering](#server-side-rendering)
+      - [Next.js Client Components](#nextjs-client-components)
+      - [getStorage alternative](#getstorage-alternative)
+  - [Options](#options)
+    - [Validation](#validation)
+  - [Storage methods](#storage-methods)
+    - [Write and read values](#write-and-read-values)
+    - [Bulk operations](#bulk-operations)
+    - [Pattern operations](#pattern-operations)
+    - [Storage utilities](#storage-utilities)
+    - [Encrypt, decrypt, and hash](#encrypt-decrypt-and-hash)
+  - [Cookies](#cookies)
+  - [TTL (Time-To-Live)](#ttl-time-to-live)
+    - [Store a value with TTL](#store-a-value-with-ttl)
+    - [Read a TTL value](#read-a-ttl-value)
+    - [Check TTL state](#check-ttl-state)
+    - [TTL metadata and remaining time](#ttl-metadata-and-remaining-time)
+    - [Refresh and remove TTL](#refresh-and-remove-ttl)
+    - [TTL with Web Crypto (asynchronous)](#ttl-with-web-crypto-asynchronous)
+  - [State management persisters](#state-management-persisters)
+    - [Vuex Persist](#vuex-persist)
+    - [Redux Persist](#redux-persist)
+    - [Pinia persist plugins](#pinia-persist-plugins)
+  - [Notifications](#notifications)
+  - [Error handling](#error-handling)
+    - [InvalidSecretKeyError](#invalidsecretkeyerror)
+    - [IsNotBrowserEnvironmentError](#isnotbrowserenvironmenterror)
+    - [NullValueError](#nullvalueerror)
+    - [UndefinedValueError](#undefinedvalueerror)
+  - [License](#license)
 
 ## Built with
 
@@ -958,3 +981,9 @@ All errors extend the native `Error` class and can be caught with standard `try/
 ## License
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
+> **HELP THIS PROJECT**: A GitHub star helps this project. It costs nothing and is greatly appreciated.
+
+> **SUPPORT THE PROJECT**: Encrypt Storage is maintained by Michelon Souza, a solo Brazilian developer keeping this project secure, tested, and up-to-date for thousands of developers. If this package helps your project, consider supporting through any of these channels — every contribution helps keep it free and evolving. Thank you! 💙
+>
+> [![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-EA4AAA?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/michelonsouza)&nbsp;&nbsp;&nbsp;[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buymeacoffee&logoColor=000000)](https://www.buymeacoffee.com/michelon)&nbsp;&nbsp;&nbsp;[![Patreon](https://img.shields.io/badge/Patreon-F96854?logo=patreon&logoColor=white)](https://www.patreon.com/MichelonSouza)
