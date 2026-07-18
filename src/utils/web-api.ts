@@ -13,7 +13,7 @@ const algorithms = {
   'AES-GCM': {
     ivLength: 12,
 
-    createAlgorithm(iv: Uint8Array): AesGcmParams {
+    create(iv: Uint8Array): AesGcmParams {
       return {
         name: 'AES-GCM',
         // @ts-expect-error
@@ -25,7 +25,7 @@ const algorithms = {
   'AES-CBC': {
     ivLength: 16,
 
-    createAlgorithm(iv: Uint8Array): AesCbcParams {
+    create(iv: Uint8Array): AesCbcParams {
       return {
         name: 'AES-CBC',
         // @ts-expect-error
@@ -37,7 +37,7 @@ const algorithms = {
   'AES-CTR': {
     ivLength: 16,
 
-    createAlgorithm(counter: Uint8Array): AesCtrParams {
+    create(counter: Uint8Array): AesCtrParams {
       return {
         name: 'AES-CTR',
         // @ts-expect-error
@@ -50,7 +50,7 @@ const algorithms = {
   EncryptAlgorithms,
   {
     ivLength: number;
-    createAlgorithm(iv: Uint8Array): AesGcmParams | AesCbcParams | AesCtrParams;
+    create(iv: Uint8Array): AesGcmParams | AesCbcParams | AesCtrParams;
   }
 >;
 
@@ -67,7 +67,7 @@ export async function getAsyncEncryptation(
       const iv = crypto.getRandomValues(new Uint8Array(algorithm.ivLength));
 
       const encrypted = await crypto.subtle.encrypt(
-        algorithm.createAlgorithm(iv),
+        algorithm.create(iv),
         key,
         encoder.encode(value),
       );
@@ -81,7 +81,7 @@ export async function getAsyncEncryptation(
       const { iv, cipher } = split(payload, algorithm.ivLength);
 
       const decrypted = await crypto.subtle.decrypt(
-        algorithm.createAlgorithm(iv),
+        algorithm.create(iv),
         key,
         cipher,
       );

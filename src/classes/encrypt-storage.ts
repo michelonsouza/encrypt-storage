@@ -9,10 +9,10 @@ import type {
 
 export class EncryptStorage {
   /**
-   * @description Create EncryptStorageCryptoJs instance
+   * @description Create EncryptStorageNoble instance
    * @param {string} secretKey
    * @param {SyncEncryptStorageOptions} options
-   * @returns {EncryptStorageCryptoJs} `EncryptStorageCryptoJs`
+   * @returns {EncryptStorageNoble} `EncryptStorageNoble`
    */
   static create(
     secretKey: string,
@@ -41,7 +41,8 @@ export class EncryptStorage {
     options: EncryptStorageOptions,
   ): EncryptStorageWebApi | EncryptStorageNoble {
     return options.engine === 'noble'
-      ? new EncryptStorageNoble(secretKey, options)
+      ? // @ts-expect-error
+        new EncryptStorageNoble(secretKey, options)
       : new EncryptStorageWebApi(secretKey, options);
   }
 }

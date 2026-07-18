@@ -21,7 +21,7 @@
 > **� Encryption engine change**: Starting with this version, encrypt-storage replaces `crypto-js` with [`@noble/ciphers`](https://github.com/paulmillr/noble-ciphers) and [`@noble/hashes`](https://github.com/paulmillr/noble-hashes). The [crypto-js project has been discontinued](https://github.com/brix/crypto-js) — its maintainers stated that native Crypto makes the library redundant, so development and maintenance have ceased. The noble libraries are audited, tree-shakeable, ESM-native, zero-dependency, and actively maintained. This change is **fully transparent** to consumers of encrypt-storage: the public API, options, and behavior remain identical. No migration is needed — encrypted values produced by this version use the same AES algorithms and key derivation, just powered by a modern, secure foundation.
 
 ## Encrypt Storage
-`encrypt-storage` is a browser `Storage` wrapper that encrypts values before writing them to `localStorage`, `sessionStorage`, or cookies. Version 3 uses an explicit factory and encryption engine selection.
+`encrypt-storage` wraps the browser Storage API with transparent encryption. Write objects, strings, or any serializable value to `localStorage`, `sessionStorage`, or cookies — they are encrypted at rest and decrypted on read. Choose between a synchronous engine powered by `@noble/ciphers` or the native Web Crypto API, select an AES algorithm, and keep the same familiar `getItem`/`setItem` interface you already know.
 
 
 - [Encrypt Storage](#encrypt-storage)
@@ -111,7 +111,7 @@ yarn add encrypt-storage
 pnpm add encrypt-storage
 ```
 
-The package is intended for bundlers and supports ESM and CommonJS imports.
+The package is intended for bundlers and supports ESM and CommonJS imports. Requires Node.js `>=20`.
 
 ### Using a CDN
 
@@ -162,7 +162,7 @@ For production, pin the package to a specific version instead of using `@latest`
 | Modern browsers | Supported when `localStorage` or `sessionStorage` is available. |
 | `noble` engine | Synchronous encryption via `@noble/ciphers`. Works with the browser Storage API. |
 | `web-crypto` engine | Requires `globalThis.crypto.subtle`, available in modern browser secure contexts. |
-| Node.js | Version 3 development tooling requires Node.js `20` or later. |
+| Node.js | Requires `>=20`. Needed for the native `crypto` module used by `@noble/ciphers` and development tooling. |
 | Next.js App Router | Supported in Client Components with `'use client'` (Next.js `13+`). |
 | Next.js Pages Router and SSR | Supported when the storage instance is created or used only in the browser. |
 

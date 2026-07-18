@@ -2,7 +2,6 @@ import { fakerPT_BR as faker } from '@faker-js/faker';
 
 import {
   EncryptStorage,
-  EncryptStorageCryptoJs,
   EncryptStorageNoble,
   EncryptStorageWebApi,
 } from '@/classes';
@@ -15,10 +14,7 @@ type MakeSutParams = Omit<EncryptStorageOptions, 'engine'> & {
   noNotifyHandler?: boolean;
 };
 
-type EncryptStorageType =
-  | EncryptStorageCryptoJs
-  | EncryptStorageNoble
-  | EncryptStorageWebApi;
+type EncryptStorageType = EncryptStorageNoble | EncryptStorageWebApi;
 
 type DefaultEncryptStorageType = EncryptStorageType | null;
 

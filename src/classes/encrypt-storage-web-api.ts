@@ -24,6 +24,7 @@ import type {
   AsyncEncryptStorageTTLInterface,
   TTLMetadata,
   RefreshTTLParams,
+  StorageType,
 } from '@/@types';
 
 const secret = new globalThis.WeakMap();
@@ -54,25 +55,21 @@ export class EncryptStorageWebApi
 
   readonly #allowUndefined: boolean;
 
+  readonly #storageType: StorageType;
+
   #multiple = false;
 
-  public readonly storage: globalThis.Storage;
-
-  public readonly api = 'crypto-js' as const;
+  public readonly api = 'web-crypto' as const;
 
   /**
    * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
    *
    * @param {string} secretKey - A secret to encrypt data must be contain min of 10 characters
-   * @param {EncrytStorageOptions} options - A optional settings to set encryptData or select `sessionStorage` to browser storage
+   * @param {AsyncEncryptStorageOptions} options - Settings to set encryptData or select `sessionStorage` to browser storage
    */
   constructor(secretKey: string, options: AsyncEncryptStorageOptions) {
     if (secretKey.length < SECRET_KEY_MIN_LENGTH) {
       throw new InvalidSecretKeyError();
-    }
-
-    if (typeof window === 'undefined' || typeof window !== 'object') {
-      throw new IsNotBrowserEnvironmentError();
     }
 
     const {
@@ -105,7 +102,15 @@ export class EncryptStorageWebApi
       ? false
       : (validation?.allowUndefined ?? false);
     this.#init(encAlgorithm);
-    this.storage = window[storageType];
+    this.#storageType = storageType;
+  }
+
+  get storage(): Storage {
+    if (typeof window === 'undefined') {
+      throw new IsNotBrowserEnvironmentError();
+    }
+
+    return window[this.#storageType];
   }
 
   async #init(encAlgorithm: EncryptAlgorithms) {

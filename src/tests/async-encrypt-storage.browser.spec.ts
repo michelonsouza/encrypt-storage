@@ -5,7 +5,7 @@ import { InvalidSecretKeyError } from '@/errors';
 
 import type { NotifyHandlerParams, AsyncEncryptStorageOptions } from '@/@types';
 
-interface makeSutParams extends Omit<AsyncEncryptStorageOptions, 'engine'> {
+interface MakeSutParams extends Omit<AsyncEncryptStorageOptions, 'engine'> {
   secretKey?: string;
   noOptions?: boolean;
   noNotifyHandler?: boolean;
@@ -18,7 +18,7 @@ const mockNotify = {
 };
 
 export const makeSut = (
-  params: makeSutParams = {} as makeSutParams,
+  params: MakeSutParams = {} as MakeSutParams,
 ): AsyncEncryptStorage => {
   const {
     prefix,
@@ -42,6 +42,7 @@ export const makeSut = (
         engine: 'web-crypto',
         stateManagementUse,
       };
+
   return new AsyncEncryptStorage(secretKey, options);
 };
 

@@ -17,7 +17,6 @@ export type {
   BaseEcnryptStorageOptions,
   SyncEncryptStorageOptions,
   AsyncEncryptStorageOptions,
-  NobleEncryptStorageOptions,
 } from './common.ts';
 
 export type {

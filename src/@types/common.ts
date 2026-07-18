@@ -152,6 +152,11 @@ export interface ValidationInterface {
 
 export interface BaseEcnryptStorageOptions {
   /**
+   * @description EncryptStorage encrypt algorithm
+   * @default 'AES-GCM'
+   */
+  encAlgorithm?: EncryptAlgorithms;
+  /**
    * @description Prefix to be added to all keys
    * @default ''
    */
@@ -194,24 +199,6 @@ export interface SyncEncryptStorageOptions extends BaseEcnryptStorageOptions {
    * @default 'noble'
    */
   engine: 'noble';
-  /**
-   * @description CryptoJS encrypt algorithm
-   * @default 'AES'
-   */
-  encAlgorithm?: EncryptAlgorithms;
-}
-
-export interface NobleEncryptStorageOptions extends BaseEcnryptStorageOptions {
-  /**
-   * @description Encrypt engine
-   * @default 'noble'
-   */
-  engine: 'noble';
-  /**
-   * @description Noble encrypt algorithm
-   * @default 'AES-GCM'
-   */
-  encAlgorithm?: EncryptAlgorithms;
 }
 
 export interface AsyncEncryptStorageOptions extends BaseEcnryptStorageOptions {
@@ -219,14 +206,9 @@ export interface AsyncEncryptStorageOptions extends BaseEcnryptStorageOptions {
    * @description Encrypt engine
    * @default 'web-api'
    */
-  engine: 'web-crypto';
-  /**
-   * @description WebApi encrypt algorithm
-   * @default 'AES-GCM'
-   */
-  encAlgorithm?: EncryptAlgorithms;
+  engine: 'web-crypto' | 'noble';
 }
 
 export type EncryptStorageOptions =
-  | SyncEncryptStorageOptions
-  | AsyncEncryptStorageOptions;
+  | AsyncEncryptStorageOptions
+  | SyncEncryptStorageOptions;

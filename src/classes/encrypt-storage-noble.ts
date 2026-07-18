@@ -23,6 +23,7 @@ import type {
   SyncEncryptStorageOptions,
   SyncEncryptStorageTTLInterface,
   EncryptStorageNobleApiInterface,
+  StorageType,
 } from '@/@types';
 
 const secret = new globalThis.WeakMap();
@@ -48,9 +49,9 @@ export class EncryptStorageNoble
 
   readonly #allowUndefined: boolean;
 
-  #multiple = false;
+  readonly #storageType: StorageType;
 
-  public readonly storage: globalThis.Storage;
+  #multiple = false;
 
   public readonly api = 'noble' as const;
 
@@ -58,15 +59,11 @@ export class EncryptStorageNoble
    * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
    *
    * @param {string} secretKey - A secret to encrypt data must be contain min of 10 characters
-   * @param {EncrytStorageOptions} options - A optional settings to set encryptData or select `sessionStorage` to browser storage
+   * @param {SyncEncryptStorageOptions} options - Settings to set encryptData or select `sessionStorage` to browser storage
    */
   constructor(secretKey: string, options: SyncEncryptStorageOptions) {
     if (secretKey.length < SECRET_KEY_MIN_LENGTH) {
       throw new InvalidSecretKeyError();
-    }
-
-    if (typeof window === 'undefined' || typeof window !== 'object') {
-      throw new IsNotBrowserEnvironmentError();
     }
 
     const {
@@ -98,7 +95,15 @@ export class EncryptStorageNoble
       ? false
       : (validation?.allowUndefined ?? false);
     this.#encryptation = getSyncEncryptation(encAlgorithm, secret.get(this));
-    this.storage = window[storageType];
+    this.#storageType = storageType;
+  }
+
+  get storage(): Storage {
+    if (typeof window === 'undefined') {
+      throw new IsNotBrowserEnvironmentError();
+    }
+
+    return window[this.#storageType];
   }
 
   #getKey(key: string): string {

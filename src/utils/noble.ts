@@ -10,8 +10,16 @@ import {
 import { deriveSyncKey, encoder, decoder } from './pbkdf2';
 
 import type { EncryptAlgorithms, SyncEncryptation } from '@/@types';
+import type { Cipher, CipherWithOutput } from '@noble/ciphers/utils.js';
 
-const algorithms = {
+interface AlgorithmType {
+  ivLength: number;
+  create: (key: Uint8Array, iv: Uint8Array) => Cipher | CipherWithOutput;
+}
+
+type AlgorithmInterface = Record<EncryptAlgorithms, AlgorithmType>;
+
+const algorithms: AlgorithmInterface = {
   'AES-GCM': {
     ivLength: 12,
     create: (key: Uint8Array, iv: Uint8Array) => gcm(key, iv),
@@ -26,7 +34,7 @@ const algorithms = {
     ivLength: 16,
     create: (key: Uint8Array, iv: Uint8Array) => ctr(key, iv),
   },
-} as const;
+};
 
 export function getSyncEncryptation(
   encryptationAlgorithm: EncryptAlgorithms,

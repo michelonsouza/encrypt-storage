@@ -13,8 +13,6 @@ export default defineConfig(({ command }) => {
     },
     test: {
       globals: true,
-      environment: 'jsdom',
-      setupFiles: ['./setup-jsdom-test.ts'],
       coverage: {
         enabled: true,
         provider: 'v8',
@@ -22,14 +20,33 @@ export default defineConfig(({ command }) => {
         include: ['src/**/*.ts'],
         exclude: ['**/*.spec.ts', 'src/@types/**/*.ts', 'src/**/index.ts'],
       },
+      projects: [
+        {
+          extends: true,
+          test: {
+            name: { label: 'browser', color: 'blue' },
+            include: ['src/tests/*.browser.spec.ts'],
+            environment: 'jsdom',
+            setupFiles: ['./setup-jsdom-test.ts'],
+          },
+        },
+        {
+          extends: true,
+          test: {
+            name: { label: 'ssr', color: 'green' },
+            include: ['src/tests/*.node.spec.ts'],
+            environment: 'node',
+            setupFiles: ['./setup-node-test.ts'],
+          },
+        },
+      ],
     },
     pack: {
-      dts: {
-        tsgo: true,
-      },
+      dts: true,
       exports: true,
       minify: true,
       unbundle: true,
+      clean: true,
       entry: 'src/index.ts',
       name: 'encrypt-storage',
       target: 'esnext',

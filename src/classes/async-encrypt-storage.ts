@@ -1,6 +1,6 @@
 import { EncryptStorage } from './encrypt-storage';
 
-import type { EncryptStorageCryptoJs } from './encrypt-storage-crypto-js';
+import type { EncryptStorageNoble } from './encrypt-storage-noble';
 import type { EncryptStorageWebApi } from './encrypt-storage-web-api';
 import type {
   EncryptStorageOptions,
@@ -9,7 +9,7 @@ import type {
 } from '@/@types';
 
 export class AsyncEncryptStorage {
-  #encryptStorage: EncryptStorageCryptoJs | EncryptStorageWebApi;
+  #encryptStorage: EncryptStorageNoble | EncryptStorageWebApi;
 
   constructor(secretKey: string, options: EncryptStorageOptions) {
     this.#encryptStorage = EncryptStorage.create(secretKey, options as any);
