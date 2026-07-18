@@ -101,7 +101,6 @@ export class EncryptStorageWebApi
     this.#allowUndefined = validation?.strict
       ? false
       : (validation?.allowUndefined ?? false);
-    this.#init(encAlgorithm);
     this.#storageType = storageType;
   }
 

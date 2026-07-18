@@ -18,10 +18,10 @@
 
 > **⚠️ IMPORTANT**: No browser-side secret is fully secure. An application secret shipped to the client can be discovered by a sufficiently motivated user. This package obscures stored values and provides encryption at rest in browser storage; it must not be treated as a replacement for server-side authorization or secret management.
 
-> **� Encryption engine change**: Starting with this version, encrypt-storage replaces `crypto-js` with [`@noble/ciphers`](https://github.com/paulmillr/noble-ciphers) and [`@noble/hashes`](https://github.com/paulmillr/noble-hashes). The [crypto-js project has been discontinued](https://github.com/brix/crypto-js) — its maintainers stated that native Crypto makes the library redundant, so development and maintenance have ceased. The noble libraries are audited, tree-shakeable, ESM-native, zero-dependency, and actively maintained. This change is **fully transparent** to consumers of encrypt-storage: the public API, options, and behavior remain identical. No migration is needed — encrypted values produced by this version use the same AES algorithms and key derivation, just powered by a modern, secure foundation.
+> **🔄 Encryption engine change**: Starting with this version, encrypt-storage replaces `crypto-js` with [`@noble/ciphers`](https://github.com/paulmillr/noble-ciphers) and [`@noble/hashes`](https://github.com/paulmillr/noble-hashes). The [crypto-js project has been discontinued](https://github.com/brix/crypto-js) — its maintainers stated that native Crypto makes the library redundant, so development and maintenance have ceased. The noble libraries are audited, tree-shakeable, ESM-native, zero-dependency, and actively maintained. This change is **fully transparent** to consumers of encrypt-storage: the public API, options, and behavior remain identical. No migration is needed — encrypted values produced by this version use the same AES algorithms and key derivation, just powered by a modern, secure foundation.
 
 ## Encrypt Storage
-`encrypt-storage` wraps the browser Storage API with transparent encryption. Write objects, strings, or any serializable value to `localStorage`, `sessionStorage`, or cookies — they are encrypted at rest and decrypted on read. Choose between a synchronous engine powered by `@noble/ciphers` or the native Web Crypto API, select an AES algorithm, and keep the same familiar `getItem`/`setItem` interface you already know.
+`encrypt-storage` wraps the browser Storage API with transparent encryption. Write objects, strings, or any serializable value to `localStorage`, `sessionStorage`, or cookies — they are encrypted at rest and decrypted on read. Choose between a synchronous engine (`noble`) or the native Web Crypto API (`web-crypto`), select an AES algorithm, and keep the same familiar `getItem`/`setItem` interface you already know.
 
 
 - [Encrypt Storage](#encrypt-storage)
@@ -240,7 +240,7 @@ const token = await encryptStorage.getItem<string>('access-token');
 | --- | --- | --- |
 | `@app:access-token` | Encrypted text with a random IV | `'token-value'` |
 
-Supported Web Crypto algorithms are `AES-GCM`, `AES-CBC`, and `AES-CTR`. `AES-GCM` is the default.
+Supported algorithms are `AES-GCM`, `AES-CBC`, and `AES-CTR`. `AES-GCM` is the default.
 
 `web-crypto` intentionally has a mixed API because the browser Storage operations themselves are synchronous.
 
@@ -375,7 +375,7 @@ Pass an options object as the second argument to `EncryptStorage.create()`.
 | `doNotParseValues` | `false` | all | Disables automatic `JSON.stringify`/`JSON.parse` conversion. |
 | `notifyHandler` | `undefined` | all | Callback invoked after supported storage operations. |
 | `validation` | `undefined` | all | Value validation rules applied on `setItem`. See [Validation](#validation). |
-| `encAlgorithm` | `'AES-GCM'` | engine-specific | Encryption algorithm for the selected engine. |
+| `encAlgorithm` | `'AES-GCM'` | all | Encryption algorithm. Applies to both engines. |
 
 Supported algorithms: `AES-GCM`, `AES-CBC`, and `AES-CTR`.
 
@@ -428,6 +428,23 @@ Validation applies to `setItem` and, by extension, to any method that calls it i
 ## Storage methods
 
 The examples below use a synchronous noble instance. Prefixes are added to physical browser-storage keys but are omitted from method parameters and returned pattern keys.
+
+| Method | Parameters | Return (`noble`) | Return (`web-crypto`) |
+| --- | --- | --- | --- |
+| `setItem` | `(key: string, value: any, doNotEncrypt?: boolean)` | `void` | `Promise<void>` |
+| `getItem<T>` | `(key: string, doNotDecrypt?: boolean)` | `T \| undefined` | `Promise<T \| undefined>` |
+| `removeItem` | `(key: string)` | `void` | `void` |
+| `setMultipleItems` | `(items: [string, any][], doNotEncrypt?: boolean)` | `void` | `Promise<void>` |
+| `getMultipleItems` | `(keys: string[], doNotDecrypt?: boolean)` | `Record<string, any>` | `Promise<Record<string, any>>` |
+| `removeMultipleItems` | `(keys: string[])` | `void` | `void` |
+| `getItemFromPattern` | `(pattern: string, options?: GetFromPatternOptions)` | `Record<string, any> \| undefined` | `Promise<Record<string, any> \| undefined>` |
+| `removeItemFromPattern` | `(pattern: string, options?: RemoveFromPatternOptions)` | `void` | `void` |
+| `clear` | `()` | `void` | `void` |
+| `key` | `(index: number)` | `string \| null` | `string \| null` |
+| `length` | — (getter) | `number` | `number` |
+| `encryptValue` | `(value: any)` | `string` | `Promise<string>` |
+| `decryptValue<T>` | `(value: string)` | `T \| null` | `Promise<T \| null>` |
+| `hash` | `(value: string)` | `string` | `Promise<string>` |
 
 ```ts
 const encryptStorage = EncryptStorage.create('secret-key-value', {

@@ -82,6 +82,7 @@ export default defineConfig(({ command }) => {
       exports: true,
       minify: true,
       unbundle: true,
+      sourcemap: true,
       clean: true,
       entry: 'src/index.ts',
       name: 'encrypt-storage',
