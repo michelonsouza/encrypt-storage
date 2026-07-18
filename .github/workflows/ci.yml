@@ -24,7 +24,7 @@ jobs:
 
       - name: Test
         run: |
-          npm i -g pnpm
+          npm i -g pnpm@11.13.1
           pnpm install
           pnpm run lint
           pnpm run test:ci
