@@ -18,6 +18,8 @@
 
 > **⚠️ IMPORTANT**: No browser-side secret is fully secure. An application secret shipped to the client can be discovered by a sufficiently motivated user. This package obscures stored values and provides encryption at rest in browser storage; it must not be treated as a replacement for server-side authorization or secret management.
 
+> **🔮 Version 4 notice**: In version 4, encrypt-storage will drop the `crypto-js` dependency entirely. The [crypto-js project has been discontinued](https://github.com/brix/crypto-js) — its maintainers stated that further development would only result in a wrapper around native Crypto, so development and maintenance have ceased. The native [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API) is mature, secure, well-supported across modern browsers, and does not require a third-party dependency. As a consequence, the synchronous API will also be removed. The Web Crypto API is asynchronous by design — key derivation, encryption, and decryption all return promises — so version 4 will expose only the async API. If you are starting a new project, prefer `engine: 'web-crypto'` today for an easier migration path.
+
 ## Encrypt Storage
 `encrypt-storage` is a browser `Storage` wrapper that encrypts values before writing them to `localStorage`, `sessionStorage`, or cookies. Version 3 uses an explicit factory and encryption engine selection.
 
