@@ -7,6 +7,8 @@ import {
   undefinedValueErrorHandler,
 } from '@/utils';
 
+import { SyncEncryptCookie } from './sync-encrypt-cookie';
+
 import type {
   TTLMetadata,
   NotifyHandler,
@@ -55,6 +57,8 @@ export class EncryptStorageNoble
 
   public readonly api = 'noble' as const;
 
+  public cookie: SyncCookieInterface;
+
   /**
    * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
    *
@@ -96,6 +100,15 @@ export class EncryptStorageNoble
       : (validation?.allowUndefined ?? false);
     this.#encryptation = getSyncEncryptation(encAlgorithm, secret.get(this));
     this.#storageType = storageType;
+
+    this.cookie = new SyncEncryptCookie({
+      decryptValue: (value) => this.decryptValue(value),
+      encryptValue: (value) => this.encryptValue(value),
+      getKey: (key) => this.#getKey(key),
+      notifier: (params) => this.#notifier(params),
+      doNotEncryptValues: this.#doNotEncryptValues,
+      doNotParseValues: this.#doNotParseValues,
+    });
   }
 
   get storage(): Storage {
@@ -435,105 +448,6 @@ export class EncryptStorageNoble
   public hash(value: string): string {
     return hashSyncNobleSHA256(value, secret.get(this));
   }
-
-  public cookie: SyncCookieInterface = {
-    set: (key: string, value: any, options?: CookieOptions): void => {
-      if (
-        typeof document === 'undefined' ||
-        typeof document.cookie === 'undefined' ||
-        typeof window === 'undefined'
-      ) {
-        return;
-      }
-
-      let interntValue = this.#doNotParseValues ? value : JSON.stringify(value);
-
-      if (!this.#doNotEncryptValues) {
-        interntValue = this.encryptValue(interntValue);
-      }
-
-      let cookieString = `${encodeURIComponent(this.#getKey(key))}=${encodeURIComponent(interntValue)}`;
-
-      if (options?.expires) {
-        const expires =
-          options.expires instanceof Date
-            ? options.expires.toUTCString()
-            : new Date(Date.now() + options.expires * 1000).toUTCString();
-        cookieString += `; expires=${expires}`;
-      }
-
-      if (options?.path) {
-        cookieString += `; path=${options.path}`;
-      }
-
-      if (options?.domain) {
-        cookieString += `; domain=${options.domain}`;
-      }
-
-      if (options?.secure) {
-        cookieString += `; secure`;
-      }
-      if (options?.sameSite) {
-        cookieString += `; samesite=${options.sameSite}`;
-      }
-
-      document.cookie = cookieString;
-
-      this.#notifier({
-        type: 'set:cookie',
-        key,
-        value: undefined,
-      });
-    },
-    get: <DataType = any>(key: string): DataType | null => {
-      if (
-        typeof document === 'undefined' ||
-        typeof document.cookie === 'undefined' ||
-        typeof window === 'undefined'
-      ) {
-        return null;
-      }
-
-      const match = document.cookie.match(
-        new RegExp(`(?:^|; )${encodeURIComponent(this.#getKey(key))}=([^;]*)`),
-      );
-
-      let internValue = match ? match[1] : null;
-
-      if (!this.#doNotEncryptValues && internValue) {
-        internValue = this.decryptValue(decodeURIComponent(internValue));
-      }
-
-      if (this.#doNotParseValues) {
-        return internValue as unknown as DataType;
-      }
-
-      this.#notifier({
-        type: 'get:cookie',
-        key,
-        value: undefined,
-      });
-
-      return internValue ? (JSON.parse(internValue) as DataType) : null;
-    },
-    remove: (key: string, options: RemoveCookieOptions = {}): void => {
-      if (
-        typeof document === 'undefined' ||
-        typeof document.cookie === 'undefined' ||
-        typeof window === 'undefined'
-      ) {
-        return;
-      }
-
-      this.cookie.set(key, '', { ...options, expires: -1 });
-
-      this.#notifier({
-        type: 'remove:cookie',
-        key,
-        value: undefined,
-      });
-    },
-  };
 
   /**
    * TTL API

@@ -14,8 +14,10 @@ export type {
   GetFromPatternOptions,
   EncryptStorageOptions,
   RemoveFromPatternOptions,
+  SyncEncryptCookieOptions,
   BaseEcnryptStorageOptions,
   SyncEncryptStorageOptions,
+  AsyncEncryptCookieOptions,
   AsyncEncryptStorageOptions,
 } from './common.ts';
 

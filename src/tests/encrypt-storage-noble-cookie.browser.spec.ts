@@ -1,6 +1,7 @@
 import { fakerPT_BR as faker } from '@faker-js/faker';
 
 import { EncryptStorageNoble } from '@/classes';
+import { IsNotBrowserEnvironmentError } from '@/errors';
 
 import { makeSutFactory } from './test-utils';
 
@@ -46,43 +47,34 @@ describe('EncryptStorageNoble cookie 🍪', () => {
     vi.clearAllMocks();
   });
 
-  it('should enshure cookie.set not been called', () => {
+  it('should enshure cookie.set throws IsNotBrowserEnvironmentError when document.cookie is undefined', () => {
     const sut = makeSut();
     const key = faker.string.alphanumeric(5);
     const value = { value: faker.word.sample() };
 
     (document.cookie as any) = undefined;
 
-    sut.cookie.set(key, value);
-    expect(document.cookie).toEqual(undefined);
+    expect(() => sut.cookie.set(key, value)).toThrow(
+      IsNotBrowserEnvironmentError,
+    );
   });
 
-  it('should enshure cookie.get not been called', () => {
+  it('should enshure cookie.get throws IsNotBrowserEnvironmentError when document.cookie is undefined', () => {
     const sut = makeSut();
     const key = faker.string.alphanumeric(5);
-    const value = { value: faker.word.sample() };
-
-    sut.cookie.set(key, value);
 
     (document.cookie as any) = undefined;
 
-    sut.cookie.get(key);
-
-    expect(document.cookie).toEqual(undefined);
+    expect(() => sut.cookie.get(key)).toThrow(IsNotBrowserEnvironmentError);
   });
 
-  it('should enshure cookie.remove not been called when document.cookie is undefined', () => {
+  it('should enshure cookie.remove throws IsNotBrowserEnvironmentError when document.cookie is undefined', () => {
     const sut = makeSut();
     const key = faker.string.alphanumeric(5);
-    const value = { value: faker.word.sample() };
-
-    sut.cookie.set(key, value);
 
     (document.cookie as any) = undefined;
 
-    sut.cookie.remove(key);
-
-    expect(document.cookie).toEqual(undefined);
+    expect(() => sut.cookie.remove(key)).toThrow(IsNotBrowserEnvironmentError);
   });
 
   it('should enshure cookie.remove been called', () => {

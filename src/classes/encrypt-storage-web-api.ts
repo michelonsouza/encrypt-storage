@@ -7,6 +7,8 @@ import {
   undefinedValueErrorHandler,
 } from '@/utils';
 
+import { AsyncEncryptCookie } from './async-encrypt-cookie';
+
 import type {
   NotifyHandler,
   CookieOptions,
@@ -61,6 +63,8 @@ export class EncryptStorageWebApi
 
   public readonly api = 'web-crypto' as const;
 
+  public cookie: AsyncCookieInterface;
+
   /**
    * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
    *
@@ -102,6 +106,15 @@ export class EncryptStorageWebApi
       ? false
       : (validation?.allowUndefined ?? false);
     this.#storageType = storageType;
+
+    this.cookie = new AsyncEncryptCookie({
+      decryptValue: (value) => this.decryptValue(value),
+      encryptValue: (value) => this.encryptValue(value),
+      getKey: (key) => this.#getKey(key),
+      notifier: (params) => this.#notifier(params),
+      doNotEncryptValues: this.#doNotEncryptValues,
+      doNotParseValues: this.#doNotParseValues,
+    });
   }
 
   get storage(): Storage {
@@ -490,111 +503,6 @@ export class EncryptStorageWebApi
   public async hash(value: string): Promise<string> {
     return hashAsyncSHA256(value);
   }
-
-  public cookie: AsyncCookieInterface = {
-    set: async (
-      key: string,
-      value: any,
-      options?: CookieOptions,
-    ): Promise<void> => {
-      if (
-        typeof document === 'undefined' ||
-        typeof document.cookie === 'undefined' ||
-        typeof window === 'undefined'
-      ) {
-        return;
-      }
-
-      await this.#verifyEncryptation();
-      let interntValue = this.#doNotParseValues ? value : JSON.stringify(value);
-
-      if (!this.#doNotEncryptValues) {
-        interntValue = await this.encryptValue(interntValue);
-      }
-
-      let cookieString = `${encodeURIComponent(this.#getKey(key))}=${encodeURIComponent(interntValue)}`;
-
-      if (options?.expires) {
-        const expires =
-          options.expires instanceof Date
-            ? options.expires.toUTCString()
-            : new Date(Date.now() + options.expires * 1000).toUTCString();
-        cookieString += `; expires=${expires}`;
-      }
-
-      if (options?.path) {
-        cookieString += `; path=${options.path}`;
-      }
-
-      if (options?.domain) {
-        cookieString += `; domain=${options.domain}`;
-      }
-
-      if (options?.secure) {
-        cookieString += `; secure`;
-      }
-      if (options?.sameSite) {
-        cookieString += `; samesite=${options.sameSite}`;
-      }
-
-      document.cookie = cookieString;
-
-      this.#notifier({
-        type: 'set:cookie',
-        key,
-        value: undefined,
-      });
-    },
-    get: async <DataType = any>(key: string): Promise<DataType | null> => {
-      if (
-        typeof document === 'undefined' ||
-        typeof document.cookie === 'undefined' ||
-        typeof window === 'undefined'
-      ) {
-        return null;
-      }
-
-      await this.#verifyEncryptation();
-      const match = document.cookie.match(
-        new RegExp(`(?:^|; )${encodeURIComponent(this.#getKey(key))}=([^;]*)`),
-      );
-
-      let internValue = match ? match[1] : null;
-
-      if (!this.#doNotEncryptValues && internValue) {
-        internValue = await this.decryptValue(decodeURIComponent(internValue));
-      }
-
-      if (this.#doNotParseValues) {
-        return internValue as unknown as DataType;
-      }
-
-      this.#notifier({
-        type: 'get:cookie',
-        key,
-        value: undefined,
-      });
-
-      return internValue ? (JSON.parse(internValue) as DataType) : null;
-    },
-    remove: (key: string, options: RemoveCookieOptions = {}): void => {
-      if (
-        typeof document === 'undefined' ||
-        typeof document.cookie === 'undefined' ||
-        typeof window === 'undefined'
-      ) {
-        return;
-      }
-
-      this.cookie.set(key, '', { ...options, expires: -1 });
-
-      this.#notifier({
-        type: 'remove:cookie',
-        key,
-        value: undefined,
-      });
-    },
-  };
 
   /**
    * TTL API

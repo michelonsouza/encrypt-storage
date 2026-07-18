@@ -51,29 +51,32 @@ describe('EncryptStorageWebApi 📦', () => {
   it('should enshure localStorage been called', async () => {
     const sut = makeSut();
     const key = faker.string.alphanumeric(5);
+    const spy = vi.spyOn(localStorage, 'setItem');
 
     await sut.setItem(key, faker.word.sample());
 
-    expect(localStorage.setItem).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it('should enshure sessionStorage been called', async () => {
     const sut = makeSut({ storageType: 'sessionStorage' });
     const key = faker.string.alphanumeric(5);
+    const spy = vi.spyOn(sessionStorage, 'setItem');
 
     await sut.setItem(key, faker.word.sample());
 
-    expect(sessionStorage.setItem).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it('should calls localStorage.getItem with correct key', async () => {
     const sut = makeSut();
     const key = faker.string.alphanumeric(5);
     const spy = vi.spyOn(mockNotify, 'mockedFn');
+    const spyGet = vi.spyOn(localStorage, 'getItem');
 
     const result = await sut.getItem<string>(key);
 
-    expect(localStorage.getItem).toHaveBeenCalledWith(key);
+    expect(spyGet).toHaveBeenCalledWith(key);
     expect(spy).toHaveBeenCalledWith({
       value: result,
       key,
@@ -153,23 +156,25 @@ describe('EncryptStorageWebApi 📦', () => {
     const value2 = {
       [faker.word.sample()]: faker.string.alphanumeric(),
     };
+    const spy = vi.spyOn(localStorage, 'setItem');
 
     await sut.setMultipleItems([
       [key1, value1],
       [key2, value2],
     ]);
 
-    expect(localStorage.setItem).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenCalledTimes(2);
   });
 
   it('should localStorage.setItem called without notifyHandler', async () => {
     const sut = makeSut({ noNotifyHandler: true });
     const key = faker.word.sample();
     const value = faker.word.sample();
+    const spy = vi.spyOn(localStorage, 'setItem');
 
     await sut.setItem(key, value);
 
-    expect(localStorage.setItem).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it('should localStorage.getItem returns correct decrypted value when getMultipleItems is called', async () => {
@@ -246,10 +251,11 @@ describe('EncryptStorageWebApi 📦', () => {
   it('should calls localStorage.removeItem with correct key', () => {
     const sut = makeSut();
     const key = faker.string.alphanumeric(5);
+    const spy = vi.spyOn(localStorage, 'removeItem');
 
     sut.removeItem(key);
 
-    expect(localStorage.removeItem).toHaveBeenCalledWith(key);
+    expect(spy).toHaveBeenCalledWith(key);
   });
 
   it('should calls localStorage.removeItem with correct prefix and key', () => {
@@ -257,10 +263,11 @@ describe('EncryptStorageWebApi 📦', () => {
     const sut = makeSut({ prefix });
     const key = faker.string.alphanumeric(5);
     const composedKey = `${prefix}:${key}`;
+    const spy = vi.spyOn(localStorage, 'removeItem');
 
     sut.removeItem(key);
 
-    expect(localStorage.removeItem).toHaveBeenCalledWith(composedKey);
+    expect(spy).toHaveBeenCalledWith(composedKey);
   });
 
   it('should calls localStorage.getItem for all items with this pattern', async () => {
@@ -273,14 +280,15 @@ describe('EncryptStorageWebApi 📦', () => {
       [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
     };
+    const spy = vi.spyOn(localStorage, 'getItem');
 
     await sut.setItem(userKey, mockedValue[userKey]);
     await sut.setItem(itemKey, mockedValue[itemKey]);
 
     const storagedValue = await sut.getItemFromPattern(pattern);
 
-    expect(localStorage.getItem).toHaveBeenCalledWith(userKey);
-    expect(localStorage.getItem).toHaveBeenCalledWith(itemKey);
+    expect(spy).toHaveBeenCalledWith(userKey);
+    expect(spy).toHaveBeenCalledWith(itemKey);
     expect(storagedValue).toEqual(mockedValue);
   });
 
@@ -294,14 +302,15 @@ describe('EncryptStorageWebApi 📦', () => {
       [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
     };
+    const spy = vi.spyOn(localStorage, 'getItem');
 
     await sut.setItem(userKey, mockedValue[userKey]);
     await sut.setItem(itemKey, mockedValue[itemKey]);
 
     const storagedValue = await sut.getItemFromPattern(pattern);
 
-    expect(localStorage.getItem).toHaveBeenCalledWith(userKey);
-    expect(localStorage.getItem).toHaveBeenCalledWith(itemKey);
+    expect(spy).toHaveBeenCalledWith(userKey);
+    expect(spy).toHaveBeenCalledWith(itemKey);
     expect(storagedValue).toEqual(mockedValue);
   });
 
@@ -318,14 +327,15 @@ describe('EncryptStorageWebApi 📦', () => {
       [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
     };
+    const spy = vi.spyOn(localStorage, 'getItem');
 
     await sut.setItem(userKey, mockedValue[userKey]);
     await sut.setItem(itemKey, mockedValue[itemKey]);
 
     const storagedValue = await sut.getItemFromPattern(pattern);
 
-    expect(localStorage.getItem).toHaveBeenCalledWith(`${prefix}:${userKey}`);
-    expect(localStorage.getItem).toHaveBeenCalledWith(`${prefix}:${itemKey}`);
+    expect(spy).toHaveBeenCalledWith(`${prefix}:${userKey}`);
+    expect(spy).toHaveBeenCalledWith(`${prefix}:${itemKey}`);
     expect(storagedValue).toEqual(mockedValue);
   });
 
@@ -338,6 +348,7 @@ describe('EncryptStorageWebApi 📦', () => {
       [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
     };
+    const spy = vi.spyOn(localStorage, 'getItem');
 
     await sut.setItem(userKey, mockedValue[userKey]);
     await sut.setItem(itemKey, mockedValue[itemKey]);
@@ -352,7 +363,7 @@ describe('EncryptStorageWebApi 📦', () => {
       multiple: false,
     });
 
-    expect(localStorage.getItem).toHaveBeenCalledWith(itemKey);
+    expect(spy).toHaveBeenCalledWith(itemKey);
     expect(notHaveValue).toBe(undefined);
     expect(storagedValue).toEqual(mockedValue[itemKey]);
   });
@@ -366,6 +377,7 @@ describe('EncryptStorageWebApi 📦', () => {
       [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
     };
+    const spy = vi.spyOn(localStorage, 'getItem');
 
     await sut.setItem(userKey, mockedValue[userKey]);
     await sut.setItem(itemKey, mockedValue[itemKey]);
@@ -380,7 +392,7 @@ describe('EncryptStorageWebApi 📦', () => {
       multiple: false,
     });
 
-    expect(localStorage.getItem).toHaveBeenCalledWith(itemKey);
+    expect(spy).toHaveBeenCalledWith(itemKey);
     expect(notHaveValue).toBe(undefined);
     expect(storagedValue).toEqual(mockedValue[itemKey]);
   });
@@ -398,6 +410,7 @@ describe('EncryptStorageWebApi 📦', () => {
       [userKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
       [itemKey]: { id: faker.number.int({ min: 1, max: 1000 }) },
     };
+    const spy = vi.spyOn(localStorage, 'getItem');
 
     await sut.setItem(userKey, mockedValue[userKey]);
     await sut.setItem(itemKey, mockedValue[itemKey]);
@@ -410,7 +423,7 @@ describe('EncryptStorageWebApi 📦', () => {
       multiple: false,
     });
 
-    expect(localStorage.getItem).toHaveBeenCalledWith(`${prefix}:${itemKey}`);
+    expect(spy).toHaveBeenCalledWith(`${prefix}:${itemKey}`);
     expect(notHaveValue).toBe(undefined);
     expect(storagedValue).toEqual(mockedValue[itemKey]);
   });
@@ -429,14 +442,15 @@ describe('EncryptStorageWebApi 📦', () => {
     const pattern = faker.string.alphanumeric(8);
     const userKey = `${pattern}:user`;
     const itemKey = `${pattern}:item`;
+    const spy = vi.spyOn(localStorage, 'removeItem');
 
     await sut.setItem(userKey, { id: faker.string.nanoid() });
     await sut.setItem(itemKey, { id: faker.string.nanoid() });
 
     sut.removeItemFromPattern(pattern);
 
-    expect(localStorage.removeItem).toHaveBeenCalledWith(userKey);
-    expect(localStorage.removeItem).toHaveBeenCalledWith(itemKey);
+    expect(spy).toHaveBeenCalledWith(userKey);
+    expect(spy).toHaveBeenCalledWith(itemKey);
   });
 
   it('should calls localStorage.removeItem for all items with this pattern without notifyHandler', async () => {
@@ -444,14 +458,15 @@ describe('EncryptStorageWebApi 📦', () => {
     const pattern = faker.string.alphanumeric(8);
     const userKey = `${pattern}:user`;
     const itemKey = `${pattern}:item`;
+    const spy = vi.spyOn(localStorage, 'removeItem');
 
     await sut.setItem(userKey, { id: faker.string.nanoid() });
     await sut.setItem(itemKey, { id: faker.string.nanoid() });
 
     sut.removeItemFromPattern(pattern);
 
-    expect(localStorage.removeItem).toHaveBeenCalledWith(userKey);
-    expect(localStorage.removeItem).toHaveBeenCalledWith(itemKey);
+    expect(spy).toHaveBeenCalledWith(userKey);
+    expect(spy).toHaveBeenCalledWith(itemKey);
   });
 
   it('should calls localStorage.removeItem for all items with this pattern and prefix', async () => {
@@ -462,59 +477,59 @@ describe('EncryptStorageWebApi 📦', () => {
     const pattern = faker.string.alphanumeric(8);
     const userKey = `${pattern}:user`;
     const itemKey = `${pattern}:item`;
+    const spy = vi.spyOn(localStorage, 'removeItem');
 
     await sut.setItem(userKey, { id: faker.string.nanoid() });
     await sut.setItem(itemKey, { id: faker.string.nanoid() });
 
     sut.removeItemFromPattern(pattern);
 
-    expect(localStorage.removeItem).toHaveBeenCalledWith(
-      `${prefix}:${userKey}`,
-    );
-    expect(localStorage.removeItem).toHaveBeenCalledWith(
-      `${prefix}:${itemKey}`,
-    );
+    expect(spy).toHaveBeenCalledWith(`${prefix}:${userKey}`);
+    expect(spy).toHaveBeenCalledWith(`${prefix}:${itemKey}`);
   });
 
   it('should calls localStorage.removeItem for all items with this exact pattern', async () => {
     const sut = makeSut();
     const userKey = 'user';
     const itemKey = 'item';
+    const spy = vi.spyOn(localStorage, 'removeItem');
 
     await sut.setItem(userKey, { id: faker.string.nanoid() });
     await sut.setItem(itemKey, { id: faker.string.nanoid() });
 
     sut.removeItemFromPattern(itemKey, { exact: true });
 
-    expect(localStorage.removeItem).toHaveBeenCalledWith(itemKey);
+    expect(spy).toHaveBeenCalledWith(itemKey);
   });
 
   it('should calls localStorage.removeItem when removeMultipleItems is called', async () => {
     const sut = makeSut();
     const userKey = 'user';
     const itemKey = 'item';
+    const spy = vi.spyOn(localStorage, 'removeItem');
 
     await sut.setItem(userKey, { id: faker.string.nanoid() });
     await sut.setItem(itemKey, { id: faker.string.nanoid() });
 
     sut.removeMultipleItems([userKey, itemKey]);
 
-    expect(localStorage.removeItem).toHaveBeenCalledWith(userKey);
-    expect(localStorage.removeItem).toHaveBeenCalledWith(itemKey);
+    expect(spy).toHaveBeenCalledWith(userKey);
+    expect(spy).toHaveBeenCalledWith(itemKey);
   });
 
   it('should calls localStorage.removeItem when removeMultipleItems is called without notifyHandler', async () => {
     const sut = makeSut({ noNotifyHandler: true });
     const userKey = 'user';
     const itemKey = 'item';
+    const spy = vi.spyOn(localStorage, 'removeItem');
 
     await sut.setItem(userKey, { id: faker.string.nanoid() });
     await sut.setItem(itemKey, { id: faker.string.nanoid() });
 
     sut.removeMultipleItems([userKey, itemKey]);
 
-    expect(localStorage.removeItem).toHaveBeenCalledWith(userKey);
-    expect(localStorage.removeItem).toHaveBeenCalledWith(itemKey);
+    expect(spy).toHaveBeenCalledWith(userKey);
+    expect(spy).toHaveBeenCalledWith(itemKey);
   });
 
   it('should calls localStorage.clear', async () => {
@@ -610,11 +625,12 @@ describe('EncryptStorageWebApi 📦', () => {
     const prefix = '@test';
     const key = faker.string.alphanumeric(5);
     const sut = makeSut({ prefix });
+    const spy = vi.spyOn(localStorage, 'getItem');
 
     await sut.setItem(key, { value: faker.word.sample(), number: 100 });
     await sut.getItem(key);
 
-    expect(localStorage.getItem).toHaveBeenCalledWith(`${prefix}:${key}`);
+    expect(spy).toHaveBeenCalledWith(`${prefix}:${key}`);
   });
 
   it('should throws InvalidSecretKeyError if secret key is invalid', async () => {
@@ -676,46 +692,53 @@ describe('EncryptStorageWebApi 📦', () => {
   it('should test encryptStorage without options', async () => {
     const sut = makeSut({ noOptions: true });
     const key = faker.string.alphanumeric(5);
+    const spy = vi.spyOn(localStorage, 'getItem');
 
     await sut.getItem(key);
 
-    expect(localStorage.getItem).toHaveBeenCalledWith(key);
+    expect(spy).toHaveBeenCalledWith(key);
   });
 
   it('should test AES-CBC algorithm', async () => {
     const sut = makeSut({ encAlgorithm: 'AES-CBC' });
     const key = faker.string.alphanumeric(5);
     const value = faker.word.sample();
+    const spySet = vi.spyOn(localStorage, 'setItem');
+    const spyGet = vi.spyOn(localStorage, 'getItem');
 
     await sut.setItem(key, value);
     await sut.getItem(key);
 
-    expect(localStorage.setItem).toHaveBeenCalled();
-    expect(localStorage.getItem).toHaveBeenCalledWith(key);
+    expect(spySet).toHaveBeenCalled();
+    expect(spyGet).toHaveBeenCalledWith(key);
   });
 
   it('should test AES-CTR algorithm', async () => {
     const sut = makeSut({ encAlgorithm: 'AES-CTR' });
     const key = faker.string.alphanumeric(5);
     const value = faker.word.sample();
+    const spySet = vi.spyOn(localStorage, 'setItem');
+    const spyGet = vi.spyOn(localStorage, 'getItem');
 
     await sut.setItem(key, value);
     await sut.getItem(key);
 
-    expect(localStorage.setItem).toHaveBeenCalled();
-    expect(localStorage.getItem).toHaveBeenCalledWith(key);
+    expect(spySet).toHaveBeenCalled();
+    expect(spyGet).toHaveBeenCalledWith(key);
   });
 
   it('should test AES-GCM algorithm', async () => {
     const sut = makeSut({ encAlgorithm: 'AES-GCM' });
     const key = faker.string.alphanumeric(5);
     const value = faker.word.sample();
+    const spySet = vi.spyOn(localStorage, 'setItem');
+    const spyGet = vi.spyOn(localStorage, 'getItem');
 
     await sut.setItem(key, value);
     await sut.getItem(key);
 
-    expect(localStorage.setItem).toHaveBeenCalled();
-    expect(localStorage.getItem).toHaveBeenCalledWith(key);
+    expect(spySet).toHaveBeenCalled();
+    expect(spyGet).toHaveBeenCalledWith(key);
   });
 
   it('should be hash any string with SHA256 algorithm', async () => {

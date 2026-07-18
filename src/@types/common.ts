@@ -61,6 +61,23 @@ export interface CookieOptions {
   sameSite?: 'strict' | 'lax' | 'none';
 }
 
+export interface BaseEncryptCookieOptions {
+  doNotParseValues?: boolean;
+  doNotEncryptValues?: boolean;
+  getKey: (key: string) => string;
+  notifier: (params: NotifyHandlerParams, callback?: VoidFunction) => void;
+}
+
+export interface SyncEncryptCookieOptions extends BaseEncryptCookieOptions {
+  encryptValue: (value: any) => string;
+  decryptValue: <DataType = any>(value: string) => DataType | null;
+}
+
+export interface AsyncEncryptCookieOptions extends BaseEncryptCookieOptions {
+  encryptValue: (value: any) => Promise<string>;
+  decryptValue: <DataType = any>(value: string) => Promise<DataType | null>;
+}
+
 export interface SyncCookieInterface {
   /**
    * @description Set cookie
@@ -106,7 +123,7 @@ export interface AsyncCookieInterface {
    * @param {RemoveCookieOptions} options
    * @returns {void} `void`
    */
-  remove(key: string, options?: RemoveCookieOptions): void;
+  remove(key: string, options?: RemoveCookieOptions): Promise<void>;
 }
 
 export interface RemoveCookieOptions {

@@ -1,19 +1,14 @@
 import { fakerPT_BR as faker } from '@faker-js/faker';
 
 import { EncryptStorageWebApi } from '@/classes';
+import { IsNotBrowserEnvironmentError } from '@/errors';
 
-import type {
-  CookieOptions,
-  NotifyHandlerParams,
-  AsyncEncryptStorageOptions,
-} from '@/@types';
+import { makeSutFactory } from './test-utils';
+
+import type { CookieOptions, NotifyHandlerParams } from '@/@types';
 import type { Mock } from 'vite-plus/test';
 
-interface makeSutParams extends Omit<AsyncEncryptStorageOptions, 'engine'> {
-  secretKey?: string;
-  noOptions?: boolean;
-  noNotifyHandler?: boolean;
-}
+let defaultMockedSut: EncryptStorageWebApi | null = null;
 
 const mockNotify = {
   mockedFn: vi.fn().mockImplementation((params: NotifyHandlerParams) => {
@@ -21,39 +16,23 @@ const mockNotify = {
   }),
 };
 
-export const makeSut = (
-  params: makeSutParams = {} as makeSutParams,
-): EncryptStorageWebApi => {
-  const {
-    prefix,
-    storageType,
-    stateManagementUse,
-    noOptions,
-    encAlgorithm,
-    noNotifyHandler = false,
-    doNotParseValues = false,
-    notifyHandler = noNotifyHandler ? undefined : mockNotify.mockedFn,
-    secretKey = faker.string.alphanumeric(10),
-  } = params;
-  const options: AsyncEncryptStorageOptions = noOptions
-    ? { engine: 'web-crypto' }
-    : {
-        prefix,
-        storageType,
-        encAlgorithm,
-        notifyHandler,
-        doNotParseValues,
-        engine: 'web-crypto',
-        stateManagementUse,
-      };
-  return new EncryptStorageWebApi(secretKey, options);
-};
+let makeSut = makeSutFactory<EncryptStorageWebApi | null, EncryptStorageWebApi>(
+  'web-crypto',
+  defaultMockedSut,
+  mockNotify.mockedFn,
+);
 
 let cookieSetSpy: Mock<(arg: string) => void>;
 let cookieGetSpy: Mock<() => string | undefined>;
 
 describe('EncryptStorageWebApi cookie 🍪', () => {
   beforeAll(() => {
+    defaultMockedSut = makeSut();
+    makeSut = makeSutFactory(
+      'web-crypto',
+      defaultMockedSut,
+      mockNotify.mockedFn,
+    );
     cookieSetSpy = vi.spyOn(document, 'cookie', 'set');
     cookieSetSpy?.mockImplementation(() => undefined);
     cookieGetSpy = vi.spyOn(document, 'cookie', 'get');
@@ -72,43 +51,38 @@ describe('EncryptStorageWebApi cookie 🍪', () => {
     vi.clearAllMocks();
   });
 
-  it('should enshure cookie.set not been called', async () => {
+  it('should enshure cookie.set throws IsNotBrowserEnvironmentError when document.cookie is undefined', async () => {
     const sut = makeSut();
     const key = faker.string.alphanumeric(5);
     const value = { value: faker.word.sample() };
 
     (document.cookie as any) = undefined;
 
-    await sut.cookie.set(key, value);
-    expect(document.cookie).toEqual(undefined);
+    await expect(() => sut.cookie.set(key, value)).rejects.toThrow(
+      IsNotBrowserEnvironmentError,
+    );
   });
 
-  it('should enshure cookie.get not been called', async () => {
+  it('should enshure cookie.get throws IsNotBrowserEnvironmentError when document.cookie is undefined', async () => {
     const sut = makeSut();
     const key = faker.string.alphanumeric(5);
-    const value = { value: faker.word.sample() };
-
-    await sut.cookie.set(key, value);
 
     (document.cookie as any) = undefined;
 
-    sut.cookie.get(key);
-
-    expect(document.cookie).toEqual(undefined);
+    await expect(() => sut.cookie.get(key)).rejects.toThrow(
+      IsNotBrowserEnvironmentError,
+    );
   });
 
-  it('should enshure cookie.remove not been called when document.cookie is undefined', async () => {
+  it('should enshure cookie.remove throws IsNotBrowserEnvironmentError when document.cookie is undefined', async () => {
     const sut = makeSut();
     const key = faker.string.alphanumeric(5);
-    const value = { value: faker.word.sample() };
-
-    await sut.cookie.set(key, value);
 
     (document.cookie as any) = undefined;
 
-    sut.cookie.remove(key);
-
-    expect(document.cookie).toEqual(undefined);
+    await expect(() => sut.cookie.remove(key)).rejects.toThrow(
+      IsNotBrowserEnvironmentError,
+    );
   });
 
   it('should enshure cookie.remove been called', async () => {
@@ -118,7 +92,7 @@ describe('EncryptStorageWebApi cookie 🍪', () => {
     const spy = vi.spyOn(mockNotify, 'mockedFn');
 
     await sut.cookie.set(key, value);
-    sut.cookie.remove(key);
+    await sut.cookie.remove(key);
 
     await new Promise<void>((resolve) => {
       setTimeout(() => {
@@ -142,7 +116,7 @@ describe('EncryptStorageWebApi cookie 🍪', () => {
     const value = { value: faker.word.sample() };
 
     await sut.cookie.set(key, value);
-    sut.cookie.remove(key);
+    await sut.cookie.remove(key);
 
     await new Promise<void>((resolve) => {
       setTimeout(() => {

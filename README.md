@@ -84,6 +84,9 @@ Choose between a **fully synchronous** implementation powered by **@noble/cipher
     - [Storage utilities](#storage-utilities)
     - [Encrypt, decrypt, and hash](#encrypt-decrypt-and-hash)
   - [Cookies](#cookies)
+    - [Noble cookies (synchronous)](#noble-cookies-synchronous)
+    - [Web Crypto cookies (asynchronous)](#web-crypto-cookies-asynchronous)
+    - [Cookie API reference](#cookie-api-reference)
   - [TTL (Time-To-Live)](#ttl-time-to-live)
     - [Store a value with TTL](#store-a-value-with-ttl)
     - [Read a TTL value](#read-a-ttl-value)
@@ -270,7 +273,7 @@ Supported algorithms are `AES-GCM`, `AES-CBC`, and `AES-CTR`. `AES-GCM` is the d
 | Asynchronous (`Promise`) | Synchronous |
 | --- | --- |
 | `setItem`, `setMultipleItems`, `getItem`, `getMultipleItems`, `getItemFromPattern` | `removeItem`, `removeMultipleItems`, `removeItemFromPattern`, `clear`, `key`, `length` |
-| `encryptValue`, `decryptValue`, `hash`, `cookie.set`, `cookie.get` | `cookie.remove` |
+| `encryptValue`, `decryptValue`, `hash`, `cookie.set`, `cookie.get`, `cookie.remove` | — |
 
 ```ts
 await encryptStorage.setItem('access-token', 'token-value');
@@ -571,7 +574,9 @@ const digest = encryptStorage.hash('John Doe');
 
 ## Cookies
 
-Every storage instance exposes `cookie.set`, `cookie.get`, and `cookie.remove`. Cookie operations use the same selected encryption engine; Web Crypto cookie `set` and `get` operations are asynchronous.
+Every storage instance exposes `cookie.set`, `cookie.get`, and `cookie.remove`. Cookie operations use the same selected encryption engine. With the `noble` engine all cookie methods are synchronous; with `web-crypto` all three methods return promises.
+
+### Noble cookies (synchronous)
 
 ```ts
 const encryptStorage = EncryptStorage.create('secret-key-value', {
@@ -594,11 +599,48 @@ const preferences = encryptStorage.cookie.get<{ colorScheme: string }>('preferen
 encryptStorage.cookie.remove('preferences', { path: '/' });
 ```
 
-| Method | Options |
-| --- | --- |
-| `cookie.set(key, value, options?)` | `expires`, `path`, `domain`, `secure`, `sameSite` |
-| `cookie.get<T>(key)` | Returns decrypted value or `null`. |
-| `cookie.remove(key, options?)` | Accepts `path` and `domain`; match the original cookie scope. |
+### Web Crypto cookies (asynchronous)
+
+With `engine: 'web-crypto'`, **all** cookie methods (`set`, `get`, and `remove`) are asynchronous and must be awaited.
+
+```ts
+const encryptStorage = EncryptStorage.create('secret-key-value', {
+  engine: 'web-crypto',
+  prefix: '@app',
+});
+
+await encryptStorage.cookie.set(
+  'preferences',
+  { colorScheme: 'dark' },
+  {
+    path: '/',
+    expires: new Date(Date.now() + 86_400_000),
+    secure: true,
+    sameSite: 'lax',
+  },
+);
+
+const preferences = await encryptStorage.cookie.get<{ colorScheme: string }>('preferences');
+await encryptStorage.cookie.remove('preferences', { path: '/' });
+```
+
+### Cookie API reference
+
+| Method | `noble` return | `web-crypto` return |
+| --- | --- | --- |
+| `cookie.set(key, value, options?)` | `void` | `Promise<void>` |
+| `cookie.get<T>(key)` | `T \| null` | `Promise<T \| null>` |
+| `cookie.remove(key, options?)` | `void` | `Promise<void>` |
+
+| Option | Type | Description |
+| --- | --- | --- |
+| `expires` | `number \| Date` | Expiration: seconds from now (`number`) or absolute date (`Date`). |
+| `path` | `string` | Cookie path. |
+| `domain` | `string` | Cookie domain. |
+| `secure` | `boolean` | Marks the cookie as secure. |
+| `sameSite` | `'strict' \| 'lax' \| 'none'` | SameSite attribute. |
+
+`cookie.remove` accepts `path` and `domain` options to match the original cookie scope.
 
 Cookies set from JavaScript cannot be `HttpOnly`; use server-set `HttpOnly` cookies for session tokens whenever possible.
 

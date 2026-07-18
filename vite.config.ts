@@ -18,7 +18,12 @@ export default defineConfig(({ command }) => {
         provider: 'v8',
         reporter: ['text', 'json', 'html', 'lcov'],
         include: ['src/**/*.ts'],
-        exclude: ['**/*.spec.ts', 'src/@types/**/*.ts', 'src/**/index.ts'],
+        exclude: [
+          '**/*.spec.ts',
+          'src/@types/**/*.ts',
+          'src/**/index.ts',
+          'src/tests/test-utils.ts',
+        ],
       },
       projects: [
         {
