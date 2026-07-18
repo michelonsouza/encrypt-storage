@@ -17,6 +17,7 @@
   "scripts": {
     "clean": "shx rm -rf _bundles lib lib-esm",
     "build": "tsc --declaration",
+    "build:types": "tsc -p tsconfig.build.json",
     "build:minified": "webpack",
     "lint": "eslint 'src/**'",
     "lint:fix": "eslint 'src/**' --fix",
