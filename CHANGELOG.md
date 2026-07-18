@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [3.0.2-beta.2](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2-beta.2) - 2026-07-18 07:15:23+00:00
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.2-beta.1...3.0.2-beta.2
+
+### Feature
+
+- general:
+  - postergate validate of window to when use methods ([9b15786](https://github.com/michelonsouza/encrypt-storage/commit/9b15786abc37346644d37be18fe6ff0cc3b019c1))
+
 ## [3.0.2-beta.1](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2-beta.1) - 2026-07-18 04:23:34+00:00
 
 **Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.1-beta.7...3.0.2-beta.1
