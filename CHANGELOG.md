@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## [3.0.2-beta.1](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2-beta.1) - 2026-07-18 04:23:34+00:00
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.1-beta.7...3.0.2-beta.1
+
+### Feature
+
+- general:
+  - change crypto-js by @noble/ciphers and @noble/hashes for use modern structure ([021e64b](https://github.com/michelonsouza/encrypt-storage/commit/021e64bd2f4a5b9d39114d7a989613a3637555bc))
+
+### Chore
+
+- general:
+  - change logo image ([e6bb6ac](https://github.com/michelonsouza/encrypt-storage/commit/e6bb6ac3b48943f4f50815f38ef6e9976b57fb9c)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
+  - change logo image and remove uncescerary image ([bab6330](https://github.com/michelonsouza/encrypt-storage/commit/bab6330a36bae99d27f6cb5a5a061faeda548fe4)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
+  - add notice for version 4 drops crypto-js ([1305619](https://github.com/michelonsouza/encrypt-storage/commit/1305619c3066099f6e33a589d328cb5b56ab4809)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
+
 ## [3.0.1-beta.7](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.1-beta.7) - 2026-07-17 11:33:25+00:00
 
 **Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.1-beta.6...3.0.1-beta.7
