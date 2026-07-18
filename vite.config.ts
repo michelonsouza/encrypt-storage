@@ -24,8 +24,44 @@ export default defineConfig(({ command }) => {
         {
           extends: true,
           test: {
-            name: { label: 'browser', color: 'blue' },
-            include: ['src/tests/*.browser.spec.ts'],
+            name: { label: 'async-storage', color: 'cyan' },
+            include: ['src/tests/async-encrypt-storage.browser.spec.ts'],
+            environment: 'jsdom',
+            setupFiles: ['./setup-jsdom-test.ts'],
+          },
+        },
+        {
+          extends: true,
+          test: {
+            name: { label: 'storage', color: 'blue' },
+            include: [
+              'src/tests/encrypt-storage-noble.browser.spec.ts',
+              'src/tests/encrypt-storage-web-api.browser.spec.ts',
+            ],
+            environment: 'jsdom',
+            setupFiles: ['./setup-jsdom-test.ts'],
+          },
+        },
+        {
+          extends: true,
+          test: {
+            name: { label: 'cookie', color: 'yellow' },
+            include: [
+              'src/tests/encrypt-storage-noble-cookie.browser.spec.ts',
+              'src/tests/encrypt-storage-web-api-cookie.browser.spec.ts',
+            ],
+            environment: 'jsdom',
+            setupFiles: ['./setup-jsdom-test.ts'],
+          },
+        },
+        {
+          extends: true,
+          test: {
+            name: { label: 'ttl', color: 'magenta' },
+            include: [
+              'src/tests/encrypt-storage-noble-ttl-api.browser.spec.ts',
+              'src/tests/encrypt-storage-web-api-ttl-api.browser.spec.ts',
+            ],
             environment: 'jsdom',
             setupFiles: ['./setup-jsdom-test.ts'],
           },

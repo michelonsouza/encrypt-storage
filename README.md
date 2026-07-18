@@ -178,6 +178,8 @@ Version 3 has a breaking change: instances are now created with `EncryptStorage.
 
 The same secret key and compatible algorithm are required to decrypt existing values. Encrypted payloads produced by different engines are not interchangeable; plan a migration if switching engines.
 
+> **⚠️ Engine compatibility**: The `noble` (synchronous) and `web-crypto` (asynchronous) engines use different PBKDF2 key derivation parameters, optimized for each mode's performance and user experience. Data encrypted with one engine cannot be decrypted by the other. Choose an engine once per storage namespace and keep it consistent.
+
 ## Choose an encryption engine
 
 | Engine | Default algorithm | API style | Use it when |
