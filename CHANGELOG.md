@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## [3.0.0](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.0) - 2026-07-20 19:13:55+00:00
+
+## What's Changed
+* fix(build): include TypeScript declaration files in published package by @abraaoz in https://github.com/michelonsouza/encrypt-storage/pull/774
+
+## New Contributors
+* @abraaoz made their first contribution in https://github.com/michelonsouza/encrypt-storage/pull/774
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/2.16.02...3.0.0
+
+### Feature
+
+- general:
+  - new release V3 🎉, its time!!!! ([4f90860](https://github.com/michelonsouza/encrypt-storage/commit/4f908606a5b83240318253e4b8f5bf886b5dad9a)) ([#772](https://github.com/michelonsouza/encrypt-storage/pull/772))
+
 ## [3.0.2-beta.6](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2-beta.6) - 2026-07-18 21:37:54+00:00
 
 ## What's Changed
