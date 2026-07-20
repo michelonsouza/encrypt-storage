@@ -1,0 +1,50 @@
+name: "Update License year"
+
+on:
+  schedule:
+    # Todo dia 1º de janeiro às 00:00 UTC
+    - cron: "0 0 1 1 *"
+
+  # Permite executar manualmente
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-license:
+    name: Update LICENSE
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Update copyright year
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          YEAR=$(date +%Y)
+          EXPECTED="Copyright (c) 2021-${YEAR} Michelon Souza"
+
+          CURRENT=$(grep '^Copyright' LICENSE || true)
+
+          if [[ "$CURRENT" == "$EXPECTED" ]]; then
+            echo "LICENSE is already up to date."
+            exit 0
+          fi
+
+          sed -Ei \
+            "s/^Copyright \(c\) 2021(-[0-9]{4})? Michelon Souza$/${EXPECTED}/" \
+            LICENSE
+
+          echo "LICENSE updated:"
+          grep '^Copyright' LICENSE
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "chore(license): update copyright year"
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com

@@ -1321,7 +1321,7 @@ Add `type-safe` for `window` when is `undefined`
 Add new features:
 - Add `doNotEncrypt` property to `setItem`
 - Add `doNotDecrypt` property to `getItem`
-- Add `CodeQL` `badge` to `README.md` 
+- Add `CodeQL` `badge` to `README.md`
 - Add `got-to-line` in `badge version` for `package.json`
 
 ### Feature

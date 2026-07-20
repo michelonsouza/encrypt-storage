@@ -1,38 +1,53 @@
-# Description
+## Summary
 
-Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change.
+<!-- Briefly explain what changed and why. Link related issues with `Fixes #123`. -->
 
-Fixes # (issue)
+Fixes #
 
-## Type of change
+## Change Type
 
-Please delete options that are not relevant.
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Refactor or internal maintenance
+- [ ] Documentation update
+- [ ] Dependency update
+- [ ] Breaking change
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] This change requires a documentation update
+## Details
 
-# How Has This Been Tested?
+<!-- Describe public API, storage behavior, encryption-engine, or compatibility changes. -->
 
-Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration
+## Testing
 
-- [ ] Test A
-- [ ] Test B
+<!-- List the commands you ran and any relevant manual verification. -->
 
-**Test Configuration**:
-* Firmware version:
-* Hardware:
-* Toolchain:
-* SDK:
+- [ ] `vp check`
+- [ ] `vp test`
+- [ ] Added or updated tests for this change
+- [ ] Not applicable (explain below)
 
-# Checklist:
+Additional test notes:
 
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
-- [ ] Any dependent changes have been merged and published in downstream modules
+<!-- Include relevant browser, runtime, or storage-engine details when applicable. -->
+
+## Documentation
+
+- [ ] Updated `README.md` or relevant documentation
+- [ ] Documentation is not required
+
+## Breaking Changes
+
+- [ ] This pull request introduces no breaking changes
+- [ ] This pull request introduces breaking changes and includes migration notes
+      below
+
+<!-- Describe the migration path, affected APIs, and compatibility impact. -->
+
+## Contributor Checklist
+
+- [ ] I reviewed my changes and kept the pull request focused.
+- [ ] My commits follow the Conventional Commits format.
+- [ ] I did not commit generated artifacts, credentials, or unrelated files.
+- [ ] I updated public types, exports, and documentation when applicable.
+- [ ] I considered both `crypto-js` and `web-crypto` behavior when changing
+      storage APIs.

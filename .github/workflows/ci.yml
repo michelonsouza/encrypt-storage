@@ -1,4 +1,4 @@
-name: CI
+name: "CI"
 
 on:
   push:
@@ -12,19 +12,30 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [24.x]
+        node-version: [24]
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v5
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.13.1
+
+      - name: Setup node ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Test
-        run: |
-          npm i -g pnpm@11.13.1
-          pnpm install
-          pnpm run lint
-          pnpm run test:ci
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run tests
+        run: pnpm run test:ci
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          override_branch: main
+          token: ${{ secrets.CODECOV_TOKEN }}

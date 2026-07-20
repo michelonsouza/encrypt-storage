@@ -1,23 +1,48 @@
-name: npm published
+name: "NPM Publish"
 
 on:
   release:
-    types: [created]
+    types:
+      - created
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  publish:
+    name: Publish package
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "24.x"
-          registry-url: "https://registry.npmjs.org"
 
-      - run: npm install -g pnpm@11.13.1
-      - run: pnpm install
-      - run: pnpm run build:minified
-      - run: pnpm run build:types
-      - run: npm publish
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.13.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build package
+        run: pnpm build
+
+      - name: Publish package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+        run: |
+          if [ "${{ github.event.release.prerelease }}" = "true" ]; then
+            echo "Publishing prerelease (beta)..."
+            pnpm publish --tag beta --no-git-checks
+          else
+            echo "Publishing stable release..."
+            pnpm publish --no-git-checks
+          fi

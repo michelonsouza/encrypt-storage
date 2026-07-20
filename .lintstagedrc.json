@@ -1,6 +1,0 @@
-{
-  "*.ts": [
-    "eslint -c eslint.config.mjs \"src/**\" --cache --fix",
-    "pnpm run test:staged"
-  ]
-}
