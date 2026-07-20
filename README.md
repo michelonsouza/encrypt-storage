@@ -96,6 +96,7 @@ Choose between a **fully synchronous** implementation powered by **@noble/cipher
     - [TTL with Web Crypto (asynchronous)](#ttl-with-web-crypto-asynchronous)
   - [State management persisters](#state-management-persisters)
     - [Vuex Persist](#vuex-persist)
+    - [Zustand Persist](#zustand-persist)
     - [Redux Persist](#redux-persist)
     - [Pinia persist plugins](#pinia-persist-plugins)
   - [Notifications](#notifications)
@@ -105,6 +106,7 @@ Choose between a **fully synchronous** implementation powered by **@noble/cipher
     - [NullValueError](#nullvalueerror)
     - [UndefinedValueError](#undefinedvalueerror)
   - [License](#license)
+  - [Help project](#help-project)
 
 ## Built with
 
@@ -853,6 +855,44 @@ const vuexLocal = new VuexPersistence<RootState>({
 });
 ```
 
+### Zustand Persist
+
+Zustand's `persist` middleware accepts a custom `storage` via `createJSONStorage`. Wrap the synchronous `noble` instance to satisfy its interface. Do not use `web-crypto` directly unless you provide an async-compatible storage adapter.
+
+```ts
+import { createStore } from 'zustand/vanilla'
+import { persist, createJSONStorage } from 'zustand/middleware';,
+
+import { persisterStorage } from './storage';
+
+type PositionStoreState = { position: { x: number; y: number } }
+
+type PositionStoreActions = {
+  setPosition: (nextPosition: PositionStoreState['position']) => void
+}
+
+type PositionStore = PositionStoreState & PositionStoreActions
+
+const storage = createJSONStorage(() => ({
+  getItem: (name) => persisterStorage.getItem(name) ?? null,
+  setItem: (name, value) => persisterStorage.setItem(name, value),
+  removeItem: (name) => persisterStorage.removeItem(name),
+}));
+
+const positionStore = createStore<PositionStore>()(
+  persist(
+    (set) => ({
+      position: { x: 0, y: 0 },
+      setPosition: (position) => set({ position }),
+    }),
+    {
+      storage,
+      name: 'position-store',
+    }
+  ),
+);
+```
+
 ### Redux Persist
 
 Use the same synchronous `noble` instance. Do not use `web-crypto` or a custom asynchronous wrapper with this integration.
@@ -1023,6 +1063,8 @@ All errors extend the native `Error` class and can be caught with standard `try/
 ## License
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
+## Help project
 
 > **HELP THIS PROJECT**: A GitHub star helps this project. It costs nothing and is greatly appreciated.
 
