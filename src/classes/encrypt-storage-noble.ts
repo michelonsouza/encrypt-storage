@@ -527,7 +527,7 @@ export class EncryptStorageNoble
 
     return {
       expiresAt: new Date(item.expiresAt),
-      remaining: item.expiresAt - Date.now(),
+      remaining: (item.expiresAt - Date.now()) / 1000,
       expired: Date.now() >= item.expiresAt,
     };
   }
@@ -551,7 +551,8 @@ export class EncryptStorageNoble
       return false;
     }
 
-    const expiresAt = ttl instanceof Date ? ttl.getTime() : Date.now() + ttl;
+    const expiresAt =
+      ttl instanceof Date ? ttl.getTime() : Date.now() + ttl * 1000;
 
     item.expiresAt = expiresAt;
 

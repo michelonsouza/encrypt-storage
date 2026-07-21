@@ -244,7 +244,7 @@ describe('EncryptStorageWebApi TTL API 🕐', () => {
       );
     });
 
-    it('should return metadata with remaining time in milliseconds', async () => {
+    it('should return metadata with remaining time in seconds', async () => {
       const sut = makeSut();
       const key = faker.string.alphanumeric(5);
       const ttlInSeconds = 3600;
@@ -255,7 +255,7 @@ describe('EncryptStorageWebApi TTL API 🕐', () => {
 
       expect(metadata).not.toBeNull();
       expect(metadata!.remaining).toBeGreaterThan(0);
-      expect(metadata!.remaining).toBeLessThanOrEqual(ttlInSeconds * 1000);
+      expect(metadata!.remaining).toBeLessThanOrEqual(ttlInSeconds);
     });
 
     it('should return metadata with expired as false when not expired', async () => {
@@ -392,6 +392,7 @@ describe('EncryptStorageWebApi TTL API 🕐', () => {
       const retrieved = await sut.getTTL<string>(key);
 
       expect(retrieved).toBe(value);
+      expect(await sut.getRemainingTTL(key)).toBeGreaterThan(190);
     });
 
     it('should update the TTL of an existing item with a Date', async () => {

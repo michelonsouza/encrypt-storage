@@ -26,7 +26,7 @@ Choose between a **fully synchronous** implementation powered by **@noble/cipher
 > ### What's new?
 >
 > - ⚡ Replaced **CryptoJS** with modern cryptography powered by **Web Crypto API** and **Noble Ciphers/Hashes**
-> - 🌐 Full support for modern runtimes including **Browsers, Node.js, Bun, Deno, Next.js, Astro, Vite, Nuxt**, and more
+> - 🌐 Improved compatibility with modern browser-based frameworks such as **Next.js, Astro, Vite, Nuxt**, and more
 > - ⏳ **New built-in TTL (Time-To-Live) API** featuring dedicated methods such as `setTTL`, `getTTL`, `hasTTL`, `refreshTTL`, `removeTTL`, and more for managing expiring data
 > - 🔒 Stronger key derivation using **PBKDF2**
 > - 🚀 Smaller bundle size and improved tree-shaking
@@ -139,7 +139,7 @@ yarn add encrypt-storage
 pnpm add encrypt-storage
 ```
 
-The package is intended for bundlers and supports ESM and CommonJS imports. Requires Node.js `>=20`.
+The package is intended for bundlers and supports ESM and CommonJS imports. A modern Node.js runtime such as `>=20` is recommended for local development and package tooling.
 
 ### Using a CDN
 
@@ -188,11 +188,11 @@ For production, pin the package to a specific version instead of using `@latest`
 | Runtime or framework | Support |
 | --- | --- |
 | Modern browsers | Supported when `localStorage` or `sessionStorage` is available. |
-| `noble` engine | Synchronous encryption via `@noble/ciphers`. Works with the browser Storage API. |
+| `noble` engine | Synchronous encryption via `@noble/ciphers`. Works in the browser with the Storage API. |
 | `web-crypto` engine | Requires `globalThis.crypto.subtle`, available in modern browser secure contexts. |
-| Node.js | Requires `>=20`. Needed for the native `crypto` module used by `@noble/ciphers` and development tooling. |
+| Node.js, Bun, and Deno | Not runtime targets for storage usage. They may be used for development, bundling, testing, or SSR frameworks, but storage instances must only be created and used in the browser. |
 | Next.js App Router | Supported in Client Components with `'use client'` (Next.js `13+`). |
-| Next.js Pages Router and SSR | Supported when the storage instance is created or used only in the browser. |
+| Next.js Pages Router and SSR | Supported when browser-storage code runs only on the client. |
 
 ## Migration to version 3
 
@@ -368,7 +368,7 @@ export function UserName() {
 }
 ```
 
-Do not import this Client Component into a Server Component when the storage instance is created at module scope. Keep the browser-storage code inside a file marked with `'use client'`.
+Importing a Client Component from a Server Component is fine. The important rule is that any code creating or using a storage instance must stay inside a file marked with `'use client'`, or otherwise run only in the browser.
 
 #### getStorage alternative
 
@@ -695,7 +695,7 @@ encryptStorage.setTTL({
 | --- | --- | --- |
 | `key` | `string` | Storage key. |
 | `value` | `T` | Value to store. Objects are serialized automatically. |
-| `ttl` | `number \| Date` | Expiration: seconds from now (`number`) or absolute date (`Date`). |
+| `ttl` | `number \| Date` | Expiration: seconds from now (`number`) or an absolute expiration date (`Date`). |
 | `doNotEncrypt` | `boolean` | Skip encryption for this item. Default `false`. |
 
 The stored value in browser storage is an encrypted JSON object containing the original value and the expiration timestamp. The prefix is applied to the key as with regular `setItem`.
@@ -751,7 +751,7 @@ const metadata = encryptStorage.getTTLMetadata('access_token');
 
 if (metadata) {
   console.log(metadata.expiresAt);  // Date object
-  console.log(metadata.remaining);  // Remaining time in milliseconds
+  console.log(metadata.remaining);  // Remaining time in seconds
   console.log(metadata.expired);    // false (always false when metadata is returned)
 }
 
@@ -764,7 +764,7 @@ if (remaining !== null) {
 
 | Method | Return type | Description |
 | --- | --- | --- |
-| `getTTLMetadata(key)` | `TTLMetadata \| null` | Returns `expiresAt` (Date), `remaining` (ms), and `expired` (boolean). Returns `null` when the key does not exist or has expired. |
+| `getTTLMetadata(key)` | `TTLMetadata \| null` | Returns `expiresAt` (Date), `remaining` (seconds), and `expired` (boolean). Returns `null` when the key does not exist or has expired. |
 | `getRemainingTTL(key)` | `number \| null` | Remaining lifetime in seconds. Returns `null` when the key does not exist or has expired. |
 
 ### Refresh and remove TTL
@@ -791,7 +791,7 @@ const removed = encryptStorage.removeTTL('access_token');
 
 | Method | Return | Description |
 | --- | --- | --- |
-| `refreshTTL({ key, ttl })` | `boolean` | Updates the expiration time. The stored value remains unchanged. Returns `false` when the key does not exist or has expired. |
+| `refreshTTL({ key, ttl })` | `boolean` | Updates the expiration time using seconds-from-now (`number`) or an absolute expiration date (`Date`). The stored value remains unchanged. Returns `false` when the key does not exist or has expired. |
 | `removeTTL(key)` | `boolean` | Removes the TTL wrapper. The plain value is re-stored as a permanent item. Returns `false` when the key does not exist or has expired. |
 
 ### TTL with Web Crypto (asynchronous)
@@ -861,7 +861,7 @@ Zustand's `persist` middleware accepts a custom `storage` via `createJSONStorage
 
 ```ts
 import { createStore } from 'zustand/vanilla'
-import { persist, createJSONStorage } from 'zustand/middleware';,
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 import { persisterStorage } from './storage';
 
