@@ -1,38 +1,104 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
+about: Report a reproducible problem in encrypt-storage
+title: "[bug]: "
+labels: bug
 assignees: ''
-
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Summary
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+Describe the bug clearly and directly.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Affected API
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+Which part of the library is affected?
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+- Engine: `noble` / `web-crypto` / `AsyncEncryptStorage`
+- Feature: `storage` / `cookies` / `TTL` / `hash` / `encryptValue` / `decryptValue` / `stateManagementUse` / `SSR`
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+## Environment
 
-**Additional context**
-Add any other context about the problem here.
+Please complete the relevant details:
+
+- Package version:
+- Runtime: Browser / Next.js / Nuxt / Astro / Vite / other
+- Browser:
+- Browser version:
+- OS:
+- Storage type: `localStorage` / `sessionStorage` / cookies
+- Encryption algorithm: `AES-GCM` / `AES-CBC` / `AES-CTR`
+
+## Configuration
+
+Share the instance configuration you are using.
+
+```ts
+EncryptStorage.create('secret-key-value', {
+  engine: 'noble',
+  storageType: 'localStorage',
+  prefix: '@app',
+  encAlgorithm: 'AES-GCM',
+});
+```
+
+If relevant, also mention:
+
+- `stateManagementUse`
+- `doNotEncryptValues`
+- `doNotParseValues`
+- `validation`
+- `notifyHandler`
+
+## Reproduction
+
+Provide the smallest possible reproduction.
+
+```ts
+// Minimal reproduction here
+```
+
+Steps:
+
+1. Create the instance with the configuration above.
+2. Call the relevant method(s).
+3. Observe the result.
+
+## Expected behavior
+
+Describe what you expected to happen.
+
+## Actual behavior
+
+Describe what actually happened.
+
+Include exact errors, returned values, or incorrect storage behavior.
+
+```txt
+Paste stack trace or console output here
+```
+
+## Storage details
+
+If relevant, include the exact key/value behavior you observed:
+
+- Stored key:
+- Stored value shape:
+- Expected stored/read value:
+- Actual stored/read value:
+
+## Special cases
+
+Mark any that apply:
+
+- [ ] Happens only with `web-crypto`
+- [ ] Happens only with `noble`
+- [ ] Happens only in SSR or hydration flows
+- [ ] Happens only with TTL methods
+- [ ] Happens only with cookies
+- [ ] Happens only with persisters such as Redux Persist, Zustand, Vuex, or Pinia
+- [ ] Happens only when using prefixes or multiple instances
+
+## Additional context
+
+Add anything else that helps reproduce or explain the bug, including repository links, screenshots, or notes about framework behavior.
