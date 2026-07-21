@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [3.0.1](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.1) - 2026-07-21 18:31:39+00:00
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/2.16.06...3.0.1
+
 ## [3.0.0](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.0) - 2026-07-20 19:13:55+00:00
 
 ## What's Changed
