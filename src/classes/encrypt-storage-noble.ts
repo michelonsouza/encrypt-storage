@@ -12,12 +12,10 @@ import { SyncEncryptCookie } from './sync-encrypt-cookie';
 import type {
   TTLMetadata,
   NotifyHandler,
-  CookieOptions,
   TTLStorageValue,
   SyncEncryptation,
   SetTTLItemParams,
   RefreshTTLParams,
-  RemoveCookieOptions,
   NotifyHandlerParams,
   SyncCookieInterface,
   GetFromPatternOptions,

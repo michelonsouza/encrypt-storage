@@ -69,6 +69,8 @@ export function concat(
   iv: Uint8Array,
   encrypted:
     | ArrayBuffer
+    | Uint8Array<ArrayBuffer>
+    | Uint8Array<ArrayBufferLike>
     | (Uint8Array<ArrayBufferLike> & Uint8Array<ArrayBuffer>),
 ): ArrayBuffer {
   const cipher = new Uint8Array(encrypted);

@@ -1,5 +1,6 @@
 import { gcm, cbc, ctr } from '@noble/ciphers/aes.js';
 import { sha256 } from '@noble/hashes/sha2.js';
+import { bytesToHex } from '@noble/hashes/utils.js';
 
 import {
   arrayBufferToBase64,
@@ -10,7 +11,7 @@ import {
 import { deriveSyncKey, encoder, decoder } from './pbkdf2';
 
 import type { EncryptAlgorithms, SyncEncryptation } from '@/@types';
-import type { Cipher, CipherWithOutput } from '@noble/ciphers/utils.js';
+import type { Cipher, CipherWithOutput, TArg } from '@noble/ciphers/utils.js';
 
 interface AlgorithmType {
   ivLength: number;
@@ -67,7 +68,13 @@ export function getSyncEncryptation(
 
 export function hashSyncNobleSHA256(value: string, secret: string): string {
   const key = deriveSyncKey(secret);
-  const hashedValue = sha256(Uint8Array.from([key, encoder.encode(value)]));
+  const hashedValue = bytesToHex(
+    sha256(
+      concat(key, encoder.encode(value)) as unknown as TArg<
+        Uint8Array<ArrayBufferLike>
+      >,
+    ),
+  );
 
-  return hashedValue.toString();
+  return hashedValue;
 }
