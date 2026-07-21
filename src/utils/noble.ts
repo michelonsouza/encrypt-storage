@@ -68,12 +68,9 @@ export function getSyncEncryptation(
 
 export function hashSyncNobleSHA256(value: string, secret: string): string {
   const key = deriveSyncKey(secret);
+  const payload = new Uint8Array(concat(key, encoder.encode(value)));
   const hashedValue = bytesToHex(
-    sha256(
-      concat(key, encoder.encode(value)) as unknown as TArg<
-        Uint8Array<ArrayBufferLike>
-      >,
-    ),
+    sha256(payload as TArg<Uint8Array<ArrayBufferLike>>),
   );
 
   return hashedValue;

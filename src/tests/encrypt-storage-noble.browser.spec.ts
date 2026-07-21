@@ -747,6 +747,7 @@ describe('EncryptStorageNoble 📦', () => {
     const result = sut.hash(value);
 
     expect(result).not.toEqual(value);
+    expect(result).toMatch(/^[a-f0-9]{64}$/);
   });
 
   describe('Validation 🚨', () => {
