@@ -11,4 +11,9 @@ export type {
   AsyncEncryptStorageOptions,
 } from './@types';
 
-export { EncryptStorage, AsyncEncryptStorage } from './classes';
+export {
+  EncryptStorage,
+  AsyncEncryptStorage,
+  EncryptStorageNoble,
+  EncryptStorageWebApi,
+} from './classes';

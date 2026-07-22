@@ -24,6 +24,7 @@ import type {
   SyncEncryptStorageTTLInterface,
   EncryptStorageNobleApiInterface,
   StorageType,
+  BaseEcnryptStorageOptions,
 } from '@/@types';
 
 const secret = new globalThis.WeakMap();
@@ -61,9 +62,9 @@ export class EncryptStorageNoble
    * EncryptStorage provides a wrapper implementation of `localStorage` and `sessionStorage` for a better security solution in browser data store
    *
    * @param {string} secretKey - A secret to encrypt data must be contain min of 10 characters
-   * @param {SyncEncryptStorageOptions} options - Settings to set encryptData or select `sessionStorage` to browser storage
+   * @param {SyncEncryptStorageOptions} [options] - Settings to set encryptData or select `sessionStorage` to browser storage
    */
-  constructor(secretKey: string, options: SyncEncryptStorageOptions) {
+  constructor(secretKey: string, options: BaseEcnryptStorageOptions = {}) {
     if (secretKey.length < SECRET_KEY_MIN_LENGTH) {
       throw new InvalidSecretKeyError();
     }

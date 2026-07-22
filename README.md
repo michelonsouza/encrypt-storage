@@ -67,6 +67,7 @@ Choose between a **fully synchronous** implementation powered by **@noble/cipher
   - [Version and runtime support](#version-and-runtime-support)
   - [Migration to version 3](#migration-to-version-3)
   - [Choose an encryption engine](#choose-an-encryption-engine)
+  - [Factory or direct class imports](#factory-or-direct-class-imports)
   - [Usage](#usage)
     - [Noble (synchronous)](#noble-synchronous)
     - [Web Crypto API (asynchronous)](#web-crypto-api-asynchronous)
@@ -182,7 +183,7 @@ For production, pin the package to a specific version instead of using `@latest`
 | Encrypt Storage version | Status | Documentation |
 | --- | --- | --- |
 | `3.x` | Current API. Requires explicit engine<br /> selection with `EncryptStorage.create()`. | This README |
-| `2.16.x` | Legacy API. | [Version 2 documentation](./docs/README_V2.md) |
+| `2.16.x` | Legacy API. (Security updates) | [Version 2 documentation](./docs/README_V2.md) |
 | `1.3.10` `(deprecated)` | Legacy API. | [Version 1 documentation](./docs/README_V1.md) |
 
 | Runtime or framework | Support |
@@ -196,11 +197,18 @@ For production, pin the package to a specific version instead of using `@latest`
 
 ## Migration to version 3
 
-Version 3 has a breaking change: instances are now created with `EncryptStorage.create()` and an explicit `engine`. Do not instantiate `EncryptStorage` with `new`.
+Version 3 has a breaking change: `EncryptStorage` is now a factory entrypoint, not a directly instantiated class. Do not instantiate `EncryptStorage` with `new`.
+
+In version 3, you have two valid patterns:
+
+- use `EncryptStorage.create(secretKey, { engine, ...options })`
+- import and instantiate a concrete class directly, such as `new EncryptStorageNoble(...)` or `new EncryptStorageWebApi(...)`
 
 | Before version 3 | Version 3 |
 | --- | --- |
 | `new EncryptStorage(secretKey, options)` | `EncryptStorage.create(secretKey, { engine: 'noble', ...options })` |
+| `new EncryptStorage(secretKey, options)` | `new EncryptStorageNoble(secretKey, options)` when you want the synchronous `noble` engine directly |
+| `new EncryptStorage(secretKey, options)` | `new EncryptStorageWebApi(secretKey, options)` when you want the `Web Crypto` engine directly |
 | One implicit encryption implementation | Explicit `noble` or `web-crypto` engine |
 | Synchronous API | `noble` is synchronous; `web-crypto` encrypt/decrypt operations return promises, while removal and storage utility methods remain synchronous. |
 
@@ -219,6 +227,63 @@ The same secret key and compatible algorithm are required to decrypt existing va
 All instances require a `secretKey` with at least 10 characters. Keep it stable: changing it makes existing encrypted values unreadable.
 
 Supported algorithms for both engines: `AES-GCM`, `AES-CBC`, and `AES-CTR`. `AES-GCM` is the default.
+
+## Factory or direct class imports
+
+The package exports both the `EncryptStorage.create()` factory and the engine classes directly from the main entrypoint:
+
+```ts
+import {
+  EncryptStorage,
+  AsyncEncryptStorage,
+  EncryptStorageNoble,
+  EncryptStorageWebApi,
+} from 'encrypt-storage';
+```
+
+Use `EncryptStorage.create()` when you want a single entrypoint that chooses the implementation based on `engine`:
+
+```ts
+import { EncryptStorage } from 'encrypt-storage';
+
+const encryptStorage = EncryptStorage.create('secret-key-value', {
+  engine: 'noble',
+  prefix: '@app',
+});
+```
+
+If you already know which implementation you want, you can import the class directly:
+
+```ts
+import { EncryptStorageNoble } from 'encrypt-storage';
+
+const encryptStorage = new EncryptStorageNoble('secret-key-value', {
+  prefix: '@app',
+});
+```
+
+```ts
+import { EncryptStorageWebApi } from 'encrypt-storage';
+
+const encryptStorage = new EncryptStorageWebApi('secret-key-value', {
+  prefix: '@app',
+});
+```
+
+```ts
+import { AsyncEncryptStorage } from 'encrypt-storage';
+
+const encryptStorage = new AsyncEncryptStorage('secret-key-value', {
+  engine: 'web-crypto',
+  prefix: '@app',
+});
+```
+
+`AsyncEncryptStorage` is intentionally narrower than the engine instances. It does **not** expose the Cookie API (`cookie.set`, `cookie.get`, `cookie.remove`) and it does **not** expose the TTL API (`setTTL`, `getTTL`, `hasTTL`, `hasExpired`, `getTTLMetadata`, `getRemainingTTL`, `refreshTTL`, `removeTTL`).
+
+If you need cookies or TTL, use an engine instance created with `EncryptStorage.create()`, `new EncryptStorageNoble(...)`, or `new EncryptStorageWebApi(...)`.
+
+Direct class imports can help bundlers tree-shake more aggressively because your code references one concrete implementation instead of the factory branch that can return different engines. The factory API is still the most convenient option for general use.
 
 ## Usage
 
@@ -285,7 +350,7 @@ encryptStorage.clear();
 
 ### AsyncEncryptStorage (fully promise-based)
 
-`AsyncEncryptStorage` wraps the selected engine and exposes a promise-returning API for every method it provides. It is useful when an application expects asynchronous storage calls, including integrations built around promise-based runtimes such as React Native.
+`AsyncEncryptStorage` wraps the selected engine and exposes a promise-returning API for a smaller storage-focused surface. It is useful when an application expects asynchronous storage calls, including integrations built around promise-based runtimes such as React Native.
 
 ```ts
 import { AsyncEncryptStorage } from 'encrypt-storage';
@@ -310,7 +375,15 @@ await encryptStorage.clear();
 | `getItem`, `getItemFromPattern`, `key` | `Promise<value>` |
 | `encryptValue`, `decryptValue`, `hash` | `Promise<value>` |
 
-`AsyncEncryptStorage` exposes `setItem`, `getItem`, `removeItem`, `getItemFromPattern`, `removeItemFromPattern`, `clear`, `key`, `encryptValue`, `decryptValue`, `hash`, and `length`. For bulk operations and cookies, use the engine instance returned by `EncryptStorage.create()`.
+`AsyncEncryptStorage` exposes `setItem`, `getItem`, `removeItem`, `getItemFromPattern`, `removeItemFromPattern`, `clear`, `key`, `encryptValue`, `decryptValue`, `hash`, and `length`.
+
+It does **not** expose:
+
+- bulk operations such as `setMultipleItems`, `getMultipleItems`, and `removeMultipleItems`
+- the Cookie API
+- the TTL API
+
+For bulk operations, cookies, or TTL, use the engine instance returned by `EncryptStorage.create()` or instantiate `EncryptStorageNoble` / `EncryptStorageWebApi` directly.
 
 > **React Native note**: this package requires a compatible Web Storage implementation (`localStorage` or `sessionStorage`) to persist data. `AsyncEncryptStorage` provides a promise-based API, but it does not include a React Native storage backend or replace `@react-native-async-storage/async-storage`.
 
@@ -576,7 +649,9 @@ const digest = encryptStorage.hash('John Doe');
 
 ## Cookies
 
-Every storage instance exposes `cookie.set`, `cookie.get`, and `cookie.remove`. Cookie operations use the same selected encryption engine. With the `noble` engine all cookie methods are synchronous; with `web-crypto` all three methods return promises.
+Engine instances expose `cookie.set`, `cookie.get`, and `cookie.remove`. Cookie operations use the same selected encryption engine. With the `noble` engine all cookie methods are synchronous; with `web-crypto` all three methods return promises.
+
+`AsyncEncryptStorage` does not implement the Cookie API.
 
 ### Noble cookies (synchronous)
 
@@ -650,11 +725,11 @@ Cookies set from JavaScript cannot be `HttpOnly`; use server-set `HttpOnly` cook
 
 ![new](https://img.shields.io/badge/New-blue)
 
-Every storage instance exposes a TTL API that stores values with an expiration time. When a TTL item expires, it is **lazily removed**: the item is deleted from browser storage only when it is accessed after expiration. There is no background observer, timer, or polling mechanism watching for expiration. This means an expired item remains physically in storage until your code reads it with `getTTL`, `hasTTL`, `hasExpired`, `getTTLMetadata`, `getRemainingTTL`, or `refreshTTL`.
+Engine instances expose a TTL API that stores values with an expiration time. When a TTL item expires, it is **lazily removed**: the item is deleted from browser storage only when it is accessed after expiration. There is no background observer, timer, or polling mechanism watching for expiration. This means an expired item remains physically in storage until your code reads it with `getTTL`, `hasTTL`, `hasExpired`, `getTTLMetadata`, `getRemainingTTL`, or `refreshTTL`.
 
 > **Important**: expired items are cleaned up on access, not on a schedule. If your application never reads an expired key, it stays in browser storage indefinitely. Design your access patterns accordingly, or call `getTTL` for known keys at application startup.
 
-The TTL API is available on both `noble` (synchronous) and `web-crypto` (asynchronous) engines. The examples below use the synchronous `noble` engine; see [TTL with Web Crypto](#ttl-with-web-crypto-asynchronous) for the async equivalent.
+The TTL API is available on both `noble` (synchronous) and `web-crypto` (asynchronous) engine instances. `AsyncEncryptStorage` does not implement TTL methods. The examples below use the synchronous `noble` engine; see [TTL with Web Crypto](#ttl-with-web-crypto-asynchronous) for the async equivalent.
 
 ```ts
 const encryptStorage = EncryptStorage.create('secret-key-value', {

@@ -7,7 +7,7 @@ Supported versions for security updates.
 | Version | Supported          |
 | ------- | ------------------ |
 | 1.3.10  | ❌                 |
-| 2.16.x  | ❌                 |
+| 2.16.x  | 🟡                 |
 | >3.x.x  | ✅                 |
 
 

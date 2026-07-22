@@ -38,11 +38,10 @@ export class EncryptStorage {
    */
   static create(
     secretKey: string,
-    options: EncryptStorageOptions,
+    { engine, ...options }: EncryptStorageOptions,
   ): EncryptStorageWebApi | EncryptStorageNoble {
-    return options.engine === 'noble'
-      ? // @ts-expect-error
-        new EncryptStorageNoble(secretKey, options)
+    return engine === 'noble'
+      ? new EncryptStorageNoble(secretKey, options)
       : new EncryptStorageWebApi(secretKey, options);
   }
 }
