@@ -21,7 +21,7 @@ Choose between a **fully synchronous** implementation powered by **@noble/cipher
 >
 > Version 3 is the most significant release in the project's history.
 >
-> This release is a complete modernization of the library, focused on modernization, performance, security, and compatibility with today's JavaScript ecosystem.
+> This release is a complete overhaul of the library, focused on performance, security, and compatibility with today's JavaScript ecosystem.
 >
 > ### What's new?
 >
