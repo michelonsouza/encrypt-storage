@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## [3.0.4](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.4) - 2026-07-27 20:27:59+00:00
+
+## What's Changed
+* docs: fix redundant modernization wording in README.md by @amir-rezaei in https://github.com/michelonsouza/encrypt-storage/pull/776
+
+## New Contributors
+* @amir-rezaei made their first contribution in https://github.com/michelonsouza/encrypt-storage/pull/776
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.2...3.0.3
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.3...3.0.4
+
+### Bug Fixes
+
+- general:
+  - adjust return type in get functions ([38f12e3](https://github.com/michelonsouza/encrypt-storage/commit/38f12e3b267b03303eedccf11fdae7d67db9cb4e))
+
+### Chore
+
+- general:
+  - update package version ([2e75b85](https://github.com/michelonsouza/encrypt-storage/commit/2e75b857b5f9a4263ef2363ef1b815ee27865ce1))
+
+### Documentation
+
+- general:
+  - fix redundant modernization wording in README.md (#776) ([a3b6cea](https://github.com/michelonsouza/encrypt-storage/commit/a3b6cea830676ef2aa49ad0936f59c50253c37e6)) ([#776](https://github.com/michelonsouza/encrypt-storage/pull/776))
+
 ## [3.0.2](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2) - 2026-07-22 01:03:55+00:00
 
 ## What's Changed
