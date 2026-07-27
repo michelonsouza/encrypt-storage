@@ -58,7 +58,7 @@ export interface EncryptStorageNobleApiInterface extends Storage {
    * encryptStorage.getItem('any_key') -> `{key: 'value', another_key: 2}`
    * encryptStorage.getItem('any_key') -> `'any value'`
    */
-  getItem(key: string, doNotDecrypt?: boolean): string | any | undefined;
+  getItem(key: string, doNotDecrypt?: boolean): string | any | null;
 
   /**
    * `getMulpleItems` - Is the function to be get `safeItems` in `selected storage`

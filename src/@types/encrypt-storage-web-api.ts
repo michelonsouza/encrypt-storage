@@ -64,7 +64,7 @@ export interface EncryptStorageCryptoWebApiInterface {
   getItem<DataType = any>(
     key: string,
     doNotDecrypt?: boolean,
-  ): Promise<string | DataType | undefined>;
+  ): Promise<string | DataType | null>;
 
   /**
    * `getMulpleItems` - Is the function to be get `safeItems` in `selected storage`

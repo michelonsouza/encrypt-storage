@@ -20,7 +20,6 @@ import type {
   SyncCookieInterface,
   GetFromPatternOptions,
   RemoveFromPatternOptions,
-  SyncEncryptStorageOptions,
   SyncEncryptStorageTTLInterface,
   EncryptStorageNobleApiInterface,
   StorageType,
@@ -210,7 +209,7 @@ export class EncryptStorageNoble
   public getItem<DataType = any>(
     key: string,
     doNotDecrypt = false,
-  ): DataType | undefined {
+  ): DataType | null {
     const decryptValues = this.#doNotEncryptValues || doNotDecrypt;
     const storageKey = this.#getKey(key);
     const item = this.storage.getItem(storageKey);
@@ -260,11 +259,11 @@ export class EncryptStorageNoble
       this.#notifier({
         type: 'get',
         key,
-        value: undefined,
+        value: null,
       });
     }
 
-    return undefined;
+    return null;
   }
 
   public getMultipleItems(
@@ -351,7 +350,7 @@ export class EncryptStorageNoble
   public getItemFromPattern(
     pattern: string,
     options: GetFromPatternOptions = {} as GetFromPatternOptions,
-  ): Record<string, any> | undefined {
+  ): Record<string, any> | null {
     const { multiple = true, exact = false, doNotDecrypt = false } = options;
     const decryptValues = this.#doNotEncryptValues || doNotDecrypt;
     const keys = Object.keys(this.storage).filter((key) => {
@@ -367,7 +366,7 @@ export class EncryptStorageNoble
     });
 
     if (!keys.length) {
-      return undefined;
+      return null;
     }
 
     if (!multiple) {
