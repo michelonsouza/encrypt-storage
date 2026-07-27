@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## [3.0.2](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.2) - 2026-07-22 01:03:55+00:00
+
+## What's Changed
+* version 3.0.1-beta.1 under construction by @michelonsouza in https://github.com/michelonsouza/encrypt-storage/pull/772
+
+
+**Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/3.0.1...3.0.2
+
+### Feature
+
+- general:
+  - change hash string casting ([50b734d](https://github.com/michelonsouza/encrypt-storage/commit/50b734d2e1f327582d569dbddb162a7f272e2e69))
+  - export classes for better tree-shaking, adjust readme and security documentation ([3d34e48](https://github.com/michelonsouza/encrypt-storage/commit/3d34e4857084221beb73dfc847080da34c8862e3))
+
+### Bug Fixes
+
+- general:
+  - adjust hash function exit in noble class ([a125d81](https://github.com/michelonsouza/encrypt-storage/commit/a125d8189438110d795a1bacebac94696b11b722))
+  - change nomenclature in documentation for TTL and adjust TTL return functions ([af3948c](https://github.com/michelonsouza/encrypt-storage/commit/af3948c63bb4c10d0a262fe6cc57930cda042d1c))
+
+### Chore
+
+- general:
+  - update issue templates ([51a9c25](https://github.com/michelonsouza/encrypt-storage/commit/51a9c251cf69e554ccb3e3b541166f8cdb72360a))
+
 ## [3.0.1](https://github.com/michelonsouza/encrypt-storage/releases/tag/3.0.1) - 2026-07-21 18:31:39+00:00
 
 **Full Changelog**: https://github.com/michelonsouza/encrypt-storage/compare/2.16.06...3.0.1
