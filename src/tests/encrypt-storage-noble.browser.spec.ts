@@ -193,7 +193,7 @@ describe('EncryptStorageNoble 📦', () => {
     const expectedValue = {
       [key1]: value1,
       [key2]: value2,
-      [key3]: undefined,
+      [key3]: null,
     };
 
     expect(storagedDecrypetdValue).toEqual(expectedValue);
@@ -219,7 +219,7 @@ describe('EncryptStorageNoble 📦', () => {
     const expectedValue = {
       [key1]: value1,
       [key2]: value2,
-      [key3]: undefined,
+      [key3]: null,
     };
 
     expect(storagedDecrypetdValue).toEqual(expectedValue);
@@ -352,7 +352,7 @@ describe('EncryptStorageNoble 📦', () => {
     });
 
     expect(spy).toHaveBeenCalledWith(itemKey);
-    expect(notHaveValue).toBe(undefined);
+    expect(notHaveValue).toBe(null);
     expect(storagedValue).toEqual(mockedValue[itemKey]);
   });
 
@@ -381,7 +381,7 @@ describe('EncryptStorageNoble 📦', () => {
     });
 
     expect(spy).toHaveBeenCalledWith(itemKey);
-    expect(notHaveValue).toBe(undefined);
+    expect(notHaveValue).toBe(null);
     expect(storagedValue).toEqual(mockedValue[itemKey]);
   });
 
@@ -412,7 +412,7 @@ describe('EncryptStorageNoble 📦', () => {
     });
 
     expect(spy).toHaveBeenCalledWith(`${prefix}:${itemKey}`);
-    expect(notHaveValue).toBe(undefined);
+    expect(notHaveValue).toBe(null);
     expect(storagedValue).toEqual(mockedValue[itemKey]);
   });
 
@@ -422,7 +422,7 @@ describe('EncryptStorageNoble 📦', () => {
 
     const storagedValue = sut.getItemFromPattern(pattern);
 
-    expect(storagedValue).toEqual(undefined);
+    expect(storagedValue).toEqual(null);
   });
 
   it('should calls localStorage.removeItem for all items with this pattern', () => {
@@ -619,7 +619,7 @@ describe('EncryptStorageNoble 📦', () => {
     const sut = makeSut();
     const value = sut.getItem('unknow_key');
 
-    expect(value).toBe(undefined);
+    expect(value).toBe(null);
   });
 
   it('should use prefix with key', () => {
